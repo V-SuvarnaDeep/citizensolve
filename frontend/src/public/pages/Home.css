@@ -1,0 +1,548 @@
+/* =========================
+   CIVIORA HOME PAGE
+   ========================= */
+
+/* ---------- Main Page ---------- */
+
+.public-home {
+  min-height: 100vh;
+  overflow: hidden;
+  background: #f7f8f6;
+  color: #14201a;
+}
+
+.public-home a {
+  text-decoration: none;
+  color: inherit;
+}
+
+
+/* =========================
+   NAVBAR
+   ========================= */
+
+.navbar {
+  height: 76px;
+  padding: 0 7%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  background: rgba(247, 248, 246, 0.94);
+  border-bottom: 1px solid #e3e7e2;
+
+  position: relative;
+  z-index: 10;
+}
+
+.navbar-brand {
+  font-size: 25px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.navbar-links {
+  display: flex;
+  gap: 34px;
+
+  font-size: 14px;
+  font-weight: 500;
+  color: #526058;
+}
+
+.navbar-links a:hover,
+.login-link:hover {
+  color: #0b7a53;
+}
+
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+
+.login-link {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.register-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+
+  padding: 11px 17px;
+
+  background: #0b7a53;
+  color: white !important;
+
+  border-radius: 8px;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  transition: 0.2s ease;
+}
+
+.register-button:hover {
+  background: #086443;
+  transform: translateY(-1px);
+}
+
+
+/* =========================
+   HERO SECTION
+   ========================= */
+
+.hero-section {
+  min-height: 650px;
+
+  display: flex;
+  justify-content: center;
+
+  padding: 100px 7% 80px;
+
+  background:
+    radial-gradient(
+      circle at 85% 25%,
+      rgba(11, 122, 83, 0.11),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 10% 70%,
+      rgba(39, 120, 97, 0.07),
+      transparent 28%
+    ),
+    #f7f8f6;
+}
+
+.hero-content {
+  width: 100%;
+  max-width: 1150px;
+
+  text-align: center;
+}
+
+
+/* ---------- Hero Badge ---------- */
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 8px 13px;
+
+  border: 1px solid #cfe0d7;
+  border-radius: 30px;
+
+  background: #edf5f1;
+  color: #0b7a53;
+
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+
+/* ---------- Hero Heading ---------- */
+
+.hero-content h1 {
+  max-width: 900px;
+
+  margin: 25px auto 0;
+
+  font-size: clamp(48px, 7vw, 82px);
+  line-height: 0.98;
+
+  letter-spacing: -3px;
+  font-weight: 800;
+}
+
+.hero-content h1 span {
+  color: #0b7a53;
+}
+
+
+/* ---------- Hero Description ---------- */
+
+.hero-description {
+  max-width: 710px;
+
+  margin: 28px auto 0;
+
+  color: #5a665f;
+
+  font-size: 17px;
+  line-height: 1.7;
+}
+
+
+/* ---------- Hero Buttons ---------- */
+
+.hero-actions {
+  display: flex;
+  justify-content: center;
+  gap: 13px;
+
+  margin-top: 35px;
+}
+
+.primary-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+
+  padding: 14px 21px;
+
+  background: #0b7a53;
+  color: white !important;
+
+  border-radius: 8px;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  transition: 0.2s ease;
+}
+
+.primary-button:hover {
+  background: #086443;
+  transform: translateY(-1px);
+}
+
+.secondary-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 14px 21px;
+
+  border: 1px solid #ccd5cf;
+  border-radius: 8px;
+
+  background: white;
+
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.secondary-button:hover {
+  border-color: #0b7a53;
+}
+
+
+/* ---------- Network ---------- */
+
+.hero-network {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+
+  margin-top: 75px;
+
+  flex-wrap: wrap;
+}
+
+.network-item {
+  min-width: 110px;
+
+  padding: 14px 15px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+
+  border: 1px solid #dce3de;
+  border-radius: 12px;
+
+  background: rgba(255, 255, 255, 0.8);
+
+  color: #35423b;
+
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.ai-node {
+  border-color: #9bcdb9;
+  background: #edf7f2;
+  color: #0b7a53;
+}
+
+.network-arrow {
+  color: #9aa69f;
+}
+
+
+/* =========================
+   MISSION SECTION
+   ========================= */
+
+.mission-section {
+  padding: 110px 7%;
+  background: white;
+}
+
+.section-heading {
+  max-width: 760px;
+
+  margin: 0 auto;
+
+  text-align: center;
+}
+
+.section-label {
+  color: #0b7a53;
+
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.7px;
+}
+
+.section-heading h2,
+.cta-section h2 {
+  margin: 16px 0;
+
+  font-size: clamp(35px, 5vw, 54px);
+  line-height: 1.05;
+
+  letter-spacing: -1.8px;
+}
+
+.section-heading p {
+  color: #69746e;
+
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+
+/* ---------- Mission Cards ---------- */
+
+.mission-cards {
+  max-width: 1100px;
+
+  margin: 65px auto 0;
+
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+
+  gap: 20px;
+}
+
+.mission-card {
+  padding: 30px;
+
+  border: 1px solid #e1e6e2;
+  border-radius: 15px;
+
+  background: #fafbfa;
+
+  transition: 0.2s ease;
+}
+
+.mission-card:hover {
+  transform: translateY(-4px);
+
+  border-color: #bfd8ca;
+
+  box-shadow: 0 10px 30px rgba(20, 32, 26, 0.05);
+}
+
+.mission-card span {
+  color: #0b7a53;
+
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.mission-card h3 {
+  margin: 30px 0 10px;
+
+  font-size: 23px;
+}
+
+.mission-card p {
+  margin: 0;
+
+  color: #68736d;
+
+  line-height: 1.65;
+  font-size: 14px;
+}
+
+
+/* =========================
+   CTA SECTION
+   ========================= */
+
+.cta-section {
+  max-width: 1100px;
+
+  margin: 100px auto;
+
+  padding: 55px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 30px;
+
+  border-radius: 18px;
+
+  background: #14201a;
+  color: white;
+}
+
+.cta-section h2 {
+  margin-bottom: 12px;
+}
+
+.cta-section p {
+  max-width: 570px;
+
+  margin: 0;
+
+  color: #b7c3bd;
+
+  line-height: 1.6;
+}
+
+.cta-section .primary-button {
+  flex-shrink: 0;
+}
+
+
+/* =========================
+   FOOTER
+   ========================= */
+
+.footer {
+  padding: 55px 7% 25px;
+
+  background: #0e1712;
+
+  color: white;
+}
+
+.footer-main {
+  max-width: 1100px;
+
+  margin: 0 auto;
+
+  display: flex;
+  justify-content: space-between;
+
+  gap: 50px;
+}
+
+.footer-brand {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.footer-main p {
+  max-width: 390px;
+
+  margin-top: 16px;
+
+  color: #9daaa3;
+
+  line-height: 1.6;
+  font-size: 14px;
+}
+
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+
+  align-content: flex-start;
+
+  gap: 25px;
+
+  color: #b9c2bd;
+
+  font-size: 13px;
+}
+
+.footer-links a:hover {
+  color: white;
+}
+
+.footer-bottom {
+  max-width: 1100px;
+
+  margin: 50px auto 0;
+
+  padding-top: 20px;
+
+  border-top: 1px solid #29342e;
+
+  display: flex;
+  justify-content: space-between;
+
+  color: #758179;
+
+  font-size: 11px;
+}
+
+
+/* =========================
+   RESPONSIVE DESIGN
+   ========================= */
+
+@media (max-width: 800px) {
+
+  .navbar {
+    padding: 0 5%;
+  }
+
+  .navbar-links {
+    display: none;
+  }
+
+  .hero-section {
+    padding: 75px 5% 60px;
+  }
+
+  .hero-content h1 {
+    letter-spacing: -2px;
+  }
+
+  .hero-network {
+    margin-top: 50px;
+  }
+
+  .mission-section {
+    padding: 75px 5%;
+  }
+
+  .mission-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .cta-section {
+    margin: 60px 5%;
+
+    padding: 35px;
+
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .footer-main {
+    flex-direction: column;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    gap: 10px;
+  }
+}

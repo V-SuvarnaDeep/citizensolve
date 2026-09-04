@@ -1,0 +1,422 @@
+.citizen-settings-page {
+  min-height: 100vh;
+  background: #f7f8f6;
+  color: #14201a;
+}
+
+/* Navbar */
+
+.settings-navbar {
+  min-height: 72px;
+  padding: 0 7%;
+
+  background: #ffffff;
+  border-bottom: 1px solid #e4e9e5;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.settings-logo {
+  color: #0b7a53;
+  text-decoration: none;
+  font-size: 27px;
+  font-weight: 800;
+}
+
+.settings-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 26px;
+}
+
+.settings-nav-links a {
+  color: #53615a;
+  text-decoration: none;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  transition: 0.2s ease;
+}
+
+.settings-nav-links a:hover,
+.settings-nav-links a.active {
+  color: #0b7a53;
+}
+
+/* Main */
+
+.settings-content {
+  width: 86%;
+  max-width: 1050px;
+
+  margin: 0 auto;
+  padding: 45px 0 70px;
+}
+
+.settings-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+
+  color: #0b7a53;
+  text-decoration: none;
+
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.settings-heading {
+  margin-top: 22px;
+  margin-bottom: 32px;
+}
+
+.settings-heading h1 {
+  margin: 0;
+
+  font-size: 40px;
+  line-height: 1.2;
+}
+
+.settings-heading p {
+  margin-top: 12px;
+
+  color: #68746d;
+  font-size: 16px;
+}
+
+/* Form */
+
+.settings-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Cards */
+
+.settings-card {
+  background: #ffffff;
+  border: 1px solid #e1e6e2;
+  border-radius: 12px;
+
+  padding: 27px;
+}
+
+.settings-card-heading {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+
+  margin-bottom: 25px;
+}
+
+.settings-card-heading h2 {
+  margin: 0;
+
+  font-size: 20px;
+}
+
+.settings-card-heading p {
+  margin: 5px 0 0;
+
+  color: #7a847e;
+  font-size: 13px;
+}
+
+.settings-heading-icon {
+  width: 42px;
+  height: 42px;
+
+  border-radius: 9px;
+
+  background: #e5f5ef;
+  color: #0b7a53;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Profile Fields */
+
+.settings-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.settings-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.settings-field label {
+  color: #26332c;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.settings-field input {
+  height: 45px;
+  box-sizing: border-box;
+
+  padding: 0 13px;
+
+  border: 1px solid #d7dfda;
+  border-radius: 7px;
+
+  background: #ffffff;
+  color: #14201a;
+
+  font-family: inherit;
+  font-size: 14px;
+
+  outline: none;
+}
+
+.settings-field input:focus {
+  border-color: #0b7a53;
+  box-shadow: 0 0 0 3px rgba(11, 122, 83, 0.08);
+}
+
+.settings-field input::placeholder {
+  color: #9aa39e;
+}
+
+/* Notification Settings */
+
+.notification-settings {
+  display: flex;
+  flex-direction: column;
+}
+
+.notification-setting {
+  min-height: 70px;
+
+  padding: 15px 0;
+
+  border-bottom: 1px solid #edf0ed;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  cursor: pointer;
+}
+
+.notification-setting:last-child {
+  border-bottom: none;
+}
+
+.notification-setting div {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.notification-setting strong {
+  font-size: 14px;
+}
+
+.notification-setting span {
+  color: #7a847e;
+  font-size: 13px;
+}
+
+/* Checkbox */
+
+.notification-setting input {
+  width: 18px;
+  height: 18px;
+
+  accent-color: #0b7a53;
+
+  cursor: pointer;
+}
+
+/* Security */
+
+.security-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+}
+
+.security-row div {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.security-row strong {
+  font-size: 14px;
+}
+
+.security-row span {
+  color: #7a847e;
+  font-size: 13px;
+}
+
+.change-password-button {
+  border: 1px solid #d7dfda;
+  background: #ffffff;
+
+  color: #0b7a53;
+
+  padding: 10px 15px;
+
+  border-radius: 7px;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.change-password-button:hover {
+  background: #f2f6f3;
+}
+
+/* Account */
+
+.account-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.account-card .settings-card-heading {
+  margin: 0;
+}
+
+.logout-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+
+  border: 1px solid #e0bdbd;
+  background: #fff8f8;
+
+  color: #a44848;
+
+  padding: 10px 16px;
+
+  border-radius: 7px;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.logout-button:hover {
+  background: #fff0f0;
+}
+
+/* Save */
+
+.settings-actions {
+  display: flex;
+  justify-content: flex-end;
+
+  padding-top: 5px;
+}
+
+.save-settings-button {
+  height: 46px;
+
+  padding: 0 20px;
+
+  border: 1px solid #0b7a53;
+  border-radius: 7px;
+
+  background: #0b7a53;
+  color: #ffffff;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.save-settings-button:hover {
+  background: #096745;
+}
+
+/* Footer */
+
+.settings-footer {
+  border-top: 1px solid #e1e6e2;
+
+  padding: 24px 7%;
+
+  text-align: center;
+
+  color: #7b857f;
+  font-size: 13px;
+}
+
+/* Responsive */
+
+@media (max-width: 900px) {
+  .settings-navbar {
+    padding: 18px 5%;
+
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .settings-nav-links {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+  }
+
+  .settings-content {
+    width: 90%;
+  }
+}
+
+@media (max-width: 650px) {
+  .settings-heading h1 {
+    font-size: 32px;
+  }
+
+  .settings-fields {
+    grid-template-columns: 1fr;
+  }
+
+  .security-row,
+  .account-card {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .change-password-button,
+  .logout-button,
+  .save-settings-button {
+    width: 100%;
+  }
+
+  .settings-actions {
+    justify-content: stretch;
+  }
+}
