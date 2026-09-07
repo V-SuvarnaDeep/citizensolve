@@ -1,0 +1,200 @@
+.review-page {
+  min-height: 100vh;
+  background: #f5f7fb;
+  padding: 32px;
+  font-family: Arial, sans-serif;
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 30px;
+}
+
+.review-header h1 {
+  margin: 18px 0 6px;
+  color: #111827;
+}
+
+.review-header p {
+  margin: 0;
+  color: #6b7280;
+}
+
+.review-rank {
+  background: #eff6ff;
+  color: #1d4ed8;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: bold;
+}
+
+.back-button {
+  border: none;
+  background: transparent;
+  color: #2563eb;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 0;
+}
+
+.review-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.review-card {
+  background: white;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.review-card h2 {
+  margin-top: 0;
+  color: #111827;
+}
+
+.detail-item {
+  padding: 14px 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.detail-item:last-child {
+  border-bottom: none;
+}
+
+.detail-item span,
+.analysis-item span,
+.ai-summary span {
+  display: block;
+  font-size: 12px;
+  color: #6b7280;
+  margin-bottom: 6px;
+}
+
+.detail-item strong {
+  color: #111827;
+}
+
+.detail-item p {
+  margin: 0;
+  color: #374151;
+  line-height: 1.5;
+}
+
+.analysis-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.analysis-item {
+  background: #f9fafb;
+  padding: 14px;
+  border-radius: 8px;
+}
+
+.analysis-item strong {
+  text-transform: capitalize;
+  color: #111827;
+}
+
+.ai-summary {
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.ai-summary p {
+  margin: 0;
+  color: #374151;
+  line-height: 1.5;
+}
+
+.decision-card {
+  margin-top: 24px;
+  background: white;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.decision-card h2 {
+  margin: 0 0 6px;
+  color: #111827;
+}
+
+.decision-card p {
+  margin: 0;
+  color: #6b7280;
+}
+
+.decision-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+.reject-button,
+.approve-button {
+  border: none;
+  padding: 11px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.reject-button {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.approve-button {
+  background: #2563eb;
+  color: white;
+}
+
+.reject-button:disabled,
+.approve-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.review-message,
+.review-error {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.review-error {
+  color: #b91c1c;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 800px) {
+  .review-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .review-header {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .decision-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .decision-buttons {
+    width: 100%;
+  }
+}

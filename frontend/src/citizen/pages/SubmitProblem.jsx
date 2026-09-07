@@ -14,6 +14,11 @@ function SubmitProblem() {
     additionalInfo: "",
   });
 
+  const [image, setImage] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [aiResult, setAiResult] = useState(null);
+  const [error, setError] = useState("");
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -21,11 +26,62 @@ function SubmitProblem() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleImageChange = (e) => {
+    setImage(e.target.files[0]);
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log("Problem submitted:", formData);
-    alert("Problem submitted successfully!");
+    if (!image) {
+      setError("Please upload an image of the problem.");
+      return;
+    }
+
+    setLoading(true);
+    setError("");
+    setAiResult(null);
+
+    try {
+      const data = new FormData();
+
+      data.append("title", formData.title);
+      data.append("description", formData.description);
+      data.append("category", formData.category);
+      data.append("location", formData.location);
+      data.append("impact", formData.impact);
+      data.append("urgency", formData.urgency);
+      data.append("additionalInfo", formData.additionalInfo);
+      data.append("image", image);
+
+      const response = await fetch("http://127.0.0.1:8000/analyze", {
+        method: "POST",
+        body: data,
+      });
+
+      if (!response.ok) {
+        throw new Error("AI service failed to analyze the problem.");
+      }
+
+      const result = await response.json();
+
+      if (!result.success) {
+        throw new Error("Problem analysis was unsuccessful.");
+      }
+
+      console.log("Civiora AI Analysis:", result.analysis);
+
+      setAiResult(result.analysis);
+
+    } catch (err) {
+      console.error("Submission error:", err);
+      setError(
+        err.message ||
+          "Something went wrong while connecting to Civiora AI."
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -123,6 +179,25 @@ function SubmitProblem() {
                 onChange={handleChange}
                 required
               />
+            </div>
+
+            {/* Image Upload */}
+            <div className="form-group">
+              <label htmlFor="image">
+                Problem Image
+              </label>
+
+              <input
+                id="image"
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                onChange={handleImageChange}
+                required
+              />
+
+              <small>
+                Upload a clear image showing the civic problem.
+              </small>
             </div>
 
           </section>
@@ -304,6 +379,21 @@ function SubmitProblem() {
 
           </section>
 
+          {/* Error */}
+          {error && (
+            <div
+              style={{
+                padding: "14px",
+                marginBottom: "20px",
+                borderRadius: "8px",
+                background: "#ffe5e5",
+                color: "#b00020",
+              }}
+            >
+              {error}
+            </div>
+          )}
+
           {/* Submit */}
           <div className="submit-actions">
 
@@ -311,14 +401,106 @@ function SubmitProblem() {
               Cancel
             </Link>
 
-            <button type="submit" className="submit-button">
+            <button
+              type="submit"
+              className="submit-button"
+              disabled={loading}
+            >
               <Send size={18} />
-              Submit Problem
+
+              {loading
+                ? "Analyzing Problem..."
+                : "Submit Problem"}
             </button>
 
           </div>
 
         </form>
+
+        {/* AI Result */}
+        {aiResult && (
+          <section
+            style={{
+              marginTop: "40px",
+              padding: "30px",
+              borderRadius: "12px",
+              background: "#f5f7fa",
+              border: "1px solid #e1e5ea",
+            }}
+          >
+            <span className="submit-label">
+              CIVIORA AI ANALYSIS
+            </span>
+
+            <h2 style={{ marginTop: "10px" }}>
+              AI Analysis Complete
+            </h2>
+
+            <p>
+              <strong>Category:</strong>{" "}
+              {aiResult.category}
+            </p>
+
+            <p>
+              <strong>Problem Type:</strong>{" "}
+              {aiResult.problemType}
+            </p>
+
+            <p>
+              <strong>Severity:</strong>{" "}
+              {aiResult.severity}
+            </p>
+
+            <p>
+              <strong>Urgency:</strong>{" "}
+              {aiResult.urgency}
+            </p>
+
+            <p>
+              <strong>Visual Severity:</strong>{" "}
+              {aiResult.visualSeverity}
+            </p>
+
+            <p>
+              <strong>Affected Population:</strong>{" "}
+              {aiResult.affectedPopulation}
+            </p>
+
+            <p>
+              <strong>Safety Risk:</strong>{" "}
+              {aiResult.safetyRisk}
+            </p>
+
+            <p>
+              <strong>Geographic Impact:</strong>{" "}
+              {aiResult.geographicImpact}
+            </p>
+
+            <p>
+              <strong>Time Sensitivity:</strong>{" "}
+              {aiResult.timeSensitivity}
+            </p>
+
+            <p>
+              <strong>AI Summary:</strong>{" "}
+              {aiResult.summary}
+            </p>
+
+            <p>
+              <strong>Required Skills:</strong>{" "}
+              {Array.isArray(aiResult.requiredSkills)
+                ? aiResult.requiredSkills.join(", ")
+                : aiResult.requiredSkills}
+            </p>
+
+            <p>
+              <strong>Keywords:</strong>{" "}
+              {Array.isArray(aiResult.keywords)
+                ? aiResult.keywords.join(", ")
+                : aiResult.keywords}
+            </p>
+          </section>
+        )}
 
       </main>
 
