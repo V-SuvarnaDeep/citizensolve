@@ -15,29 +15,29 @@ function Review() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    if (!problemId) {
-      setError("No problem was selected.");
-      setLoading(false);
-      return;
-    }
+    const loadProblem = async () => {
+      if (!problemId) {
+        setError("No problem was selected.");
+        setLoading(false);
+        return;
+      }
 
-    fetchProblem();
+      try {
+        const response = await axios.get(
+          `http://127.0.0.1:8000/problems/${problemId}`
+        );
+
+        setProblem(response.data.problem);
+      } catch (err) {
+        console.error(err);
+        setError("Unable to load problem details.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadProblem();
   }, [problemId]);
-
-  const fetchProblem = async () => {
-    try {
-      const response = await axios.get(
-        `http://127.0.0.1:8000/problems/${problemId}`
-      );
-
-      setProblem(response.data.problem);
-    } catch (err) {
-      console.error(err);
-      setError("Unable to load problem details.");
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const updateStatus = async (status) => {
     try {
