@@ -219,3 +219,16 @@
     gap: 10px;
   }
 }
+.auth-error {
+  margin-bottom: 20px;
+  padding: 12px 14px;
+  border-radius: 8px;
+  background: #fff1f1;
+  color: #c62828;
+  font-size: 14px;
+}
+
+.login-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

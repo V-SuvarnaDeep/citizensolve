@@ -8,6 +8,11 @@ import HowItWorks from "../public/pages/HowItWorks";
 // Authentication pages
 import Login from "../auth/pages/Login";
 import Register from "../auth/pages/Register";
+import ForgotPassword from "../auth/pages/ForgotPassword";
+import ResetPassword from "../auth/pages/ResetPassword";
+
+// Authentication protection
+import ProtectedRoute from "../components/ProtectedRoute";
 
 // Citizen pages
 import CitizenHome from "../citizen/pages/Home";
@@ -23,6 +28,7 @@ import UniversitySolutions from "../university/pages/Solutions";
 import UniversityMeetings from "../university/pages/Meetings";
 import UniversityNotifications from "../university/pages/Notifications";
 import UniversitySettings from "../university/pages/Settings";
+import ProblemDetails from "../university/pages/ProblemDetails";
 
 // Government pages
 import GovernmentHome from "../government/pages/Home";
@@ -54,88 +60,241 @@ function AppRoutes() {
         {/* Authentication */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route
+          path="/forgot-password"
+          element={<ForgotPassword />}
+        />
+        <Route
+          path="/reset-password"
+          element={<ResetPassword />}
+        />
 
         {/* Citizen */}
-        <Route path="/citizen" element={<CitizenHome />} />
-        <Route path="/citizen/submit" element={<SubmitProblem />} />
-        <Route path="/citizen/myproblems" element={<MyProblems />} />
+        <Route
+          path="/citizen"
+          element={
+            <ProtectedRoute role="citizen">
+              <CitizenHome />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/citizen/submit"
+          element={
+            <ProtectedRoute role="citizen">
+              <SubmitProblem />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/citizen/myproblems"
+          element={
+            <ProtectedRoute role="citizen">
+              <MyProblems />
+            </ProtectedRoute>
+          }
+        />
+
         <Route
           path="/citizen/notifications"
-          element={<CitizenNotifications />}
+          element={
+            <ProtectedRoute role="citizen">
+              <CitizenNotifications />
+            </ProtectedRoute>
+          }
         />
-        <Route path="/citizen/settings" element={<CitizenSettings />} />
+
+        <Route
+          path="/citizen/settings"
+          element={
+            <ProtectedRoute role="citizen">
+              <CitizenSettings />
+            </ProtectedRoute>
+          }
+        />
 
         {/* University */}
-        <Route path="/university" element={<UniversityHome />} />
+        <Route
+          path="/university"
+          element={
+            <ProtectedRoute role="university">
+              <UniversityHome />
+            </ProtectedRoute>
+          }
+        />
+
         <Route
           path="/university/problems"
-          element={<UniversityProblems />}
+          element={
+            <ProtectedRoute role="university">
+              <UniversityProblems />
+            </ProtectedRoute>
+          }
         />
+             <Route
+  path="/university/problems/:id"
+  element={
+    <ProtectedRoute role="university">
+      <ProblemDetails />
+    </ProtectedRoute>
+  }
+/>
+
         <Route
           path="/university/solutions"
-          element={<UniversitySolutions />}
+          element={
+            <ProtectedRoute role="university">
+              <UniversitySolutions />
+            </ProtectedRoute>
+          }
         />
+
         <Route
           path="/university/meetings"
-          element={<UniversityMeetings />}
+          element={
+            <ProtectedRoute role="university">
+              <UniversityMeetings />
+            </ProtectedRoute>
+          }
         />
+
         <Route
           path="/university/notifications"
-          element={<UniversityNotifications />}
+          element={
+            <ProtectedRoute role="university">
+              <UniversityNotifications />
+            </ProtectedRoute>
+          }
         />
+
         <Route
           path="/university/settings"
-          element={<UniversitySettings />}
+          element={
+            <ProtectedRoute role="university">
+              <UniversitySettings />
+            </ProtectedRoute>
+          }
         />
 
         {/* Government */}
-        <Route path="/government" element={<GovernmentHome />} />
+        <Route
+          path="/government"
+          element={
+            <ProtectedRoute role="government">
+              <GovernmentHome />
+            </ProtectedRoute>
+          }
+        />
+
         <Route
           path="/government/solutions"
-          element={<GovernmentSolutions />}
+          element={
+            <ProtectedRoute role="government">
+              <GovernmentSolutions />
+            </ProtectedRoute>
+          }
         />
+
         <Route
           path="/government/review"
-          element={<GovernmentReview />}
+          element={
+            <ProtectedRoute role="government">
+              <GovernmentReview />
+            </ProtectedRoute>
+          }
         />
+
         <Route
           path="/government/companies"
-          element={<GovernmentCompanies />}
+          element={
+            <ProtectedRoute role="government">
+              <GovernmentCompanies />
+            </ProtectedRoute>
+          }
         />
+
         <Route
           path="/government/meetings"
-          element={<GovernmentMeetings />}
+          element={
+            <ProtectedRoute role="government">
+              <GovernmentMeetings />
+            </ProtectedRoute>
+          }
         />
+
         <Route
           path="/government/notifications"
-          element={<GovernmentNotifications />}
+          element={
+            <ProtectedRoute role="government">
+              <GovernmentNotifications />
+            </ProtectedRoute>
+          }
         />
+
         <Route
           path="/government/settings"
-          element={<GovernmentSettings />}
+          element={
+            <ProtectedRoute role="government">
+              <GovernmentSettings />
+            </ProtectedRoute>
+          }
         />
 
         {/* Company */}
-        <Route path="/company" element={<CompanyHome />} />
+        <Route
+          path="/company"
+          element={
+            <ProtectedRoute role="company">
+              <CompanyHome />
+            </ProtectedRoute>
+          }
+        />
+
         <Route
           path="/company/opportunities"
-          element={<CompanyOpportunities />}
+          element={
+            <ProtectedRoute role="company">
+              <CompanyOpportunities />
+            </ProtectedRoute>
+          }
         />
+
         <Route
           path="/company/solutions"
-          element={<CompanySolutions />}
+          element={
+            <ProtectedRoute role="company">
+              <CompanySolutions />
+            </ProtectedRoute>
+          }
         />
+
         <Route
           path="/company/meetings"
-          element={<CompanyMeetings />}
+          element={
+            <ProtectedRoute role="company">
+              <CompanyMeetings />
+            </ProtectedRoute>
+          }
         />
+
         <Route
           path="/company/notifications"
-          element={<CompanyNotifications />}
+          element={
+            <ProtectedRoute role="company">
+              <CompanyNotifications />
+            </ProtectedRoute>
+          }
         />
+
         <Route
           path="/company/settings"
-          element={<CompanySettings />}
+          element={
+            <ProtectedRoute role="company">
+              <CompanySettings />
+            </ProtectedRoute>
+          }
         />
 
       </Routes>

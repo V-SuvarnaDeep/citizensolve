@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   ArrowLeft,
@@ -9,163 +9,454 @@ import {
   Building2,
   X,
 } from "lucide-react";
+import { supabase } from "../../supabaseClient";
 import "./Notifications.css";
 
 function Notifications() {
-  const notifications = [
-    {
-      id: 1,
-      type: "success",
-      icon: <CheckCircle size={20} />,
-      title: "Problem Submitted Successfully",
-      message:
-        "Your reported problem has been successfully submitted to Civiora and is now being analyzed.",
-      time: "Today, 10:30 AM",
-      unread: true,
-    },
-    {
-      id: 2,
-      type: "info",
-      icon: <FileText size={20} />,
-      title: "AI Analysis Completed",
-      message:
-        "Civiora AI has analyzed your problem and identified the required expertise and capabilities.",
-      time: "Yesterday, 4:15 PM",
-      unread: true,
-    },
-    {
-      id: 3,
-      type: "university",
-      icon: <Building2 size={20} />,
-      title: "University Matching in Progress",
-      message:
-        "Suitable universities are being identified based on their expertise, facilities and previous work.",
-      time: "02 Sep 2026, 2:40 PM",
-      unread: false,
-    },
-    {
-      id: 4,
-      type: "pending",
-      icon: <Clock size={20} />,
-      title: "Problem Under Review",
-      message:
-        "Your problem is currently being processed. You will receive an update when a suitable institution is assigned.",
-      time: "01 Sep 2026, 11:20 AM",
-      unread: false,
-    },
-  ];
+  const [notifications, setNotifications] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const loadNotifications = async () => {
+      try {
+        setLoading(true);
+        setError("");
+
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
+
+        if (!session) {
+          setError(
+            "Your session has expired. Please sign in again."
+          );
+          return;
+        }
+
+        const response = await fetch(
+          "http://127.0.0.1:8000/citizen/notifications",
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${session.access_token}`,
+            },
+          }
+        );
+
+        if (!response.ok) {
+          if (response.status === 401) {
+            throw new Error(
+              "Your session is no longer valid. Please sign in again."
+            );
+          }
+
+          throw new Error(
+            "Unable to load your notifications."
+          );
+        }
+
+        const result = await response.json();
+
+        if (!result.success) {
+          throw new Error(
+            "Unable to load your notifications."
+          );
+        }
+
+        setNotifications(
+          result.notifications || []
+        );
+
+      } catch (err) {
+        console.error(
+          "Loading notifications error:",
+          err
+        );
+
+        setError(
+          err.message ||
+            "Something went wrong while loading notifications."
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadNotifications();
+  }, []);
+
+  const getNotificationIcon = (type) => {
+    if (type === "success") {
+      return <CheckCircle size={20} />;
+    }
+
+    if (type === "university") {
+      return <Building2 size={20} />;
+    }
+
+    if (type === "pending") {
+      return <Clock size={20} />;
+    }
+
+    return <FileText size={20} />;
+  };
+
+  const getNotificationType = (type) => {
+    if (
+      type === "success" ||
+      type === "university" ||
+      type === "pending"
+    ) {
+      return type;
+    }
+
+    return "info";
+  };
+
+  const formatTime = (date) => {
+    if (!date) {
+      return "";
+    }
+
+    return new Date(date).toLocaleString(
+      "en-IN",
+      {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      }
+    );
+  };
+
+  const markAsRead = async (notificationId) => {
+    try {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      if (!session) {
+        return;
+      }
+
+      const response = await fetch(
+        `http://127.0.0.1:8000/notifications/${notificationId}/read`,
+        {
+          method: "PATCH",
+          headers: {
+            Authorization: `Bearer ${session.access_token}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(
+          "Unable to update notification."
+        );
+      }
+
+      setNotifications((current) =>
+        current.map((notification) =>
+          notification.id === notificationId
+            ? {
+                ...notification,
+                is_read: true,
+              }
+            : notification
+        )
+      );
+
+    } catch (err) {
+      console.error(
+        "Mark notification error:",
+        err
+      );
+    }
+  };
+
+  const markAllAsRead = async () => {
+    try {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      if (!session) {
+        return;
+      }
+
+      const response = await fetch(
+        "http://127.0.0.1:8000/citizen/notifications/read-all",
+        {
+          method: "PATCH",
+          headers: {
+            Authorization: `Bearer ${session.access_token}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(
+          "Unable to mark notifications as read."
+        );
+      }
+
+      setNotifications((current) =>
+        current.map((notification) => ({
+          ...notification,
+          is_read: true,
+        }))
+      );
+
+    } catch (err) {
+      console.error(
+        "Mark all notifications error:",
+        err
+      );
+    }
+  };
+
+  const unreadCount = notifications.filter(
+    (notification) => !notification.is_read
+  ).length;
 
   return (
     <div className="citizen-notifications-page">
+
       {/* Navbar */}
       <nav className="notifications-navbar">
-        <Link to="/citizen" className="notifications-logo">
+
+        <Link
+          to="/citizen"
+          className="notifications-logo"
+        >
           Civiora
         </Link>
 
         <div className="notifications-nav-links">
-          <Link to="/citizen">Home</Link>
 
-          <Link to="/citizen/submit">Submit Problem</Link>
+          <Link to="/citizen">
+            Home
+          </Link>
 
-          <Link to="/citizen/myproblems">My Problems</Link>
+          <Link to="/citizen/submit">
+            Submit Problem
+          </Link>
 
-          <Link to="/citizen/notifications" className="active">
+          <Link to="/citizen/myproblems">
+            My Problems
+          </Link>
+
+          <Link
+            to="/citizen/notifications"
+            className="active"
+          >
             <Bell size={17} />
             Notifications
           </Link>
 
-          <Link to="/citizen/settings">Settings</Link>
+          <Link to="/citizen/settings">
+            Settings
+          </Link>
+
         </div>
+
       </nav>
 
       {/* Main Content */}
       <main className="notifications-content">
-        <Link to="/citizen" className="notifications-back-link">
+
+        <Link
+          to="/citizen"
+          className="notifications-back-link"
+        >
           <ArrowLeft size={18} />
           Back to Home
         </Link>
 
         <div className="notifications-heading">
+
           <div>
-            <h1>Notifications</h1>
+
+            <h1>
+              Notifications
+            </h1>
+
             <p>
-              Stay updated about your submitted problems and Civiora activity.
+              Stay updated about your submitted problems
+              and Civiora activity.
             </p>
+
           </div>
 
-          <button className="mark-read-button">
+          <button
+            className="mark-read-button"
+            onClick={markAllAsRead}
+            disabled={unreadCount === 0}
+          >
             Mark all as read
           </button>
+
         </div>
 
         {/* Notification Summary */}
         <div className="notification-summary">
+
           <div className="summary-item">
-            <span className="summary-number">2</span>
-            <span className="summary-label">Unread</span>
+
+            <span className="summary-number">
+              {unreadCount}
+            </span>
+
+            <span className="summary-label">
+              Unread
+            </span>
+
           </div>
 
           <div className="summary-divider"></div>
 
           <div className="summary-item">
-            <span className="summary-number">{notifications.length}</span>
-            <span className="summary-label">Total Notifications</span>
+
+            <span className="summary-number">
+              {notifications.length}
+            </span>
+
+            <span className="summary-label">
+              Total Notifications
+            </span>
+
           </div>
+
         </div>
 
         {/* Notifications List */}
         <section className="notifications-section">
+
           <div className="notifications-section-header">
-            <h2>Recent Notifications</h2>
+
+            <h2>
+              Recent Notifications
+            </h2>
+
           </div>
 
-          <div className="notifications-list">
-            {notifications.map((notification) => (
-              <div
-                className={`notification-card ${
-                  notification.unread ? "unread" : ""
-                }`}
-                key={notification.id}
-              >
-                <div className={`notification-icon ${notification.type}`}>
-                  {notification.icon}
-                </div>
+          {loading && (
+            <div className="notification-message">
+              Loading notifications...
+            </div>
+          )}
 
-                <div className="notification-body">
-                  <div className="notification-title-row">
-                    <h3>{notification.title}</h3>
+          {!loading && error && (
+            <div className="notification-message error-message">
+              {error}
+            </div>
+          )}
 
-                    {notification.unread && (
-                      <span className="unread-dot"></span>
-                    )}
-                  </div>
-
-                  <p>{notification.message}</p>
-
-                  <span className="notification-time">
-                    {notification.time}
-                  </span>
-                </div>
-
-                <button
-                  className="notification-close"
-                  aria-label="Remove notification"
-                >
-                  <X size={17} />
-                </button>
+          {!loading &&
+            !error &&
+            notifications.length === 0 && (
+              <div className="notification-message">
+                You don't have any notifications yet.
               </div>
-            ))}
-          </div>
+            )}
+
+          {!loading &&
+            !error &&
+            notifications.length > 0 && (
+
+              <div className="notifications-list">
+
+                {notifications.map(
+                  (notification) => {
+
+                    const notificationType =
+                      getNotificationType(
+                        notification.type
+                      );
+
+                    return (
+                      <div
+                        className={`notification-card ${
+                          !notification.is_read
+                            ? "unread"
+                            : ""
+                        }`}
+                        key={notification.id}
+                      >
+
+                        <div
+                          className={`notification-icon ${notificationType}`}
+                        >
+                          {getNotificationIcon(
+                            notification.type
+                          )}
+                        </div>
+
+                        <div className="notification-body">
+
+                          <div className="notification-title-row">
+
+                            <h3>
+                              {notification.title}
+                            </h3>
+
+                            {!notification.is_read && (
+                              <span className="unread-dot"></span>
+                            )}
+
+                          </div>
+
+                          <p>
+                            {notification.message}
+                          </p>
+
+                          <span className="notification-time">
+                            {formatTime(
+                              notification.created_at
+                            )}
+                          </span>
+
+                        </div>
+
+                        {!notification.is_read && (
+                          <button
+                            className="notification-close"
+                            aria-label="Mark notification as read"
+                            onClick={() =>
+                              markAsRead(
+                                notification.id
+                              )
+                            }
+                          >
+                            <X size={17} />
+                          </button>
+                        )}
+
+                      </div>
+                    );
+                  }
+                )}
+
+              </div>
+
+            )}
+
         </section>
+
       </main>
 
       {/* Footer */}
       <footer className="notifications-footer">
+
         <p>
-          © 2026 Civiora. Connecting citizens, institutions and solutions.
+          © 2026 Civiora. Connecting citizens,
+          institutions and solutions.
         </p>
+
       </footer>
+
     </div>
   );
 }

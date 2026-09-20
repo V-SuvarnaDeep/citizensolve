@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { supabase } from "../../supabaseClient";
 import "./Register.css";
 
 function Register() {
   const [role, setRole] = useState("");
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -11,36 +13,101 @@ function Register() {
     confirmPassword: "",
   });
 
+const [loading, setLoading] = useState(false);
+const [error, setError] = useState("");
+const [success, setSuccess] = useState(false);
+
+const [showPassword, setShowPassword] = useState(false);
+const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
+
+    setError("");
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
+    setError("");
+    setSuccess(false);
+
     if (!role) {
-      alert("Please select your role.");
+      setError("Please select your role.");
       return;
     }
 
     if (formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match.");
+      setError("Passwords do not match.");
       return;
     }
+const passwordPattern =
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
 
-    console.log("Registration data:", {
-      ...formData,
-      role,
-    });
+if (!passwordPattern.test(formData.password)) {
+  setError(
+    "Password must be at least 8 characters and include uppercase, lowercase, number, and special character."
+  );
+  return;
+}
+    try {
+      setLoading(true);
+
+      const { data, error: signUpError } =
+        await supabase.auth.signUp({
+          email: formData.email,
+          password: formData.password,
+          options: {
+            data: {
+              name: formData.name,
+              role: role,
+            },
+          },
+        });
+
+      if (signUpError) {
+        throw signUpError;
+      }
+
+      if (data.user) {
+        setSuccess(
+          "Account created successfully. Please check your email to verify your account."
+        );
+      }
+
+      setFormData({
+        name: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+      });
+
+      setRole("");
+    } catch (err) {
+      console.error(err);
+
+      if (
+        err.message?.toLowerCase().includes("already registered")
+      ) {
+        setError(
+          "An account with this email already exists."
+        );
+      } else {
+        setError(
+          err.message || "Unable to create your account."
+        );
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="auth-page">
 
-      {/* Brand */}
       <div className="auth-brand">
         <Link to="/">CIVIORA</Link>
       </div>
@@ -48,7 +115,6 @@ function Register() {
       <div className="auth-container">
         <div className="auth-card">
 
-          {/* Header */}
           <div className="auth-header">
             <span>JOIN CIVIORA</span>
 
@@ -59,8 +125,22 @@ function Register() {
             </p>
           </div>
 
-          {/* Registration Form */}
-          <form className="register-form" onSubmit={handleSubmit}>
+          {error && (
+            <div className="auth-error">
+              {error}
+            </div>
+          )}
+
+          {success && (
+            <div className="auth-success">
+              {success}
+            </div>
+          )}
+
+          <form
+            className="register-form"
+            onSubmit={handleSubmit}
+          >
 
             <div className="form-group">
               <label>Full Name</label>
@@ -89,32 +169,59 @@ function Register() {
             </div>
 
             <div className="form-group">
-              <label>Password</label>
+  <label>Password</label>
 
-              <input
-                type="password"
-                name="password"
-                placeholder="Create a password"
-                value={formData.password}
-                onChange={handleChange}
-                required
-              />
-            </div>
+  <div className="password-input-wrapper">
+    <input
+      type={showPassword ? "text" : "password"}
+      name="password"
+      placeholder="Create a password"
+      value={formData.password}
+      onChange={handleChange}
+      minLength="8"
+      required
+    />
 
-            <div className="form-group">
-              <label>Confirm Password</label>
+    <button
+      type="button"
+      className="password-toggle"
+      onClick={() => setShowPassword(!showPassword)}
+    >
+      {showPassword ? "Hide" : "Show"}
+    </button>
+  </div>
 
-              <input
-                type="password"
-                name="confirmPassword"
-                placeholder="Confirm your password"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                required
-              />
-            </div>
+  <p className="password-hint">
+    Use 8+ characters with uppercase, lowercase, number and special character.
+  </p>
+</div>
 
-            {/* Role Selection */}
+                 <div className="form-group">
+  <label>Confirm Password</label>
+
+  <div className="password-input-wrapper">
+    <input
+      type={showConfirmPassword ? "text" : "password"}
+      name="confirmPassword"
+      placeholder="Confirm your password"
+      value={formData.confirmPassword}
+      onChange={handleChange}
+      minLength="8"
+      required
+    />
+
+    <button
+      type="button"
+      className="password-toggle"
+      onClick={() =>
+        setShowConfirmPassword(!showConfirmPassword)
+      }
+    >
+      {showConfirmPassword ? "Hide" : "Show"}
+    </button>
+  </div>
+</div>
+
             <div className="form-group">
               <label>Select Your Role</label>
 
@@ -122,7 +229,11 @@ function Register() {
 
                 <button
                   type="button"
-                  className={role === "citizen" ? "role-option selected" : "role-option"}
+                  className={
+                    role === "citizen"
+                      ? "role-option selected"
+                      : "role-option"
+                  }
                   onClick={() => setRole("citizen")}
                 >
                   Citizen
@@ -130,7 +241,11 @@ function Register() {
 
                 <button
                   type="button"
-                  className={role === "university" ? "role-option selected" : "role-option"}
+                  className={
+                    role === "university"
+                      ? "role-option selected"
+                      : "role-option"
+                  }
                   onClick={() => setRole("university")}
                 >
                   University
@@ -138,7 +253,11 @@ function Register() {
 
                 <button
                   type="button"
-                  className={role === "government" ? "role-option selected" : "role-option"}
+                  className={
+                    role === "government"
+                      ? "role-option selected"
+                      : "role-option"
+                  }
                   onClick={() => setRole("government")}
                 >
                   Government
@@ -146,7 +265,11 @@ function Register() {
 
                 <button
                   type="button"
-                  className={role === "company" ? "role-option selected" : "role-option"}
+                  className={
+                    role === "company"
+                      ? "role-option selected"
+                      : "role-option"
+                  }
                   onClick={() => setRole("company")}
                 >
                   Company
@@ -155,13 +278,16 @@ function Register() {
               </div>
             </div>
 
-            <button type="submit" className="register-submit">
-              Create Account
+            <button
+              type="submit"
+              className="register-submit"
+              disabled={loading}
+            >
+              {loading ? "Creating Account..." : "Create Account"}
             </button>
 
           </form>
 
-          {/* Login Link */}
           <p className="auth-footer-text">
             Already have an account?{" "}
             <Link to="/login">Sign in</Link>

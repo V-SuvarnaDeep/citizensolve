@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft, Send } from "lucide-react";
+import { supabase } from "../../supabaseClient";
 import "./SubmitProblem.css";
 
 function SubmitProblem() {
@@ -24,10 +25,13 @@ function SubmitProblem() {
       ...formData,
       [e.target.name]: e.target.value,
     });
+
+    setError("");
   };
 
   const handleImageChange = (e) => {
     setImage(e.target.files[0]);
+    setError("");
   };
 
   const handleSubmit = async (e) => {
@@ -43,6 +47,17 @@ function SubmitProblem() {
     setAiResult(null);
 
     try {
+      // Get the currently logged-in user session
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      if (!session) {
+        setError("Your session has expired. Please sign in again.");
+        setLoading(false);
+        return;
+      }
+
       const data = new FormData();
 
       data.append("title", formData.title);
@@ -54,27 +69,47 @@ function SubmitProblem() {
       data.append("additionalInfo", formData.additionalInfo);
       data.append("image", image);
 
-      const response = await fetch("http://127.0.0.1:8000/analyze", {
-        method: "POST",
-        body: data,
-      });
+      const response = await fetch(
+        "http://127.0.0.1:8000/analyze",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${session.access_token}`,
+          },
+          body: data,
+        }
+      );
 
       if (!response.ok) {
-        throw new Error("AI service failed to analyze the problem.");
+        if (response.status === 401) {
+          throw new Error(
+            "Your session is no longer valid. Please sign in again."
+          );
+        }
+
+        throw new Error(
+          "AI service failed to analyze the problem."
+        );
       }
 
       const result = await response.json();
 
       if (!result.success) {
-        throw new Error("Problem analysis was unsuccessful.");
+        throw new Error(
+          "Problem analysis was unsuccessful."
+        );
       }
 
-      console.log("Civiora AI Analysis:", result.analysis);
+      console.log(
+        "Civiora AI Analysis:",
+        result.analysis
+      );
 
       setAiResult(result.analysis);
 
     } catch (err) {
       console.error("Submission error:", err);
+
       setError(
         err.message ||
           "Something went wrong while connecting to Civiora AI."
@@ -89,23 +124,48 @@ function SubmitProblem() {
 
       {/* Navbar */}
       <nav className="submit-navbar">
-        <Link to="/citizen" className="submit-brand">
+
+        <Link
+          to="/citizen"
+          className="submit-brand"
+        >
           CIVIORA
         </Link>
 
         <div className="submit-nav-links">
-          <Link to="/citizen">Home</Link>
-          <Link to="/citizen/submit" className="active">
+
+          <Link to="/citizen">
+            Home
+          </Link>
+
+          <Link
+            to="/citizen/submit"
+            className="active"
+          >
             Submit Problem
           </Link>
-          <Link to="/citizen/problems">My Problems</Link>
-          <Link to="/citizen/notifications">Notifications</Link>
-          <Link to="/citizen/settings">Settings</Link>
+
+          <Link to="/citizen/problems">
+            My Problems
+          </Link>
+
+          <Link to="/citizen/notifications">
+            Notifications
+          </Link>
+
+          <Link to="/citizen/settings">
+            Settings
+          </Link>
+
         </div>
 
-        <Link to="/login" className="submit-logout">
+        <Link
+          to="/login"
+          className="submit-logout"
+        >
           Logout
         </Link>
+
       </nav>
 
       <main className="submit-main">
@@ -113,7 +173,10 @@ function SubmitProblem() {
         {/* Page Header */}
         <div className="submit-header">
 
-          <Link to="/citizen" className="back-link">
+          <Link
+            to="/citizen"
+            className="back-link"
+          >
             <ArrowLeft size={17} />
             Back to Dashboard
           </Link>
@@ -122,7 +185,9 @@ function SubmitProblem() {
             CIVIC PROBLEM SUBMISSION
           </span>
 
-          <h1>Tell us about the problem.</h1>
+          <h1>
+            Tell us about the problem.
+          </h1>
 
           <p>
             Describe a real-world societal problem and provide enough
@@ -132,24 +197,33 @@ function SubmitProblem() {
         </div>
 
         {/* Form */}
-        <form className="problem-form" onSubmit={handleSubmit}>
+        <form
+          className="problem-form"
+          onSubmit={handleSubmit}
+        >
 
           {/* Basic Information */}
           <section className="form-section">
 
             <div className="form-section-header">
+
               <span>01</span>
 
               <div>
-                <h2>Problem Information</h2>
+                <h2>
+                  Problem Information
+                </h2>
+
                 <p>
                   Give your problem a clear title and explain what is
                   happening.
                 </p>
               </div>
+
             </div>
 
             <div className="form-group">
+
               <label htmlFor="title">
                 Problem Title
               </label>
@@ -163,9 +237,11 @@ function SubmitProblem() {
                 onChange={handleChange}
                 required
               />
+
             </div>
 
             <div className="form-group">
+
               <label htmlFor="description">
                 Problem Description
               </label>
@@ -179,10 +255,12 @@ function SubmitProblem() {
                 onChange={handleChange}
                 required
               />
+
             </div>
 
             {/* Image Upload */}
             <div className="form-group">
+
               <label htmlFor="image">
                 Problem Image
               </label>
@@ -198,6 +276,7 @@ function SubmitProblem() {
               <small>
                 Upload a clear image showing the civic problem.
               </small>
+
             </div>
 
           </section>
@@ -206,20 +285,26 @@ function SubmitProblem() {
           <section className="form-section">
 
             <div className="form-section-header">
+
               <span>02</span>
 
               <div>
-                <h2>Problem Classification</h2>
+                <h2>
+                  Problem Classification
+                </h2>
+
                 <p>
                   Help Civiora understand the nature and importance of the
                   problem.
                 </p>
               </div>
+
             </div>
 
             <div className="form-grid">
 
               <div className="form-group">
+
                 <label htmlFor="category">
                   Category
                 </label>
@@ -231,41 +316,56 @@ function SubmitProblem() {
                   onChange={handleChange}
                   required
                 >
-                  <option value="">Select a category</option>
+                  <option value="">
+                    Select a category
+                  </option>
+
                   <option value="waste-management">
                     Waste Management
                   </option>
+
                   <option value="water">
                     Water
                   </option>
+
                   <option value="transportation">
                     Transportation
                   </option>
+
                   <option value="healthcare">
                     Healthcare
                   </option>
+
                   <option value="education">
                     Education
                   </option>
+
                   <option value="environment">
                     Environment
                   </option>
+
                   <option value="agriculture">
                     Agriculture
                   </option>
+
                   <option value="public-safety">
                     Public Safety
                   </option>
+
                   <option value="infrastructure">
                     Infrastructure
                   </option>
+
                   <option value="other">
                     Other
                   </option>
+
                 </select>
+
               </div>
 
               <div className="form-group">
+
                 <label htmlFor="location">
                   Location
                 </label>
@@ -279,6 +379,7 @@ function SubmitProblem() {
                   onChange={handleChange}
                   required
                 />
+
               </div>
 
             </div>
@@ -289,20 +390,28 @@ function SubmitProblem() {
           <section className="form-section">
 
             <div className="form-section-header">
+
               <span>03</span>
 
               <div>
-                <h2>Impact and Urgency</h2>
+
+                <h2>
+                  Impact and Urgency
+                </h2>
+
                 <p>
                   Tell us how serious the problem is and how many people may
                   be affected.
                 </p>
+
               </div>
+
             </div>
 
             <div className="form-grid">
 
               <div className="form-group">
+
                 <label htmlFor="impact">
                   Expected Impact
                 </label>
@@ -314,15 +423,32 @@ function SubmitProblem() {
                   onChange={handleChange}
                   required
                 >
-                  <option value="">Select impact level</option>
-                  <option value="low">Low</option>
-                  <option value="medium">Medium</option>
-                  <option value="high">High</option>
-                  <option value="critical">Critical</option>
+                  <option value="">
+                    Select impact level
+                  </option>
+
+                  <option value="low">
+                    Low
+                  </option>
+
+                  <option value="medium">
+                    Medium
+                  </option>
+
+                  <option value="high">
+                    High
+                  </option>
+
+                  <option value="critical">
+                    Critical
+                  </option>
+
                 </select>
+
               </div>
 
               <div className="form-group">
+
                 <label htmlFor="urgency">
                   Urgency
                 </label>
@@ -334,12 +460,28 @@ function SubmitProblem() {
                   onChange={handleChange}
                   required
                 >
-                  <option value="">Select urgency</option>
-                  <option value="low">Can wait</option>
-                  <option value="medium">Needs attention</option>
-                  <option value="high">Urgent</option>
-                  <option value="critical">Immediate attention</option>
+                  <option value="">
+                    Select urgency
+                  </option>
+
+                  <option value="low">
+                    Can wait
+                  </option>
+
+                  <option value="medium">
+                    Needs attention
+                  </option>
+
+                  <option value="high">
+                    Urgent
+                  </option>
+
+                  <option value="critical">
+                    Immediate attention
+                  </option>
+
                 </select>
+
               </div>
 
             </div>
@@ -350,21 +492,34 @@ function SubmitProblem() {
           <section className="form-section">
 
             <div className="form-section-header">
+
               <span>04</span>
 
               <div>
-                <h2>Additional Information</h2>
+
+                <h2>
+                  Additional Information
+                </h2>
+
                 <p>
                   Add any other information that could help understand the
                   problem.
                 </p>
+
               </div>
+
             </div>
 
             <div className="form-group">
+
               <label htmlFor="additionalInfo">
+
                 Additional Details
-                <span className="optional">Optional</span>
+
+                <span className="optional">
+                  Optional
+                </span>
+
               </label>
 
               <textarea
@@ -375,6 +530,7 @@ function SubmitProblem() {
                 value={formData.additionalInfo}
                 onChange={handleChange}
               />
+
             </div>
 
           </section>
@@ -397,7 +553,10 @@ function SubmitProblem() {
           {/* Submit */}
           <div className="submit-actions">
 
-            <Link to="/citizen" className="cancel-button">
+            <Link
+              to="/citizen"
+              className="cancel-button"
+            >
               Cancel
             </Link>
 
@@ -406,11 +565,13 @@ function SubmitProblem() {
               className="submit-button"
               disabled={loading}
             >
+
               <Send size={18} />
 
               {loading
                 ? "Analyzing Problem..."
                 : "Submit Problem"}
+
             </button>
 
           </div>
@@ -428,6 +589,7 @@ function SubmitProblem() {
               border: "1px solid #e1e5ea",
             }}
           >
+
             <span className="submit-label">
               CIVIORA AI ANALYSIS
             </span>
@@ -499,6 +661,7 @@ function SubmitProblem() {
                 ? aiResult.keywords.join(", ")
                 : aiResult.keywords}
             </p>
+
           </section>
         )}
 
