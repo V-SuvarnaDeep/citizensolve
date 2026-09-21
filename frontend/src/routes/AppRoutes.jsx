@@ -29,6 +29,7 @@ import UniversityMeetings from "../university/pages/Meetings";
 import UniversityNotifications from "../university/pages/Notifications";
 import UniversitySettings from "../university/pages/Settings";
 import ProblemDetails from "../university/pages/ProblemDetails";
+import SolutionSubmit from "../university/pages/SolutionSubmit";
 
 // Government pages
 import GovernmentHome from "../government/pages/Home";
@@ -38,6 +39,7 @@ import GovernmentCompanies from "../government/pages/Companies";
 import GovernmentMeetings from "../government/pages/Meetings";
 import GovernmentNotifications from "../government/pages/Notifications";
 import GovernmentSettings from "../government/pages/Settings";
+import SolutionReview from "../government/pages/SolutionReview";
 
 // Company pages
 import CompanyHome from "../company/pages/Home";
@@ -141,6 +143,14 @@ function AppRoutes() {
     </ProtectedRoute>
   }
 />
+<Route
+  path="/university/solutions/new"
+  element={
+    <ProtectedRoute role="university">
+      <SolutionSubmit />
+    </ProtectedRoute>
+  }
+/>
 
         <Route
           path="/university/solutions"
@@ -187,6 +197,14 @@ function AppRoutes() {
             </ProtectedRoute>
           }
         />
+        <Route
+  path="/government/solutions/:id"
+  element={
+    <ProtectedRoute role="government">
+      <SolutionReview />
+    </ProtectedRoute>
+  }
+/>
 
         <Route
           path="/government/solutions"

@@ -2,6 +2,7 @@ import os
 import tempfile
 
 from dotenv import load_dotenv
+
 from fastapi import (
     FastAPI,
     File,
@@ -10,7 +11,9 @@ from fastapi import (
     HTTPException,
     UploadFile
 )
+
 from fastapi.middleware.cors import CORSMiddleware
+
 from supabase import create_client
 
 from ai import analyze_problem
@@ -68,7 +71,9 @@ app.add_middleware(
 def get_current_user(
     authorization: str | None
 ):
+
     if not authorization:
+
         raise HTTPException(
             status_code=401,
             detail="Authentication required"
@@ -77,6 +82,7 @@ def get_current_user(
     if not authorization.startswith(
         "Bearer "
     ):
+
         raise HTTPException(
             status_code=401,
             detail="Invalid authorization header"
@@ -95,6 +101,7 @@ def get_current_user(
         )
 
         if not response.user:
+
             raise HTTPException(
                 status_code=401,
                 detail="Invalid authentication token"
@@ -103,6 +110,7 @@ def get_current_user(
         return response.user
 
     except HTTPException:
+
         raise
 
     except Exception:
@@ -123,6 +131,7 @@ def create_notification(
     message,
     notification_type
 ):
+
     try:
 
         (
@@ -183,12 +192,15 @@ async def analyze(
     authorization: str | None = Header(
         default=None
     )
+
 ):
 
     # Get logged-in user
+
     user = get_current_user(
         authorization
     )
+
 
     # --------------------------------------------------
     # CREATE TEMPORARY IMAGE FILE
@@ -237,6 +249,7 @@ async def analyze(
 
 
         # Add additional information
+
         result["additionalInfo"] = (
             additionalInfo
         )
@@ -266,7 +279,6 @@ async def analyze(
 
             "status": "submitted",
 
-            # Logged-in user's UUID
             "user_id": str(user.id)
         }
 
@@ -341,7 +353,6 @@ async def analyze(
         for item in ranked_problems:
 
             (
-
                 supabase
                 .table("problems")
                 .update({
@@ -437,10 +448,10 @@ def rank_all_problems():
 
 
     # Save ranks
+
     for item in ranked_problems:
 
         (
-
             supabase
             .table("problems")
             .update({
@@ -537,6 +548,7 @@ def get_citizen_problems(
 ):
 
     # Identify logged-in citizen
+
     user = get_current_user(
         authorization
     )
@@ -584,6 +596,7 @@ def get_citizen_notifications(
 ):
 
     # Identify logged-in citizen
+
     user = get_current_user(
         authorization
     )
@@ -823,7 +836,9 @@ def update_problem_status(
             response.data[0]
 
     }
-    # --------------------------------------------------
+
+
+# --------------------------------------------------
 # UNIVERSITY - GET APPROVED PROBLEMS
 # --------------------------------------------------
 
@@ -846,6 +861,7 @@ def get_university_problems():
         .execute()
 
     )
+
 
     return {
 

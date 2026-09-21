@@ -63,7 +63,7 @@
   color: #087f5b;
 }
 
-/* PAGE CONTENT */
+/* PAGE */
 
 .university-problems-content {
   max-width: 1280px;
@@ -78,7 +78,7 @@
   justify-content: space-between;
   align-items: center;
   gap: 40px;
-  margin-bottom: 40px;
+  margin-bottom: 30px;
 }
 
 .problems-label {
@@ -128,43 +128,89 @@
   font-size: 12px;
 }
 
-/* MESSAGES */
+/* STATISTICS */
 
-.problems-message,
-.problems-error,
-.empty-problems {
-  padding: 45px 25px;
+.problem-statistics {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 25px;
+}
+
+.problem-stat-card {
+  padding: 18px 20px;
   background: #ffffff;
   border: 1px solid #e0e7e3;
-  border-radius: 11px;
-  text-align: center;
+  border-radius: 10px;
 }
 
-.problems-message {
+.stat-title {
+  display: block;
   color: #687771;
+  font-size: 12px;
+  font-weight: 600;
 }
 
-.problems-error {
-  color: #b42318;
-  border-color: #f1d1cd;
-  background: #fff8f7;
+.problem-stat-card strong {
+  display: block;
+  margin-top: 8px;
+  color: #15221e;
+  font-size: 27px;
 }
 
-.empty-problems h2 {
-  margin: 0;
-  color: #1b2a25;
-  font-size: 21px;
+.problem-stat-card small {
+  display: block;
+  margin-top: 4px;
+  color: #87928d;
+  font-size: 11px;
 }
 
-.empty-problems p {
-  max-width: 550px;
-  margin: 10px auto 0;
-  color: #687771;
-  font-size: 14px;
-  line-height: 1.6;
+/* FILTERS */
+
+.problem-filters {
+  display: grid;
+  grid-template-columns: 1fr 190px 180px;
+  gap: 12px;
+  margin-bottom: 30px;
+  padding: 16px;
+  background: #ffffff;
+  border: 1px solid #e0e7e3;
+  border-radius: 10px;
 }
 
-/* PROBLEM LIST */
+.search-box input,
+.problem-filters select {
+  width: 100%;
+  height: 42px;
+  padding: 0 13px;
+  border: 1px solid #dce4e0;
+  border-radius: 7px;
+  background: #ffffff;
+  color: #35443e;
+  font-size: 13px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.search-box input:focus,
+.problem-filters select:focus {
+  border-color: #087f5b;
+}
+
+.problem-filters select {
+  cursor: pointer;
+}
+
+/* RESULTS */
+
+.results-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 12px;
+  color: #74817c;
+  font-size: 12px;
+}
 
 .problems-list {
   display: flex;
@@ -172,7 +218,7 @@
   gap: 18px;
 }
 
-/* PROBLEM CARD */
+/* CARD */
 
 .problem-card {
   padding: 25px;
@@ -304,7 +350,7 @@
   line-height: 1.6;
 }
 
-/* CARD BOTTOM */
+/* BOTTOM */
 
 .problem-card-bottom {
   display: flex;
@@ -337,13 +383,62 @@
   background: #066b4c;
 }
 
-.view-problem-button:hover {
+/* EMPTY / ERROR */
+
+.problems-message,
+.problems-error,
+.empty-problems {
+  padding: 45px 25px;
+  background: #ffffff;
+  border: 1px solid #e0e7e3;
+  border-radius: 11px;
+  text-align: center;
+}
+
+.problems-message {
+  color: #687771;
+}
+
+.problems-error {
+  color: #b42318;
+  border-color: #f1d1cd;
+  background: #fff8f7;
+}
+
+.empty-problems h2 {
+  margin: 0;
+  color: #1b2a25;
+  font-size: 21px;
+}
+
+.empty-problems p {
+  max-width: 550px;
+  margin: 10px auto 0;
+  color: #687771;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.clear-filter-button {
+  margin-top: 18px;
+  padding: 10px 17px;
+  border: none;
+  border-radius: 8px;
+  background: #087f5b;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.clear-filter-button:hover {
   background: #066b4c;
 }
 
 /* RESPONSIVE */
 
 @media (max-width: 1000px) {
+
   .university-navbar {
     gap: 20px;
   }
@@ -352,16 +447,26 @@
     gap: 15px;
   }
 
-  .problems-header h1 {
-    font-size: 32px;
+  .problem-statistics {
+    grid-template-columns: repeat(2, 1fr);
   }
 
   .problem-details {
     grid-template-columns: repeat(2, 1fr);
   }
+
+  .problem-filters {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .search-box {
+    grid-column: 1 / -1;
+  }
+
 }
 
 @media (max-width: 750px) {
+
   .university-navbar {
     height: auto;
     min-height: 72px;
@@ -393,9 +498,23 @@
   .problem-card-top {
     flex-direction: column;
   }
+
 }
 
 @media (max-width: 550px) {
+
+  .problem-statistics {
+    grid-template-columns: 1fr;
+  }
+
+  .problem-filters {
+    grid-template-columns: 1fr;
+  }
+
+  .search-box {
+    grid-column: auto;
+  }
+
   .problem-details {
     grid-template-columns: 1fr;
   }
@@ -407,13 +526,21 @@
 
   .view-problem-button {
     width: 100%;
+    text-align: center;
+    box-sizing: border-box;
   }
 
   .problems-header h1 {
     font-size: 29px;
   }
 
+  .results-heading {
+    flex-direction: column;
+    gap: 5px;
+  }
+
   .university-navbar {
     gap: 15px;
   }
+
 }

@@ -59,8 +59,6 @@ function ProblemDetails() {
   return (
     <div className="university-problem-details-page">
 
-      {/* NAVBAR */}
-
       <nav className="university-navbar">
 
         <Link
@@ -110,8 +108,6 @@ function ProblemDetails() {
 
       </nav>
 
-      {/* CONTENT */}
-
       <main className="problem-details-content">
 
         <Link
@@ -150,8 +146,6 @@ function ProblemDetails() {
           </span>
 
         </div>
-
-        {/* BASIC INFORMATION */}
 
         <section className="details-section">
 
@@ -250,8 +244,6 @@ function ProblemDetails() {
 
         </section>
 
-        {/* AI ANALYSIS */}
-
         <section className="details-section">
 
           <div className="section-title">
@@ -341,8 +333,6 @@ function ProblemDetails() {
 
         </section>
 
-        {/* VISUAL FINDINGS */}
-
         {analysis.visualFindings && (
 
           <section className="details-section">
@@ -370,8 +360,6 @@ function ProblemDetails() {
           </section>
 
         )}
-
-        {/* SOLUTION ACTION */}
 
         <section className="solution-action">
 
