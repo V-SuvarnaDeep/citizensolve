@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+import API_URL from "../../api";
 import "./Review.css";
 
 function Review() {
@@ -24,7 +25,7 @@ function Review() {
 
       try {
         const response = await axios.get(
-          `http://127.0.0.1:8000/problems/${problemId}`
+          `${API_URL}/problems/${problemId}`
         );
 
         setProblem(response.data.problem);
@@ -44,7 +45,7 @@ function Review() {
       setActionLoading(true);
 
       await axios.patch(
-        `http://127.0.0.1:8000/problems/${problemId}/status`,
+        `${API_URL}/problems/${problemId}/status`,
         {
           status: status,
         }

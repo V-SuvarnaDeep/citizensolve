@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import API_URL from "../../api";
 import "./Home.css";
 
 function Home() {
@@ -18,7 +19,7 @@ function Home() {
       setError("");
 
       const response = await axios.get(
-        "http://127.0.0.1:8000/problems"
+        `${API_URL}/problems`
       );
 
       setProblems(response.data.problems || []);

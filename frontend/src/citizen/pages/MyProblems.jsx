@@ -1,3 +1,4 @@
+import API_URL from "../../api";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {
@@ -33,7 +34,7 @@ function MyProblems() {
         }
 
         const response = await fetch(
-          "http://127.0.0.1:8000/citizen/problems",
+         `${API_URL}/citizen/problems`,
           {
             method: "GET",
             headers: {

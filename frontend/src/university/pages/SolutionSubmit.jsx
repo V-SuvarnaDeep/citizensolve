@@ -6,6 +6,7 @@ import {
 } from "react-router-dom";
 import { supabase } from "../../supabaseClient";
 import "./SolutionSubmit.css";
+import API_URL from "../../api";
 
 function SolutionSubmit() {
   const [searchParams] = useSearchParams();
@@ -36,7 +37,7 @@ function SolutionSubmit() {
 
       try {
         const response = await fetch(
-          `http://127.0.0.1:8000/problems/${problemId}`
+          `${API_URL}/problems/${problemId}`
         );
 
         if (!response.ok) {

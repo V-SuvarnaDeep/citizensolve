@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import API_URL from "../../api";
 import {
   ArrowLeft,
   Bell,
@@ -35,7 +36,7 @@ function Notifications() {
         }
 
         const response = await fetch(
-          "http://127.0.0.1:8000/citizen/notifications",
+          `${API_URL}/citizen/notifications`,
           {
             method: "GET",
             headers: {
@@ -142,7 +143,7 @@ function Notifications() {
       }
 
       const response = await fetch(
-        `http://127.0.0.1:8000/notifications/${notificationId}/read`,
+        `${API_URL}/citizen/notifications/read-all`,
         {
           method: "PATCH",
           headers: {
@@ -187,7 +188,7 @@ function Notifications() {
       }
 
       const response = await fetch(
-        "http://127.0.0.1:8000/citizen/notifications/read-all",
+        `${API_URL}/citizen/notifications/read-all`,
         {
           method: "PATCH",
           headers: {

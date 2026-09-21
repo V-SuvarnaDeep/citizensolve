@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
+import API_URL from "../../api";
 import "./Problems.css";
 
 function Problems() {
@@ -15,7 +16,7 @@ function Problems() {
     const loadProblems = async () => {
       try {
         const response = await fetch(
-          "http://127.0.0.1:8000/university/problems"
+          `${API_URL}/university/problems`
         );
 
         if (!response.ok) {

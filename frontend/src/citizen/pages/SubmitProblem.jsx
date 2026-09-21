@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import API_URL from "../../api";
 import { Link } from "react-router-dom";
 import { ArrowLeft, Send } from "lucide-react";
 import { supabase } from "../../supabaseClient";
@@ -70,7 +71,7 @@ function SubmitProblem() {
       data.append("image", image);
 
       const response = await fetch(
-        "http://127.0.0.1:8000/analyze",
+        `${API_URL}/analyze`,
         {
           method: "POST",
           headers: {
