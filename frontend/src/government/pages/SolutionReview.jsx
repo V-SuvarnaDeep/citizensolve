@@ -1,4 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { supabase } from "../../supabaseClient";
 import "./SolutionReview.css";
@@ -15,11 +19,7 @@ function SolutionReview() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    fetchSolution();
-  }, [id]);
-
-  const fetchSolution = async () => {
+  const fetchSolution = useCallback(async () => {
     try {
       setLoading(true);
       setError("");
@@ -60,7 +60,11 @@ function SolutionReview() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [id]);
+
+  useEffect(() => {
+    fetchSolution();
+  }, [fetchSolution]);
 
   const updateSolutionStatus = async (status) => {
     if (!solution) {
@@ -191,7 +195,9 @@ function SolutionReview() {
         <section className="government-review-section">
           <div className="section-heading">
             <h2>Civic Problem</h2>
-            <span>Original problem submitted by citizen</span>
+            <span>
+              Original problem submitted by citizen
+            </span>
           </div>
 
           {problem ? (
@@ -251,7 +257,9 @@ function SolutionReview() {
         <section className="government-review-section">
           <div className="section-heading">
             <h2>University Solution</h2>
-            <span>Technical proposal submitted by the university</span>
+            <span>
+              Technical proposal submitted by the university
+            </span>
           </div>
 
           <div className="solution-review-card">
@@ -309,7 +317,9 @@ function SolutionReview() {
                 }
                 disabled={submitting}
               >
-                {submitting ? "Processing..." : "Reject Solution"}
+                {submitting
+                  ? "Processing..."
+                  : "Reject Solution"}
               </button>
 
               <button
@@ -320,7 +330,9 @@ function SolutionReview() {
                 }
                 disabled={submitting}
               >
-                {submitting ? "Processing..." : "Approve Solution"}
+                {submitting
+                  ? "Processing..."
+                  : "Approve Solution"}
               </button>
             </div>
           </div>
