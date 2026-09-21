@@ -47,7 +47,17 @@ supabase = create_client(
 app = FastAPI(
     title="Civiora AI Service"
 )
+@app.middleware("http")
+async def remove_api_prefix(request, call_next):
+    if request.scope["path"].startswith("/api"):
+        request.scope["path"] = request.scope["path"][4:]
 
+        if request.scope["path"] == "":
+            request.scope["path"] = "/"
+
+    response = await call_next(request)
+
+    return response
 
 # --------------------------------------------------
 # CORS
