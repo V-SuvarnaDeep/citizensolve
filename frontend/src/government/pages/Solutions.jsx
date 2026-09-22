@@ -40,13 +40,15 @@ function Solutions() {
           ),
         ];
 
-        const { data: problemData, error: problemError } =
-          await supabase
-            .from("problems")
-            .select(
-              "id, title, category, location, priority_rank, status"
-            )
-            .in("id", problemIds);
+        const {
+          data: problemData,
+          error: problemError,
+        } = await supabase
+          .from("problems")
+          .select(
+            "id, title, category, location, priority_rank, status"
+          )
+          .in("id", problemIds);
 
         if (problemError) {
           throw problemError;
@@ -135,6 +137,8 @@ function Solutions() {
   return (
     <div className="government-solutions-page">
 
+      {/* GOVERNMENT NAVBAR */}
+
       <nav className="government-navbar">
 
         <Link
@@ -150,7 +154,14 @@ function Solutions() {
             Dashboard
           </Link>
 
-          <Link to="/government/solutions" className="active">
+          <Link to="/government">
+            Problems
+          </Link>
+
+          <Link
+            to="/government/solutions"
+            className="active"
+          >
             Solutions
           </Link>
 
@@ -180,6 +191,8 @@ function Solutions() {
         </Link>
 
       </nav>
+
+      {/* PAGE CONTENT */}
 
       <main className="government-solutions-content">
 
@@ -440,8 +453,7 @@ function Solutions() {
                           solution.status
                         )}`}
                       >
-                        {solution.status ===
-                        "submitted"
+                        {solution.status === "submitted"
                           ? "Awaiting Review"
                           : solution.status ||
                             "Submitted"}
@@ -486,8 +498,7 @@ function Solutions() {
                         </span>
 
                         <strong>
-                          #{problem.priority_rank ||
-                            "N/A"}
+                          #{problem.priority_rank || "N/A"}
                         </strong>
 
                       </div>

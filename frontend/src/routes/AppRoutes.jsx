@@ -48,6 +48,7 @@ import CompanySolutions from "../company/pages/Solutions";
 import CompanyMeetings from "../company/pages/Meetings";
 import CompanyNotifications from "../company/pages/Notifications";
 import CompanySettings from "../company/pages/Settings";
+import CompanyProfile from "./company/pages/Profile";
 
 function AppRoutes() {
   return (
@@ -278,6 +279,10 @@ function AppRoutes() {
             </ProtectedRoute>
           }
         />
+        <Route
+  path="/company/profile"
+  element={<CompanyProfile />}
+/>
 
         <Route
           path="/company/solutions"

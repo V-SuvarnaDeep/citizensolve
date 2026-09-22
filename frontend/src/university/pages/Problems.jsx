@@ -1,6 +1,6 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import API_URL from "../../api";
+import { supabase } from "../../supabaseClient";
 import "./Problems.css";
 
 function Problems() {
@@ -8,19 +8,28 @@ function Problems() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const [search, setSearch] = useState("");
-  const [category, setCategory] = useState("all");
-  const [severity, setSeverity] = useState("all");
-
   useEffect(() => {
     const loadProblems = async () => {
       try {
+        const {
+          data: { session }
+        } = await supabase.auth.getSession();
+
+        if (!session) {
+          throw new Error("University session not found");
+        }
+
         const response = await fetch(
-          `${API_URL}/university/problems`
+          "http://127.0.0.1:8000/university/problems",
+          {
+            headers: {
+              Authorization: `Bearer ${session.access_token}`
+            }
+          }
         );
 
         if (!response.ok) {
-          throw new Error("Unable to load approved problems");
+          throw new Error("Unable to load allocated problems");
         }
 
         const data = await response.json();
@@ -28,7 +37,7 @@ function Problems() {
         setProblems(data.problems || []);
       } catch (error) {
         console.error(error);
-        setError("Unable to load approved problems.");
+        setError("Unable to load allocated problems.");
       } finally {
         setLoading(false);
       }
@@ -37,86 +46,18 @@ function Problems() {
     loadProblems();
   }, []);
 
-  const categories = useMemo(() => {
-    const values = problems
-      .map((problem) => problem.category)
-      .filter(Boolean);
+  const getSeverityClass = (severity) => {
+    if (!severity) {
+      return "severity-medium";
+    }
 
-    return [...new Set(values)];
-  }, [problems]);
-
-  const filteredProblems = useMemo(() => {
-    return problems.filter((problem) => {
-      const analysis = problem.ai_analysis || {};
-
-      const searchText = search.toLowerCase();
-
-      const matchesSearch =
-        !searchText ||
-        (problem.title || "")
-          .toLowerCase()
-          .includes(searchText) ||
-        (problem.description || "")
-          .toLowerCase()
-          .includes(searchText) ||
-        (problem.location || "")
-          .toLowerCase()
-          .includes(searchText) ||
-        (problem.category || "")
-          .toLowerCase()
-          .includes(searchText);
-
-      const matchesCategory =
-        category === "all" ||
-        (problem.category || "").toLowerCase() ===
-          category.toLowerCase();
-
-      const problemSeverity = (
-        analysis.severity || ""
-      ).toLowerCase();
-
-      const matchesSeverity =
-        severity === "all" ||
-        problemSeverity === severity.toLowerCase();
-
-      return (
-        matchesSearch &&
-        matchesCategory &&
-        matchesSeverity
-      );
-    });
-  }, [problems, search, category, severity]);
-
-  const criticalCount = problems.filter(
-    (problem) =>
-      (problem.ai_analysis?.severity || "").toLowerCase() ===
-      "critical"
-  ).length;
-
-  const highCount = problems.filter(
-    (problem) =>
-      (problem.ai_analysis?.severity || "").toLowerCase() ===
-      "high"
-  ).length;
-
-  const mediumCount = problems.filter(
-    (problem) =>
-      (problem.ai_analysis?.severity || "").toLowerCase() ===
-      "medium"
-  ).length;
-
-  const getSeverityClass = (value) => {
-    const currentSeverity = (
-      value || "medium"
-    ).toLowerCase();
-
-    return `severity-${currentSeverity}`;
+    return `severity-${severity.toLowerCase()}`;
   };
 
   return (
     <div className="university-problems-page">
 
-      {/* NAVBAR */}
+      {/* UNIVERSITY NAVBAR */}
 
       <nav className="university-navbar">
 
@@ -167,11 +108,9 @@ function Problems() {
 
       </nav>
 
-      {/* CONTENT */}
+      {/* PAGE CONTENT */}
 
       <main className="university-problems-content">
-
-        {/* HEADER */}
 
         <div className="problems-header">
 
@@ -182,13 +121,13 @@ function Problems() {
             </p>
 
             <h1>
-              Government Approved Problems
+              Allocated Civic Problems
             </h1>
 
             <p>
-              Explore civic problems that have been
-              reviewed and approved by the Government
-              for university solution development.
+              Explore civic problems that have been reviewed
+              and approved by the Government and allocated
+              to your university by Civiora AI.
             </p>
 
           </div>
@@ -200,182 +139,24 @@ function Problems() {
             </strong>
 
             <span>
-              Approved Problems
+              Assigned Problems
             </span>
 
           </div>
 
         </div>
 
-        {/* STATISTICS */}
-
-        {!loading && !error && problems.length > 0 && (
-
-          <div className="problem-statistics">
-
-            <div className="problem-stat-card">
-
-              <span className="stat-title">
-                Total Approved
-              </span>
-
-              <strong>
-                {problems.length}
-              </strong>
-
-              <small>
-                Available for development
-              </small>
-
-            </div>
-
-            <div className="problem-stat-card">
-
-              <span className="stat-title">
-                Critical
-              </span>
-
-              <strong>
-                {criticalCount}
-              </strong>
-
-              <small>
-                Highest severity
-              </small>
-
-            </div>
-
-            <div className="problem-stat-card">
-
-              <span className="stat-title">
-                High
-              </span>
-
-              <strong>
-                {highCount}
-              </strong>
-
-              <small>
-                High severity
-              </small>
-
-            </div>
-
-            <div className="problem-stat-card">
-
-              <span className="stat-title">
-                Medium
-              </span>
-
-              <strong>
-                {mediumCount}
-              </strong>
-
-              <small>
-                Medium severity
-              </small>
-
-            </div>
-
-          </div>
-
-        )}
-
-        {/* FILTERS */}
-
-        {!loading && !error && problems.length > 0 && (
-
-          <div className="problem-filters">
-
-            <div className="search-box">
-
-              <input
-                type="text"
-                placeholder="Search problems, locations or categories..."
-                value={search}
-                onChange={(event) =>
-                  setSearch(event.target.value)
-                }
-              />
-
-            </div>
-
-            <select
-              value={category}
-              onChange={(event) =>
-                setCategory(event.target.value)
-              }
-            >
-
-              <option value="all">
-                All Categories
-              </option>
-
-              {categories.map((item) => (
-                <option
-                  key={item}
-                  value={item}
-                >
-                  {item}
-                </option>
-              ))}
-
-            </select>
-
-            <select
-              value={severity}
-              onChange={(event) =>
-                setSeverity(event.target.value)
-              }
-            >
-
-              <option value="all">
-                All Severity
-              </option>
-
-              <option value="critical">
-                Critical
-              </option>
-
-              <option value="high">
-                High
-              </option>
-
-              <option value="medium">
-                Medium
-              </option>
-
-              <option value="low">
-                Low
-              </option>
-
-            </select>
-
-          </div>
-
-        )}
-
-        {/* LOADING */}
-
         {loading && (
-
           <div className="problems-message">
-            Loading approved problems...
+            Loading allocated problems...
           </div>
-
         )}
-
-        {/* ERROR */}
 
         {!loading && error && (
-
           <div className="problems-error">
             {error}
           </div>
-
         )}
-
-        {/* EMPTY */}
 
         {!loading &&
           !error &&
@@ -384,74 +165,24 @@ function Problems() {
             <div className="empty-problems">
 
               <h2>
-                No approved problems yet
+                No problems assigned yet
               </h2>
 
               <p>
-                Government-approved problems will appear
-                here when they are available for university
-                teams.
+                Government-approved problems allocated
+                to your university will appear here.
               </p>
 
             </div>
-
           )}
-
-        {/* NO FILTER RESULTS */}
 
         {!loading &&
           !error &&
-          problems.length > 0 &&
-          filteredProblems.length === 0 && (
-
-            <div className="empty-problems">
-
-              <h2>
-                No matching problems
-              </h2>
-
-              <p>
-                Try changing your search or filters to
-                find other approved problems.
-              </p>
-
-              <button
-                className="clear-filter-button"
-                onClick={() => {
-                  setSearch("");
-                  setCategory("all");
-                  setSeverity("all");
-                }}
-              >
-                Clear Filters
-              </button>
-
-            </div>
-
-          )}
-
-        {/* PROBLEMS */}
-
-        {!loading &&
-          !error &&
-          filteredProblems.length > 0 && (
+          problems.length > 0 && (
 
             <div className="problems-list">
 
-              <div className="results-heading">
-
-                <span>
-                  Showing {filteredProblems.length} of{" "}
-                  {problems.length} problems
-                </span>
-
-                <span>
-                  Ordered by AI priority
-                </span>
-
-              </div>
-
-              {filteredProblems.map((problem) => {
+              {problems.map((problem) => {
 
                 const analysis =
                   problem.ai_analysis || {};
@@ -494,7 +225,6 @@ function Problems() {
                     <div className="problem-details">
 
                       <div>
-
                         <span>
                           Category
                         </span>
@@ -502,11 +232,9 @@ function Problems() {
                         <strong>
                           {problem.category || "N/A"}
                         </strong>
-
                       </div>
 
                       <div>
-
                         <span>
                           Location
                         </span>
@@ -514,11 +242,9 @@ function Problems() {
                         <strong>
                           {problem.location || "N/A"}
                         </strong>
-
                       </div>
 
                       <div>
-
                         <span>
                           Urgency
                         </span>
@@ -528,11 +254,9 @@ function Problems() {
                             problem.urgency ||
                             "N/A"}
                         </strong>
-
                       </div>
 
                       <div>
-
                         <span>
                           Affected Population
                         </span>
@@ -541,7 +265,6 @@ function Problems() {
                           {analysis.affectedPopulation ||
                             "N/A"}
                         </strong>
-
                       </div>
 
                     </div>
@@ -565,7 +288,7 @@ function Problems() {
                     <div className="problem-card-bottom">
 
                       <span className="approved-status">
-                        Government Approved
+                        AI Allocated
                       </span>
 
                       <Link

@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import API_URL from "../../api";
 import "./Home.css";
 
 function Home() {
   const navigate = useNavigate();
+
   const [problems, setProblems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -62,176 +63,270 @@ function Home() {
   return (
     <div className="government-page">
 
-      <div className="government-header">
+      {/* GOVERNMENT NAVBAR */}
 
-        <div>
-          <h1 className="government-title">
-            Government Dashboard
-          </h1>
+      <nav className="government-navbar">
 
-          <p className="government-subtitle">
-            AI-ranked civic problems requiring government attention
-          </p>
-        </div>
-
-        <button
-          className="refresh-button"
-          onClick={fetchProblems}
+        <Link
+          to="/government"
+          className="government-logo"
         >
-          Refresh
-        </button>
+          CIVIORA
+        </Link>
 
-      </div>
+        <div className="government-nav-links">
 
-      {loading && (
-        <div className="dashboard-message">
-          Loading civic problems...
+          <Link
+            to="/government"
+            className="active"
+          >
+            Dashboard
+          </Link>
+
+          <Link to="/government">
+            Problems
+          </Link>
+
+          <Link to="/government/solutions">
+            Solutions
+          </Link>
+
+          <Link to="/government/companies">
+            Companies
+          </Link>
+
+          <Link to="/government/meetings">
+            Meetings
+          </Link>
+
+          <Link to="/government/notifications">
+            Notifications
+          </Link>
+
+          <Link to="/government/settings">
+            Settings
+          </Link>
+
         </div>
-      )}
 
-      {error && (
-        <div className="dashboard-error">
-          {error}
-        </div>
-      )}
+        <Link
+          to="/login"
+          className="government-logout"
+        >
+          Logout
+        </Link>
 
-      {!loading && !error && (
-        <>
-          <div className="government-stats">
+      </nav>
 
-            <div className="stat-card">
-              <div className="stat-number">
-                {problems.length}
-              </div>
+      {/* DASHBOARD */}
 
-              <div className="stat-label">
-                Submitted Problems
-              </div>
-            </div>
+      <main className="government-content">
 
-            <div className="stat-card">
-              <div className="stat-number">
-                {criticalProblems.length}
-              </div>
+        <div className="government-header">
 
-              <div className="stat-label">
-                Critical Problems
-              </div>
-            </div>
+          <div>
 
-            <div className="stat-card">
-              <div className="stat-number">
-                {submittedProblems.length}
-              </div>
+            <p className="government-label">
+              GOVERNMENT WORKSPACE
+            </p>
 
-              <div className="stat-label">
-                Awaiting Validation
-              </div>
-            </div>
+            <h1 className="government-title">
+              Government Dashboard
+            </h1>
+
+            <p className="government-subtitle">
+              AI-ranked civic problems requiring government attention
+            </p>
 
           </div>
 
-          <div className="priority-section">
+          <button
+            className="refresh-button"
+            onClick={fetchProblems}
+          >
+            Refresh
+          </button>
 
-            <h2 className="section-title">
-              AI Priority Queue
-            </h2>
+        </div>
 
-            {problems.length === 0 ? (
-              <div className="dashboard-message">
-                No civic problems have been submitted yet.
+        {loading && (
+          <div className="dashboard-message">
+            Loading civic problems...
+          </div>
+        )}
+
+        {error && (
+          <div className="dashboard-error">
+            {error}
+          </div>
+        )}
+
+        {!loading && !error && (
+          <>
+
+            <div className="government-stats">
+
+              <div className="stat-card">
+
+                <div className="stat-number">
+                  {problems.length}
+                </div>
+
+                <div className="stat-label">
+                  Submitted Problems
+                </div>
+
               </div>
-            ) : (
-              <div className="table-wrapper">
 
-                <table className="priority-table">
+              <div className="stat-card">
 
-                  <thead>
-                    <tr>
-                      <th>Rank</th>
-                      <th>Problem</th>
-                      <th>Category</th>
-                      <th>Location</th>
-                      <th>Severity</th>
-                      <th>Urgency</th>
-                      <th>Status</th>
-                    </tr>
-                  </thead>
+                <div className="stat-number">
+                  {criticalProblems.length}
+                </div>
 
-                  <tbody>
+                <div className="stat-label">
+                  Critical Problems
+                </div>
 
-                    {problems.map((problem) => {
-                      const analysis = problem.ai_analysis || {};
+              </div>
 
-                      return (
-                        <tr
-                          key={problem.id}
+              <div className="stat-card">
+
+                <div className="stat-number">
+                  {submittedProblems.length}
+                </div>
+
+                <div className="stat-label">
+                  Awaiting Validation
+                </div>
+
+              </div>
+
+            </div>
+
+            <div className="priority-section">
+
+              <h2 className="section-title">
+                AI Priority Queue
+              </h2>
+
+              {problems.length === 0 ? (
+
+                <div className="dashboard-message">
+                  No civic problems have been submitted yet.
+                </div>
+
+              ) : (
+
+                <div className="table-wrapper">
+
+                  <table className="priority-table">
+
+                    <thead>
+
+                      <tr>
+                        <th>Rank</th>
+                        <th>Problem</th>
+                        <th>Category</th>
+                        <th>Location</th>
+                        <th>Severity</th>
+                        <th>Urgency</th>
+                        <th>Status</th>
+                      </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                      {problems.map((problem) => {
+
+                        const analysis =
+                          problem.ai_analysis || {};
+
+                        return (
+                          <tr
+                            key={problem.id}
                             onClick={() =>
-                               navigate(`/government/review?id=${problem.id}`)
-                                     }
-                              className="problem-row"
-                         >
+                              navigate(
+                                `/government/review?id=${problem.id}`
+                              )
+                            }
+                            className="problem-row"
+                          >
 
-                          <td>
-                            <span className="rank">
-                              #{problem.priority_rank}
-                            </span>
-                          </td>
+                            <td>
 
-                          <td>
-                            <strong>
-                              {problem.title}
-                            </strong>
+                              <span className="rank">
+                                #{problem.priority_rank}
+                              </span>
 
-                            <div className="problem-summary">
-                              {analysis.summary ||
-                                problem.description}
-                            </div>
-                          </td>
+                            </td>
 
-                          <td>
-                            {problem.category}
-                          </td>
+                            <td>
 
-                          <td>
-                            {problem.location}
-                          </td>
+                              <strong>
+                                {problem.title}
+                              </strong>
 
-                          <td>
-                            <span
-                              className={`severity-badge ${getSeverityClass(
-                                analysis.severity
-                              )}`}
-                            >
-                              {analysis.severity || "Unknown"}
-                            </span>
-                          </td>
+                              <div className="problem-summary">
+                                {analysis.summary ||
+                                  problem.description}
+                              </div>
 
-                          <td>
-                            {analysis.urgency ||
-                              problem.urgency}
-                          </td>
+                            </td>
 
-                          <td>
-                            <span className="status-badge">
-                              {problem.status}
-                            </span>
-                          </td>
+                            <td>
+                              {problem.category}
+                            </td>
 
-                        </tr>
-                      );
-                    })}
+                            <td>
+                              {problem.location}
+                            </td>
 
-                  </tbody>
+                            <td>
 
-                </table>
+                              <span
+                                className={`severity-badge ${getSeverityClass(
+                                  analysis.severity
+                                )}`}
+                              >
+                                {analysis.severity ||
+                                  "Unknown"}
+                              </span>
 
-              </div>
-            )}
+                            </td>
 
-          </div>
-        </>
-      )}
+                            <td>
+                              {analysis.urgency ||
+                                problem.urgency}
+                            </td>
+
+                            <td>
+
+                              <span className="status-badge">
+                                {problem.status}
+                              </span>
+
+                            </td>
+
+                          </tr>
+                        );
+                      })}
+
+                    </tbody>
+
+                  </table>
+
+                </div>
+
+              )}
+
+            </div>
+
+          </>
+        )}
+
+      </main>
 
     </div>
   );

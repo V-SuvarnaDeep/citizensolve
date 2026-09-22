@@ -1,0 +1,266 @@
+.meetings-page {
+  min-height: 100vh;
+  background: #f7f9f8;
+}
+
+/* NAVBAR */
+
+.university-navbar {
+  height: 72px;
+  padding: 0 5%;
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  background: #ffffff;
+  border-bottom: 1px solid #e3e8e5;
+  box-sizing: border-box;
+}
+
+.university-logo {
+  color: #087f5b;
+  font-size: 26px;
+  font-weight: 800;
+  text-decoration: none;
+  letter-spacing: 1px;
+}
+
+.university-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  flex: 1;
+}
+
+.university-nav-links a {
+  color: #4f5d58;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.university-nav-links a:hover {
+  color: #087f5b;
+}
+
+.university-nav-links a.active {
+  color: #087f5b;
+  font-weight: 700;
+}
+
+.university-logout {
+  padding: 10px 18px;
+  border: 1px solid #d9e1dd;
+  border-radius: 8px;
+  color: #40504a;
+  background: #ffffff;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.university-logout:hover {
+  border-color: #087f5b;
+  color: #087f5b;
+}
+
+/* MEETINGS */
+
+.meetings-content {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 60px 5% 80px;
+}
+
+.meetings-header {
+  margin-bottom: 45px;
+}
+
+.meetings-label {
+  margin: 0 0 14px;
+  color: #087f5b;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+}
+
+.meetings-header h1 {
+  margin: 0;
+  color: #15221e;
+  font-size: 44px;
+  line-height: 1.15;
+  letter-spacing: -1px;
+}
+
+.meetings-description {
+  max-width: 700px;
+  margin: 18px 0 0;
+  color: #64736d;
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+/* EMPTY STATE */
+
+.meetings-empty-card {
+  background: #ffffff;
+  border: 1px solid #e0e7e3;
+  border-radius: 11px;
+  padding: 55px 45px;
+  text-align: center;
+}
+
+.meetings-empty-icon {
+  width: 70px;
+  height: 70px;
+  margin: 0 auto 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 15px;
+  background: #e8f5ef;
+
+  font-size: 32px;
+}
+
+.meetings-empty-card h2 {
+  margin: 0 0 12px;
+  color: #15221e;
+  font-size: 24px;
+}
+
+.meetings-empty-card > p {
+  max-width: 700px;
+  margin: 0 auto;
+  color: #64736d;
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+/* WORKFLOW */
+
+.meeting-flow {
+  margin-top: 50px;
+
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.flow-step {
+  width: 205px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.flow-step span {
+  width: 44px;
+  height: 44px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #087f5b;
+  color: #ffffff;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  margin-bottom: 13px;
+}
+
+.flow-step strong {
+  margin-bottom: 7px;
+
+  color: #1b2a25;
+  font-size: 14px;
+}
+
+.flow-step small {
+  max-width: 190px;
+
+  color: #6c7b75;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.flow-line {
+  width: 65px;
+  height: 2px;
+
+  background: #d9e5df;
+
+  margin-top: 21px;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 1000px) {
+
+  .university-navbar {
+    gap: 20px;
+  }
+
+  .university-nav-links {
+    gap: 15px;
+  }
+
+  .meetings-header h1 {
+    font-size: 38px;
+  }
+}
+
+@media (max-width: 750px) {
+
+  .university-navbar {
+    height: auto;
+    min-height: 72px;
+    padding: 16px 5%;
+    flex-wrap: wrap;
+  }
+
+  .university-nav-links {
+    order: 3;
+    width: 100%;
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+
+  .meetings-content {
+    padding-top: 40px;
+  }
+
+  .meeting-flow {
+    flex-wrap: wrap;
+    gap: 30px;
+  }
+
+  .flow-line {
+    display: none;
+  }
+}
+
+@media (max-width: 550px) {
+
+  .meetings-header h1 {
+    font-size: 32px;
+  }
+
+  .university-navbar {
+    gap: 15px;
+  }
+
+  .meetings-empty-card {
+    padding: 40px 20px;
+  }
+
+  .flow-step {
+    width: 100%;
+  }
+}

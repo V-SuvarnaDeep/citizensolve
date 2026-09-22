@@ -1,64 +1,213 @@
 .review-page {
   min-height: 100vh;
+
   background: #f5f7fb;
-  padding: 32px;
+
   font-family: Arial, sans-serif;
 }
 
+/* GOVERNMENT NAVBAR */
+
+.government-navbar {
+  height: 72px;
+
+  padding: 0 5%;
+
+  display: flex;
+  align-items: center;
+
+  gap: 40px;
+
+  background: #ffffff;
+
+  border-bottom: 1px solid #e2e6ec;
+
+  box-sizing: border-box;
+}
+
+.government-logo {
+  color: #0b7a53;
+  font-size: 26px;
+  font-weight: 800;
+  text-decoration: none;
+  letter-spacing: 1px;
+}
+
+.government-nav-links {
+  display: flex;
+  align-items: center;
+
+  gap: 28px;
+
+  flex: 1;
+}
+
+.government-nav-links a {
+  color: #4b5563;
+
+  text-decoration: none;
+
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.government-nav-links a:hover {
+  color:  #087f5b;
+}
+
+.government-nav-links a.active {
+  color: #0b7a53;
+
+  font-weight: 700;
+}
+
+.government-logout {
+  padding: 10px 18px;
+
+  border: 1px solid #d7dce4;
+
+  border-radius: 8px;
+
+  color: #374151;
+
+  background: #ffffff;
+
+  text-decoration: none;
+
+  font-size: 14px;
+
+  font-weight: 500;
+}
+
+.government-logout:hover {
+  border-color: #2563eb;
+
+  color: #2563eb;
+}
+
+/* MAIN CONTENT */
+
+.review-content {
+  max-width: 1280px;
+
+  margin: 0 auto;
+
+  padding: 45px 5% 70px;
+}
+
+/* HEADER */
+
 .review-header {
   display: flex;
+
   justify-content: space-between;
+
   align-items: flex-start;
+
+  gap: 30px;
+
   margin-bottom: 30px;
-}
-
-.review-header h1 {
-  margin: 18px 0 6px;
-  color: #111827;
-}
-
-.review-header p {
-  margin: 0;
-  color: #6b7280;
-}
-
-.review-rank {
-  background: #eff6ff;
-  color: #1d4ed8;
-  padding: 10px 16px;
-  border-radius: 8px;
-  font-weight: bold;
 }
 
 .back-button {
   border: none;
+
   background: transparent;
+
   color: #2563eb;
+
   cursor: pointer;
+
   font-size: 14px;
+
   padding: 0;
+
+  margin-bottom: 20px;
 }
+
+.back-button:hover {
+  color: #1d4ed8;
+}
+
+.review-label {
+  margin: 0 0 10px;
+
+  color: #2563eb;
+
+  font-size: 12px;
+
+  font-weight: 800;
+
+  letter-spacing: 1.5px;
+}
+
+.review-header h1 {
+  margin: 0 0 7px;
+
+  color: #111827;
+
+  font-size: 34px;
+}
+
+.review-header p {
+  margin: 0;
+
+  color: #6b7280;
+
+  line-height: 1.5;
+}
+
+.review-rank {
+  background: #eff6ff;
+
+  color: #1d4ed8;
+
+  padding: 11px 16px;
+
+  border-radius: 8px;
+
+  font-size: 14px;
+
+  font-weight: 700;
+
+  white-space: nowrap;
+}
+
+/* REVIEW CARDS */
 
 .review-grid {
   display: grid;
+
   grid-template-columns: 1fr 1fr;
-  gap: 24px;
+
+  gap: 22px;
 }
 
 .review-card {
-  background: white;
-  padding: 24px;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  background: #ffffff;
+
+  padding: 25px;
+
+  border: 1px solid #e2e6ec;
+
+  border-radius: 11px;
+
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
 .review-card h2 {
-  margin-top: 0;
+  margin: 0 0 18px;
+
   color: #111827;
+
+  font-size: 20px;
 }
 
+/* PROBLEM DETAILS */
+
 .detail-item {
-  padding: 14px 0;
+  padding: 15px 0;
+
   border-bottom: 1px solid #e5e7eb;
 }
 
@@ -70,131 +219,287 @@
 .analysis-item span,
 .ai-summary span {
   display: block;
+
   font-size: 12px;
+
   color: #6b7280;
-  margin-bottom: 6px;
+
+  margin-bottom: 7px;
 }
 
 .detail-item strong {
   color: #111827;
+
+  font-size: 14px;
 }
 
 .detail-item p {
   margin: 0;
+
   color: #374151;
-  line-height: 1.5;
+
+  line-height: 1.6;
+
+  font-size: 14px;
 }
+
+/* AI ANALYSIS */
 
 .analysis-grid {
   display: grid;
+
   grid-template-columns: 1fr 1fr;
-  gap: 14px;
+
+  gap: 13px;
 }
 
 .analysis-item {
-  background: #f9fafb;
-  padding: 14px;
+  background: #f8fafc;
+
+  padding: 15px;
+
+  border: 1px solid #edf0f3;
+
   border-radius: 8px;
 }
 
 .analysis-item strong {
   text-transform: capitalize;
+
   color: #111827;
+
+  font-size: 14px;
 }
 
 .ai-summary {
   margin-top: 20px;
+
   padding-top: 18px;
+
   border-top: 1px solid #e5e7eb;
 }
 
 .ai-summary p {
   margin: 0;
+
   color: #374151;
-  line-height: 1.5;
+
+  line-height: 1.6;
+
+  font-size: 14px;
 }
 
+/* GOVERNMENT DECISION */
+
 .decision-card {
-  margin-top: 24px;
-  background: white;
-  padding: 24px;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  margin-top: 22px;
+
+  background: #ffffff;
+
+  padding: 25px;
+
+  border: 1px solid #e2e6ec;
+
+  border-radius: 11px;
+
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+
   display: flex;
+
   justify-content: space-between;
+
   align-items: center;
-  gap: 20px;
+
+  gap: 25px;
+}
+
+.decision-label {
+  margin: 0 0 8px;
+
+  color: #2563eb;
+
+  font-size: 11px;
+
+  font-weight: 800;
+
+  letter-spacing: 1.2px;
 }
 
 .decision-card h2 {
-  margin: 0 0 6px;
+  margin: 0 0 7px;
+
   color: #111827;
+
+  font-size: 20px;
 }
 
 .decision-card p {
   margin: 0;
+
   color: #6b7280;
+
+  line-height: 1.5;
+
+  font-size: 14px;
 }
 
 .decision-buttons {
   display: flex;
+
   gap: 12px;
+
+  flex-shrink: 0;
 }
 
 .reject-button,
 .approve-button {
   border: none;
+
   padding: 11px 18px;
+
   border-radius: 8px;
+
   cursor: pointer;
+
   font-weight: 600;
+
+  font-size: 14px;
 }
 
 .reject-button {
   background: #fee2e2;
+
   color: #b91c1c;
+}
+
+.reject-button:hover {
+  background: #fecaca;
 }
 
 .approve-button {
   background: #2563eb;
+
   color: white;
+}
+
+.approve-button:hover {
+  background: #1d4ed8;
 }
 
 .reject-button:disabled,
 .approve-button:disabled {
   opacity: 0.6;
+
   cursor: not-allowed;
 }
 
-.review-message,
-.review-error {
-  background: white;
-  padding: 30px;
-  border-radius: 12px;
+/* LOADING / ERROR */
+
+.review-message {
+  background: #ffffff;
+
+  padding: 35px;
+
+  border-radius: 11px;
+
   text-align: center;
+
+  color: #6b7280;
+
+  border: 1px solid #e2e6ec;
 }
 
 .review-error {
+  background: #fee2e2;
+
   color: #b91c1c;
-  margin-bottom: 20px;
+
+  padding: 18px;
+
+  border-radius: 9px;
+
+  margin-bottom: 18px;
+
+  border: 1px solid #fecaca;
 }
 
-@media (max-width: 800px) {
+/* RESPONSIVE */
+
+@media (max-width: 1000px) {
+
+  .government-navbar {
+    gap: 20px;
+  }
+
+  .government-nav-links {
+    gap: 15px;
+  }
+
   .review-grid {
     grid-template-columns: 1fr;
   }
 
+}
+
+@media (max-width: 750px) {
+
+  .government-navbar {
+    height: auto;
+
+    min-height: 72px;
+
+    padding: 16px 5%;
+
+    flex-wrap: wrap;
+  }
+
+  .government-nav-links {
+    order: 3;
+
+    width: 100%;
+
+    overflow-x: auto;
+
+    padding-bottom: 4px;
+  }
+
+  .review-content {
+    padding-top: 40px;
+  }
+
   .review-header {
     flex-direction: column;
-    gap: 15px;
   }
 
   .decision-card {
     flex-direction: column;
+
     align-items: flex-start;
   }
 
   .decision-buttons {
     width: 100%;
   }
+
+  .reject-button,
+  .approve-button {
+    flex: 1;
+  }
+
+}
+
+@media (max-width: 550px) {
+
+  .analysis-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .review-card {
+    padding: 20px;
+  }
+
+  .review-header h1 {
+    font-size: 29px;
+  }
+
 }
