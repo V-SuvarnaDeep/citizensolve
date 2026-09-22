@@ -11,8 +11,9 @@ function Settings() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    loadProfile();
-  }, []);
+  loadProfile();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+}, []);
 
   const loadProfile = async () => {
     try {
