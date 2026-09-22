@@ -312,7 +312,7 @@ async def analyze(
         # CREATE CITIZEN NOTIFICATION
         # --------------------------------------------------
 
-        create_notification(
+        (
 
             user.id,
 
@@ -787,6 +787,95 @@ def get_problem(
 
 
 # --------------------------------------------------
+# MATCH ONE UNIVERSITY TO PROBLEM
+# --------------------------------------------------
+
+def match_university(problem):
+
+    analysis = problem.get("ai_analysis") or {}
+
+    required_skills = analysis.get("requiredSkills", [])
+    keywords = analysis.get("keywords", [])
+
+    if isinstance(required_skills, str):
+        required_skills = [required_skills]
+
+    if isinstance(keywords, str):
+        keywords = [keywords]
+
+    problem_words = []
+
+    problem_words.extend(required_skills)
+    problem_words.extend(keywords)
+    problem_words.append(problem.get("category", ""))
+    problem_words.append(problem.get("title", ""))
+    problem_words.append(problem.get("description", ""))
+
+    problem_text = " ".join(
+        str(word).lower()
+        for word in problem_words
+    )
+
+    universities_response = (
+        supabase
+        .table("universities")
+        .select("*")
+        .execute()
+    )
+
+    universities = universities_response.data
+
+    if not universities:
+        return None
+
+    matches = []
+
+    for university in universities:
+
+        university_words = []
+
+        university_words.extend(
+            university.get("departments") or []
+        )
+
+        university_words.extend(
+            university.get("expertise") or []
+        )
+
+        university_words.extend(
+            university.get("technologies") or []
+        )
+
+        university_words.extend(
+            university.get("capabilities") or []
+        )
+
+        score = 0
+        matched_items = []
+
+        for word in university_words:
+
+            word_text = str(word).lower().strip()
+
+            if word_text and word_text in problem_text:
+                score += 1
+                matched_items.append(str(word))
+
+        matches.append({
+            "university": university,
+            "score": score,
+            "matched_items": matched_items
+        })
+
+    matches.sort(
+        key=lambda item: item["score"],
+        reverse=True
+    )
+
+    return matches[0]
+
+
+# --------------------------------------------------
 # GOVERNMENT - UPDATE PROBLEM STATUS
 # --------------------------------------------------
 
@@ -804,7 +893,6 @@ def update_problem_status(
     new_status = status_data.get(
         "status"
     )
-
 
     if new_status not in [
         "approved",
@@ -837,29 +925,195 @@ def update_problem_status(
 
     )
 
+    if not response.data:
+
+        raise HTTPException(
+            status_code=404,
+            detail="Problem not found"
+        )
+
+
+    updated_problem = response.data[0]
+
+    # --------------------------------------------------
+    # SELECT ONE UNIVERSITY AFTER GOVERNMENT APPROVAL
+    # --------------------------------------------------
+
+    if new_status == "approved":
+
+        match = match_university(
+            updated_problem
+        )
+
+        if match:
+
+            university = match["university"]
+
+            university_id = university["id"]
+            profile_id = university["profile_id"]
+
+            match_score = match["score"]
+
+            matched_items = match["matched_items"]
+
+            if matched_items:
+                match_reason = (
+                    "Matched based on: "
+                    + ", ".join(matched_items)
+                )
+            else:
+                match_reason = (
+                    "Selected as the best available university "
+                    "for this civic problem."
+                )
+
+            # --------------------------------------------------
+            # SAVE ONE UNIVERSITY MATCH
+            # --------------------------------------------------
+
+            existing_match = (
+
+                supabase
+                .table("problem_university_matches")
+                .select("id")
+                .eq(
+                    "problem_id",
+                    problem_id
+                )
+                .execute()
+
+            )
+
+            if not existing_match.data:
+
+                (
+                    supabase
+                    .table("problem_university_matches")
+                    .insert({
+
+                        "problem_id":
+                            problem_id,
+
+                        "university_id":
+                            university_id,
+
+                        "match_score":
+                            match_score,
+
+                        "match_rank":
+                            1,
+
+                        "match_reason":
+                            match_reason,
+
+                        "status":
+                            "allocated"
+
+                    })
+                    .execute()
+                )
+
+            # --------------------------------------------------
+            # NOTIFY SELECTED UNIVERSITY
+            # --------------------------------------------------
+
+            create_notification(
+                profile_id,
+
+                "New Civic Problem Assigned",
+
+                f'The problem "{updated_problem["title"]}" has been assigned to {university.get("university_name", "your university")} for solution development.',
+
+                "assignment"
+
+            )
 
     return {
 
         "success": True,
 
         "problem":
-            response.data[0]
+            updated_problem
 
     }
 
 
+
 # --------------------------------------------------
-# UNIVERSITY - GET APPROVED PROBLEMS
+# UNIVERSITY - GET ALLOCATED PROBLEMS
 # --------------------------------------------------
 
 @app.get("/university/problems")
-def get_university_problems():
+def get_university_problems(
+    authorization: str | None = Header(
+        default=None
+    )
+):
 
-    response = (
+    # Get logged-in university user
+    user = get_current_user(
+        authorization
+    )
 
+    # Find university record
+    university_response = (
+        supabase
+        .table("universities")
+        .select("*")
+        .eq(
+            "profile_id",
+            str(user.id)
+        )
+        .single()
+        .execute()
+    )
+
+    university = university_response.data
+
+    if not university:
+        return {
+            "success": True,
+            "problems": []
+        }
+
+    # Find problems allocated to this university
+    matches_response = (
+        supabase
+        .table("problem_university_matches")
+        .select("problem_id")
+        .eq(
+            "university_id",
+            university["id"]
+        )
+        .eq(
+            "status",
+            "allocated"
+        )
+        .execute()
+    )
+
+    matches = matches_response.data
+
+    if not matches:
+        return {
+            "success": True,
+            "problems": []
+        }
+
+    problem_ids = [
+        match["problem_id"]
+        for match in matches
+    ]
+
+    # Get only allocated problems
+    problems_response = (
         supabase
         .table("problems")
         .select("*")
+        .in_(
+            "id",
+            problem_ids
+        )
         .eq(
             "status",
             "approved"
@@ -869,15 +1123,10 @@ def get_university_problems():
             desc=False
         )
         .execute()
-
     )
 
-
     return {
-
         "success": True,
-
         "problems":
-            response.data
-
+            problems_response.data
     }
