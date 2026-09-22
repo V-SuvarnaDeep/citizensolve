@@ -1,234 +1,398 @@
-/* =========================
-   LOGIN PAGE
-   ========================= */
+/* =========================================
+   CIVIORA LOGIN PAGE
+   UI ONLY
+   ========================================= */
 
 .auth-page {
   min-height: 100vh;
-  background: #f7f8f6;
-  color: #14201a;
-  padding: 30px 20px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+
+  background: #f5e8ec;
+
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Oxygen,
+    Ubuntu,
+    Cantarell,
+    "Fira Sans",
+    "Droid Sans",
+    "Helvetica Neue",
+    sans-serif;
+
+  color: #222;
 }
 
-/* Brand */
+
+/* =========================================
+   CIVIORA BRAND
+   ========================================= */
 
 .auth-brand {
-  width: 100%;
-  max-width: 1100px;
-  margin: 0 auto;
+  position: absolute;
+  top: 24px;
+  left: 7%;
+  z-index: 10;
 }
 
 .auth-brand a {
+  color: #222;
   text-decoration: none;
-  color: #0b7a53;
-  font-size: 24px;
+
+  font-size: 21px;
   font-weight: 800;
-  letter-spacing: 2px;
+  letter-spacing: 1.8px;
 }
 
-/* Container */
+
+/* =========================================
+   LOGIN CONTAINER
+   ========================================= */
 
 .auth-container {
-  min-height: calc(100vh - 90px);
+  min-height: 100vh;
+
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 40px 0;
+
+  padding: 30px 20px;
 }
 
-/* Card */
+
+/* =========================================
+   LOGIN CARD
+   ========================================= */
 
 .auth-card {
   width: 100%;
-  max-width: 520px;
+  max-width: 360px;
+
+  padding: 50px 28px 32px;
+
   background: #ffffff;
-  border: 1px solid #e1e7e3;
-  border-radius: 18px;
-  padding: 42px;
-  box-shadow: 0 12px 35px rgba(20, 32, 26, 0.08);
+
+  border: none;
+  border-radius: 17px;
+
+  box-shadow:
+    0 20px 45px rgba(85, 55, 60, 0.18),
+    0 6px 16px rgba(85, 55, 60, 0.08);
 }
 
-/* Header */
+
+/* =========================================
+   HEADER
+   ========================================= */
 
 .auth-header {
   margin-bottom: 30px;
+  text-align: center;
 }
 
 .auth-header > span {
-  display: block;
-  margin-bottom: 10px;
-  color: #0b7a53;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 1.5px;
+  display: none;
 }
 
 .auth-header h1 {
-  margin: 0 0 10px;
-  font-size: 32px;
+  margin: 0;
+
+  color: #181818;
+
+  font-size: 28px;
+  font-weight: 800;
+
   line-height: 1.2;
-  color: #14201a;
+  letter-spacing: -0.8px;
 }
 
 .auth-header p {
-  margin: 0;
-  color: #68736d;
-  font-size: 15px;
-  line-height: 1.6;
+  max-width: 230px;
+
+  margin: 7px auto 0;
+
+  color: #777;
+
+  font-size: 10px;
+  line-height: 1.5;
 }
 
-/* Form */
+
+/* =========================================
+   ERROR MESSAGE
+   ========================================= */
+
+.auth-error {
+  margin-bottom: 12px;
+
+  padding: 9px 11px;
+
+  border-radius: 7px;
+
+  background: #fff0ed;
+
+  border: 1px solid #f4c9c0;
+
+  color: #d94428;
+
+  font-size: 10px;
+
+  line-height: 1.4;
+
+  text-align: center;
+}
+
+
+/* =========================================
+   LOGIN FORM
+   ========================================= */
 
 .login-form {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 10px;
 }
+
+
+/* =========================================
+   FORM GROUP
+   ========================================= */
 
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
 }
 
 .form-group label {
-  color: #26332c;
-  font-size: 14px;
+  color: #444;
+
+  font-size: 10px;
   font-weight: 600;
 }
 
-/* Inputs */
 
-.form-group input {
+/* =========================================
+   EMAIL & PASSWORD INPUTS
+   ========================================= */
+
+.form-group input[type="email"],
+.form-group input[type="password"] {
   width: 100%;
+  height: 40px;
+
   box-sizing: border-box;
-  padding: 13px 14px;
-  border: 1px solid #d5ddd8;
-  border-radius: 9px;
-  background: #ffffff;
-  color: #14201a;
-  font-size: 14px;
+
+  padding: 0 12px;
+
+  border: none;
+  border-radius: 7px;
+
   outline: none;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+  background: #fceceb;
+
+  color: #333;
+
+  font-size: 11px;
+
+  transition: all 0.2s ease;
 }
 
-.form-group input::placeholder {
-  color: #9aa49f;
+.form-group input[type="email"]::placeholder,
+.form-group input[type="password"]::placeholder {
+  color: #8b8b8b;
 }
 
-.form-group input:focus {
-  border-color: #0b7a53;
-  box-shadow: 0 0 0 3px rgba(11, 122, 83, 0.1);
+.form-group input[type="email"]:focus,
+.form-group input[type="password"]:focus {
+  background: #fbe5e3;
+
+  box-shadow:
+    0 0 0 2px rgba(244, 81, 43, 0.12);
 }
 
-/* Login Options */
+
+/* =========================================
+   REMEMBER + FORGOT PASSWORD
+   ========================================= */
 
 .login-options {
   display: flex;
-  justify-content: space-between;
+
   align-items: center;
-  margin-top: -5px;
+  justify-content: space-between;
+
+  margin-top: 2px;
 }
 
 .remember-me {
   display: flex;
+
   align-items: center;
-  gap: 8px;
-  color: #68736d;
-  font-size: 13px;
+
+  gap: 5px;
+
+  color: #777;
+
+  font-size: 9px;
+
   cursor: pointer;
 }
 
 .remember-me input {
-  width: 15px;
-  height: 15px;
-  accent-color: #0b7a53;
+  width: 11px;
+  height: 11px;
+
+  margin: 0;
+
+  accent-color: #f4512b;
+
+  cursor: pointer;
 }
 
 .forgot-password {
-  border: none;
-  background: none;
-  padding: 0;
-  color: #0b7a53;
-  font-size: 13px;
+  color: #e9573d;
+
+  font-size: 9px;
   font-weight: 600;
-  cursor: pointer;
-}
 
-.forgot-password:hover {
-  text-decoration: underline;
-}
-
-/* Submit Button */
-
-.login-submit {
-  width: 100%;
-  padding: 14px;
-  margin-top: 4px;
-  border: none;
-  border-radius: 9px;
-  background: #0b7a53;
-  color: #ffffff;
-  font-size: 15px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: background 0.2s ease, transform 0.2s ease;
-}
-
-.login-submit:hover {
-  background: #096744;
-  transform: translateY(-1px);
-}
-
-/* Footer */
-
-.auth-footer-text {
-  margin: 25px 0 0;
-  text-align: center;
-  color: #68736d;
-  font-size: 14px;
-}
-
-.auth-footer-text a {
-  color: #0b7a53;
-  font-weight: 700;
   text-decoration: none;
 }
 
-.auth-footer-text a:hover {
+.forgot-password:hover {
+  color: #d94328;
   text-decoration: underline;
 }
 
-/* Mobile */
 
-@media (max-width: 600px) {
-  .auth-page {
-    padding: 20px 15px;
-  }
+/* =========================================
+   SIGN IN BUTTON
+   ========================================= */
 
-  .auth-card {
-    padding: 28px 22px;
-    border-radius: 14px;
-  }
+.login-submit {
+  width: 100%;
+  height: 40px;
 
-  .auth-header h1 {
-    font-size: 27px;
-  }
+  margin-top: 7px;
 
-  .login-options {
-    align-items: flex-start;
-    gap: 10px;
-  }
+  border: none;
+  border-radius: 7px;
+
+  background: #f4512b;
+
+  color: white;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: all 0.2s ease;
 }
-.auth-error {
-  margin-bottom: 20px;
-  padding: 12px 14px;
-  border-radius: 8px;
-  background: #fff1f1;
-  color: #c62828;
-  font-size: 14px;
+
+.login-submit:hover:not(:disabled) {
+  background: #e9431f;
+
+  transform: translateY(-1px);
+
+  box-shadow:
+    0 5px 12px rgba(244, 81, 43, 0.22);
+}
+
+.login-submit:active:not(:disabled) {
+  transform: translateY(0);
 }
 
 .login-submit:disabled {
-  opacity: 0.6;
+  opacity: 0.7;
   cursor: not-allowed;
+}
+
+
+/* =========================================
+   CREATE ACCOUNT
+   ========================================= */
+
+.auth-footer-text {
+  margin: 27px 0 0;
+
+  text-align: center;
+
+  color: #777;
+
+  font-size: 9px;
+
+  line-height: 1.5;
+}
+
+.auth-footer-text a {
+  color: #e9573d;
+
+  font-weight: 700;
+
+  text-decoration: none;
+
+  border-bottom: 1px solid #e9573d;
+
+  padding-bottom: 2px;
+}
+
+.auth-footer-text a:hover {
+  color: #d94328;
+}
+
+
+/* =========================================
+   MOBILE
+   ========================================= */
+
+@media (max-width: 600px) {
+
+  .auth-brand {
+    display: none;
+  }
+
+  .auth-container {
+    min-height: 100vh;
+
+    padding: 20px;
+  }
+
+  .auth-card {
+    max-width: 340px;
+
+    padding: 45px 24px 30px;
+
+    border-radius: 17px;
+  }
+
+  .auth-header h1 {
+    font-size: 26px;
+  }
+
+  .auth-header p {
+    font-size: 10px;
+  }
+}
+
+
+/* =========================================
+   VERY SMALL PHONES
+   ========================================= */
+
+@media (max-width: 380px) {
+
+  .auth-card {
+    padding-left: 21px;
+    padding-right: 21px;
+  }
+
+  .auth-header h1 {
+    font-size: 24px;
+  }
 }
