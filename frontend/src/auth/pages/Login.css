@@ -213,7 +213,7 @@
   background: #fbe5e3;
 
   box-shadow:
-    0 0 0 2px rgba(244, 81, 43, 0.12);
+    0 0 0 2px rgba(11, 122, 83, 0.12);
 }
 
 
@@ -250,13 +250,13 @@
 
   margin: 0;
 
-  accent-color: #f4512b;
+  accent-color: #0b7a53;
 
   cursor: pointer;
 }
 
 .forgot-password {
-  color: #e9573d;
+  color: #0b7a53;
 
   font-size: 9px;
   font-weight: 600;
@@ -265,7 +265,7 @@
 }
 
 .forgot-password:hover {
-  color: #d94328;
+  color: #086443;
   text-decoration: underline;
 }
 
@@ -283,7 +283,7 @@
   border: none;
   border-radius: 7px;
 
-  background: #f4512b;
+  background: #0b7a53;
 
   color: white;
 
@@ -296,12 +296,12 @@
 }
 
 .login-submit:hover:not(:disabled) {
-  background: #e9431f;
+  background: #086443;
 
   transform: translateY(-1px);
 
   box-shadow:
-    0 5px 12px rgba(244, 81, 43, 0.22);
+    0 5px 12px rgba(11, 122, 83, 0.22);
 }
 
 .login-submit:active:not(:disabled) {
@@ -331,19 +331,19 @@
 }
 
 .auth-footer-text a {
-  color: #e9573d;
+  color: #0b7a53;
 
   font-weight: 700;
 
   text-decoration: none;
 
-  border-bottom: 1px solid #e9573d;
+  border-bottom: 1px solid #0b7a53;
 
   padding-bottom: 2px;
 }
 
 .auth-footer-text a:hover {
-  color: #d94328;
+  color: #086443;
 }
 
 
