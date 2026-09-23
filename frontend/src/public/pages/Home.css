@@ -1,14 +1,28 @@
-/* =========================
+/* =========================================
    CIVIORA HOME PAGE
-   ========================= */
-
-/* ---------- Main Page ---------- */
+   UI ONLY
+   Core React / Routing untouched
+   ========================================= */
 
 .public-home {
   min-height: 100vh;
   overflow: hidden;
-  background: #f7f8f6;
-  color: #14201a;
+
+  background: #f5e8ec;
+  color: #222;
+
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Oxygen,
+    Ubuntu,
+    Cantarell,
+    "Fira Sans",
+    "Droid Sans",
+    "Helvetica Neue",
+    sans-serif;
 }
 
 .public-home a {
@@ -17,19 +31,22 @@
 }
 
 
-/* =========================
+/* =========================================
    NAVBAR
-   ========================= */
+   ========================================= */
 
 .navbar {
   height: 76px;
+
   padding: 0 7%;
+
   display: flex;
   align-items: center;
   justify-content: space-between;
 
-  background: rgba(247, 248, 246, 0.94);
-  border-bottom: 1px solid #e3e7e2;
+  background: rgba(255, 255, 255, 0.94);
+
+  border-bottom: 1px solid #eadcdf;
 
   position: relative;
   z-index: 10;
@@ -39,6 +56,8 @@
   font-size: 25px;
   font-weight: 800;
   letter-spacing: 2px;
+
+  color: #222;
 }
 
 .navbar-links {
@@ -47,7 +66,8 @@
 
   font-size: 14px;
   font-weight: 500;
-  color: #526058;
+
+  color: #666;
 }
 
 .navbar-links a:hover,
@@ -66,55 +86,68 @@
   font-weight: 600;
 }
 
-.register-button {
+
+/* =========================================
+   GREEN BUTTON
+   ========================================= */
+
+.register-button,
+.primary-button {
   display: inline-flex;
+
   align-items: center;
   justify-content: center;
-  gap: 9px;
 
-  padding: 11px 17px;
+  gap: 9px;
 
   background: #0b7a53;
   color: white !important;
 
-  border-radius: 8px;
+  border-radius: 7px;
 
-  font-size: 13px;
   font-weight: 700;
 
-  transition: 0.2s ease;
+  transition: all 0.2s ease;
 }
 
-.register-button:hover {
+.register-button {
+  padding: 11px 17px;
+  font-size: 13px;
+}
+
+.register-button:hover,
+.primary-button:hover {
   background: #086443;
+
   transform: translateY(-1px);
 }
 
 
-/* =========================
-   HERO SECTION
-   ========================= */
+/* =========================================
+   HERO
+   ========================================= */
 
 .hero-section {
   min-height: 650px;
 
   display: flex;
   justify-content: center;
+  align-items: center;
 
-  padding: 100px 7% 80px;
+  padding: 90px 7% 80px;
 
   background:
     radial-gradient(
       circle at 85% 25%,
-      rgba(11, 122, 83, 0.11),
+      rgba(11, 122, 83, 0.09),
       transparent 30%
     ),
     radial-gradient(
       circle at 10% 70%,
-      rgba(39, 120, 97, 0.07),
+      rgba(244, 81, 43, 0.05),
       transparent 28%
     ),
-    #f7f8f6;
+    #f5e8ec;
 }
 
 .hero-content {
@@ -125,38 +158,50 @@
 }
 
 
-/* ---------- Hero Badge ---------- */
+/* =========================================
+   HERO BADGE
+   ========================================= */
 
 .hero-badge {
   display: inline-flex;
+
   align-items: center;
+
   gap: 8px;
 
   padding: 8px 13px;
 
-  border: 1px solid #cfe0d7;
+  border: 1px solid #c7ded3;
   border-radius: 30px;
 
-  background: #edf5f1;
+  background: #edf7f2;
+
   color: #0b7a53;
 
   font-size: 11px;
   font-weight: 800;
+
   letter-spacing: 1px;
 }
 
 
-/* ---------- Hero Heading ---------- */
+/* =========================================
+   HERO HEADING
+   ========================================= */
 
 .hero-content h1 {
   max-width: 900px;
 
   margin: 25px auto 0;
 
+  color: #181818;
+
   font-size: clamp(48px, 7vw, 82px);
+
   line-height: 0.98;
 
   letter-spacing: -3px;
+
   font-weight: 800;
 }
 
@@ -165,84 +210,87 @@
 }
 
 
-/* ---------- Hero Description ---------- */
+/* =========================================
+   HERO DESCRIPTION
+   ========================================= */
 
 .hero-description {
   max-width: 710px;
 
   margin: 28px auto 0;
 
-  color: #5a665f;
+  color: #666;
 
   font-size: 17px;
+
   line-height: 1.7;
 }
 
 
-/* ---------- Hero Buttons ---------- */
+/* =========================================
+   HERO BUTTONS
+   ========================================= */
 
 .hero-actions {
   display: flex;
+
   justify-content: center;
+
   gap: 13px;
 
   margin-top: 35px;
 }
 
 .primary-button {
+  padding: 14px 21px;
+
+  font-size: 14px;
+}
+
+.secondary-button {
   display: inline-flex;
+
   align-items: center;
   justify-content: center;
-  gap: 9px;
 
   padding: 14px 21px;
 
-  background: #0b7a53;
-  color: white !important;
+  border: 1px solid #d8cbd0;
 
-  border-radius: 8px;
+  border-radius: 7px;
+
+  background: #ffffff;
+
+  color: #333;
 
   font-size: 14px;
+
   font-weight: 700;
 
   transition: 0.2s ease;
 }
 
-.primary-button:hover {
-  background: #086443;
-  transform: translateY(-1px);
-}
-
-.secondary-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  padding: 14px 21px;
-
-  border: 1px solid #ccd5cf;
-  border-radius: 8px;
-
-  background: white;
-
-  font-size: 14px;
-  font-weight: 700;
-}
-
 .secondary-button:hover {
   border-color: #0b7a53;
+
+  color: #0b7a53;
 }
 
 
-/* ---------- Network ---------- */
+/* =========================================
+   NETWORK
+   ========================================= */
 
 .hero-network {
   display: flex;
+
   align-items: center;
+
   justify-content: center;
+
   gap: 12px;
 
-  margin-top: 75px;
+  margin-top: 70px;
 
   flex-wrap: wrap;
 }
@@ -253,39 +301,50 @@
   padding: 14px 15px;
 
   display: flex;
+
   flex-direction: column;
+
   align-items: center;
+
   gap: 7px;
 
-  border: 1px solid #dce3de;
+  border: 1px solid #eadcdf;
+
   border-radius: 12px;
 
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.92);
 
-  color: #35423b;
+  color: #444;
 
   font-size: 12px;
+
   font-weight: 700;
+
+  box-shadow:
+    0 8px 20px rgba(85, 55, 60, 0.06);
 }
 
 .ai-node {
   border-color: #9bcdb9;
+
   background: #edf7f2;
+
   color: #0b7a53;
 }
 
 .network-arrow {
-  color: #9aa69f;
+  color: #0b7a53;
 }
 
 
-/* =========================
-   MISSION SECTION
-   ========================= */
+/* =========================================
+   MISSION
+   ========================================= */
 
 .mission-section {
   padding: 110px 7%;
-  background: white;
+
+  background: #ffffff;
 }
 
 .section-heading {
@@ -300,7 +359,9 @@
   color: #0b7a53;
 
   font-size: 11px;
+
   font-weight: 800;
+
   letter-spacing: 1.7px;
 }
 
@@ -308,21 +369,27 @@
 .cta-section h2 {
   margin: 16px 0;
 
+  color: #181818;
+
   font-size: clamp(35px, 5vw, 54px);
+
   line-height: 1.05;
 
   letter-spacing: -1.8px;
 }
 
 .section-heading p {
-  color: #69746e;
+  color: #707070;
 
   font-size: 16px;
+
   line-height: 1.7;
 }
 
 
-/* ---------- Mission Cards ---------- */
+/* =========================================
+   MISSION CARDS
+   ========================================= */
 
 .mission-cards {
   max-width: 1100px;
@@ -330,6 +397,7 @@
   margin: 65px auto 0;
 
   display: grid;
+
   grid-template-columns: repeat(3, 1fr);
 
   gap: 20px;
@@ -338,10 +406,14 @@
 .mission-card {
   padding: 30px;
 
-  border: 1px solid #e1e6e2;
+  border: 1px solid #eadcdf;
+
   border-radius: 15px;
 
-  background: #fafbfa;
+  background: #fff;
+
+  box-shadow:
+    0 10px 30px rgba(85, 55, 60, 0.06);
 
   transition: 0.2s ease;
 }
@@ -349,20 +421,24 @@
 .mission-card:hover {
   transform: translateY(-4px);
 
-  border-color: #bfd8ca;
+  border-color: #b9d7c8;
 
-  box-shadow: 0 10px 30px rgba(20, 32, 26, 0.05);
+  box-shadow:
+    0 15px 35px rgba(85, 55, 60, 0.10);
 }
 
 .mission-card span {
   color: #0b7a53;
 
   font-size: 12px;
+
   font-weight: 800;
 }
 
 .mission-card h3 {
   margin: 30px 0 10px;
+
+  color: #222;
 
   font-size: 23px;
 }
@@ -370,16 +446,17 @@
 .mission-card p {
   margin: 0;
 
-  color: #68736d;
+  color: #707070;
 
   line-height: 1.65;
+
   font-size: 14px;
 }
 
 
-/* =========================
-   CTA SECTION
-   ========================= */
+/* =========================================
+   CTA
+   ========================================= */
 
 .cta-section {
   max-width: 1100px;
@@ -389,7 +466,9 @@
   padding: 55px;
 
   display: flex;
+
   align-items: center;
+
   justify-content: space-between;
 
   gap: 30px;
@@ -397,11 +476,15 @@
   border-radius: 18px;
 
   background: #14201a;
+
   color: white;
+
+  box-shadow:
+    0 15px 40px rgba(20, 32, 26, 0.12);
 }
 
 .cta-section h2 {
-  margin-bottom: 12px;
+  color: white;
 }
 
 .cta-section p {
@@ -409,7 +492,7 @@
 
   margin: 0;
 
-  color: #b7c3bd;
+  color: #c3cec8;
 
   line-height: 1.6;
 }
@@ -419,9 +502,9 @@
 }
 
 
-/* =========================
+/* =========================================
    FOOTER
-   ========================= */
+   ========================================= */
 
 .footer {
   padding: 55px 7% 25px;
@@ -437,6 +520,7 @@
   margin: 0 auto;
 
   display: flex;
+
   justify-content: space-between;
 
   gap: 50px;
@@ -444,7 +528,9 @@
 
 .footer-brand {
   font-size: 22px;
+
   font-weight: 800;
+
   letter-spacing: 2px;
 }
 
@@ -456,11 +542,13 @@
   color: #9daaa3;
 
   line-height: 1.6;
+
   font-size: 14px;
 }
 
 .footer-links {
   display: flex;
+
   flex-wrap: wrap;
 
   align-content: flex-start;
@@ -486,6 +574,7 @@
   border-top: 1px solid #29342e;
 
   display: flex;
+
   justify-content: space-between;
 
   color: #758179;
@@ -494,9 +583,9 @@
 }
 
 
-/* =========================
-   RESPONSIVE DESIGN
-   ========================= */
+/* =========================================
+   RESPONSIVE
+   ========================================= */
 
 @media (max-width: 800px) {
 
@@ -534,6 +623,7 @@
     padding: 35px;
 
     flex-direction: column;
+
     align-items: flex-start;
   }
 
@@ -543,6 +633,7 @@
 
   .footer-bottom {
     flex-direction: column;
+
     gap: 10px;
   }
 }
