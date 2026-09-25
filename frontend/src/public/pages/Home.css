@@ -42,7 +42,6 @@
 
   display: flex;
   align-items: center;
-  justify-content: flex-start;
 
   background: #ffffff;
 
@@ -60,11 +59,19 @@
   margin-right: 30px;
 
   color: #222;
+
+  flex-shrink: 0;
 }
+
+/* Navigation links moved towards RIGHT */
 
 .navbar-links {
   display: flex;
+  align-items: center;
+
   gap: 34px;
+
+  margin-left: auto;
 
   font-size: 14px;
   font-weight: 500;
@@ -72,22 +79,35 @@
   color: #666;
 }
 
+.navbar-links a {
+  text-decoration: none;
+  color: inherit;
+
+  transition: color 0.2s ease;
+}
+
 .navbar-links a:hover,
 .login-link:hover {
   color: #0b7a53;
 }
 
+
+/* Login + Get Started */
+
 .navbar-actions {
   display: flex;
   align-items: center;
+
   gap: 22px;
 
-  margin-left: auto;
+  margin-left: 30px;
 }
 
 .login-link {
   font-size: 14px;
   font-weight: 600;
+
+  white-space: nowrap;
 }
 
 
@@ -600,6 +620,8 @@
 
   .navbar-actions {
     gap: 14px;
+
+    margin-left: auto;
   }
 
   .hero-section {
