@@ -20,7 +20,8 @@
   padding: 0 5%;
   display: flex;
   align-items: center;
-  gap: 35px;
+
+  /* Navigation moved to the right */
   background: #ffffff;
   border-bottom: 1px solid #e1e7e3;
 }
@@ -30,13 +31,18 @@
   font-size: 23px;
   font-weight: 800;
   letter-spacing: 2px;
+
+  /* Keeps logo on the left */
+  margin-right: auto;
 }
 
 .submit-nav-links {
   display: flex;
   align-items: center;
   gap: 25px;
-  flex: 1;
+
+  /* Pushes navigation to the right */
+  margin-left: auto;
 }
 
 .submit-nav-links a {
@@ -51,6 +57,8 @@
 }
 
 .submit-logout {
+  margin-left: 25px;
+
   padding: 9px 15px;
   border: 1px solid #d5ddd8;
   border-radius: 8px;
@@ -274,6 +282,13 @@
     flex-basis: 100%;
     justify-content: center;
     flex-wrap: wrap;
+
+    /* Reset desktop spacing on smaller screens */
+    margin-left: 0;
+  }
+
+  .submit-logout {
+    margin-left: 20px;
   }
 }
 
