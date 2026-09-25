@@ -8,7 +8,7 @@
   min-height: 100vh;
   overflow: hidden;
 
-  background: #f5e8ec;
+  background: #ffffff;
   color: #222;
 
   font-family:
@@ -44,9 +44,9 @@
   align-items: center;
   justify-content: flex-start;
 
-  background: rgba(255, 255, 255, 0.94);
+  background: #ffffff;
 
-  border-bottom: 1px solid #eadcdf;
+  border-bottom: 1px solid #e8e8e8;
 
   position: relative;
   z-index: 10;
@@ -56,6 +56,7 @@
   font-size: 25px;
   font-weight: 800;
   letter-spacing: 2px;
+
   margin-right: 30px;
 
   color: #222;
@@ -80,6 +81,7 @@
   display: flex;
   align-items: center;
   gap: 22px;
+
   margin-left: auto;
 }
 
@@ -126,7 +128,7 @@
 
 
 /* =========================================
-   HERO
+   HERO SECTION
    ========================================= */
 
 .hero-section {
@@ -138,18 +140,7 @@
 
   padding: 90px 7% 80px;
 
-  background:
-    radial-gradient(
-      circle at 85% 25%,
-      rgba(11, 122, 83, 0.09),
-      transparent 30%
-    ),
-    radial-gradient(
-      circle at 10% 70%,
-      rgba(244, 81, 43, 0.05),
-      transparent 28%
-    ),
-    #f5e8ec;
+  background: #ffffff;
 }
 
 .hero-content {
@@ -173,10 +164,10 @@
 
   padding: 8px 13px;
 
-  border: 1px solid #c7ded3;
+  border: 1px solid #cfe3da;
   border-radius: 30px;
 
-  background: #edf7f2;
+  background: #ffffff;
 
   color: #0b7a53;
 
@@ -257,7 +248,7 @@
 
   padding: 14px 21px;
 
-  border: 1px solid #d8cbd0;
+  border: 1px solid #d9d9d9;
 
   border-radius: 7px;
 
@@ -280,7 +271,8 @@
 
 
 /* =========================================
-   NETWORK
+   CIVIC NETWORK
+   Simple and beginner-friendly
    ========================================= */
 
 .hero-network {
@@ -292,13 +284,13 @@
 
   gap: 12px;
 
-  margin-top: 70px;
+  margin-top: 65px;
 
   flex-wrap: wrap;
 }
 
 .network-item {
-  min-width: 110px;
+  min-width: 105px;
 
   padding: 14px 15px;
 
@@ -308,30 +300,34 @@
 
   align-items: center;
 
+  justify-content: center;
+
   gap: 7px;
 
-  border: 1px solid #eadcdf;
+  border: 1px solid #dddddd;
 
-  border-radius: 12px;
+  border-radius: 10px;
 
-  background: rgba(255, 255, 255, 0.92);
+  background: #ffffff;
 
-  color: #444;
+  color: #333;
 
   font-size: 12px;
 
-  font-weight: 700;
+  font-weight: 600;
 
-  box-shadow:
-    0 8px 20px rgba(85, 55, 60, 0.06);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.04);
 }
 
+
+/* All network boxes stay white */
+
 .ai-node {
-  border-color: #9bcdb9;
+  border-color: #dddddd;
 
-  background: #edf7f2;
+  background: #ffffff;
 
-  color: #0b7a53;
+  color: #333;
 }
 
 .network-arrow {
@@ -340,11 +336,11 @@
 
 
 /* =========================================
-   MISSION
+   MISSION SECTION
    ========================================= */
 
 .mission-section {
-  padding: 110px 7%;
+  padding: 95px 7%;
 
   background: #ffffff;
 }
@@ -391,12 +387,13 @@
 
 /* =========================================
    MISSION CARDS
+   Simple white cards
    ========================================= */
 
 .mission-cards {
   max-width: 1100px;
 
-  margin: 65px auto 0;
+  margin: 55px auto 0;
 
   display: grid;
 
@@ -408,41 +405,43 @@
 .mission-card {
   padding: 30px;
 
-  border: 1px solid #eadcdf;
+  border: 1px solid #e2e2e2;
 
-  border-radius: 15px;
+  border-radius: 12px;
 
-  background: #fff;
+  background: #ffffff;
 
   box-shadow:
-    0 10px 30px rgba(85, 55, 60, 0.06);
+    0 5px 18px rgba(0, 0, 0, 0.04);
 
   transition: 0.2s ease;
 }
 
 .mission-card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-2px);
 
-  border-color: #b9d7c8;
+  border-color: #c9ddd4;
 
   box-shadow:
-    0 15px 35px rgba(85, 55, 60, 0.10);
+    0 8px 22px rgba(0, 0, 0, 0.06);
 }
 
 .mission-card span {
   color: #0b7a53;
 
-  font-size: 12px;
+  font-size: 11px;
 
   font-weight: 800;
 }
 
 .mission-card h3 {
-  margin: 30px 0 10px;
+  margin: 20px 0 10px;
 
   color: #222;
 
-  font-size: 23px;
+  font-size: 22px;
+
+  font-weight: 700;
 }
 
 .mission-card p {
@@ -457,15 +456,15 @@
 
 
 /* =========================================
-   CTA
+   CTA SECTION
    ========================================= */
 
 .cta-section {
   max-width: 1100px;
 
-  margin: 100px auto;
+  margin: 80px auto;
 
-  padding: 55px;
+  padding: 50px;
 
   display: flex;
 
@@ -475,14 +474,14 @@
 
   gap: 30px;
 
-  border-radius: 18px;
+  border-radius: 16px;
 
   background: #14201a;
 
   color: white;
 
   box-shadow:
-    0 15px 40px rgba(20, 32, 26, 0.12);
+    0 12px 30px rgba(20, 32, 26, 0.10);
 }
 
 .cta-section h2 {
@@ -599,7 +598,13 @@
     display: none;
   }
 
+  .navbar-actions {
+    gap: 14px;
+  }
+
   .hero-section {
+    min-height: auto;
+
     padding: 75px 5% 60px;
   }
 
@@ -607,20 +612,50 @@
     letter-spacing: -2px;
   }
 
+  .hero-description {
+    font-size: 15px;
+  }
+
   .hero-network {
-    margin-top: 50px;
+    margin-top: 45px;
+
+    gap: 8px;
+  }
+
+  .network-item {
+    min-width: 90px;
+
+    padding: 12px 10px;
+
+    font-size: 11px;
   }
 
   .mission-section {
-    padding: 75px 5%;
+    padding: 70px 5%;
+  }
+
+  .section-heading p {
+    font-size: 15px;
   }
 
   .mission-cards {
     grid-template-columns: 1fr;
+
+    gap: 15px;
+
+    margin-top: 40px;
+  }
+
+  .mission-card {
+    padding: 24px;
+  }
+
+  .mission-card h3 {
+    margin-top: 15px;
   }
 
   .cta-section {
-    margin: 60px 5%;
+    margin: 50px 5%;
 
     padding: 35px;
 
@@ -637,5 +672,138 @@
     flex-direction: column;
 
     gap: 10px;
+  }
+}
+
+
+/* =========================================
+   SMALL MOBILE
+   ========================================= */
+
+@media (max-width: 500px) {
+
+  .navbar {
+    height: 68px;
+  }
+
+  .navbar-brand {
+    font-size: 21px;
+
+    margin-right: 0;
+  }
+
+  .login-link {
+    font-size: 12px;
+  }
+
+  .register-button {
+    padding: 9px 12px;
+
+    font-size: 11px;
+  }
+
+  .hero-section {
+    padding: 60px 5% 50px;
+  }
+
+  .hero-badge {
+    font-size: 9px;
+
+    padding: 7px 10px;
+  }
+
+  .hero-content h1 {
+    font-size: 42px;
+
+    line-height: 1;
+
+    letter-spacing: -1.8px;
+  }
+
+  .hero-description {
+    margin-top: 22px;
+
+    font-size: 14px;
+
+    line-height: 1.6;
+  }
+
+  .hero-actions {
+    flex-direction: column;
+
+    align-items: stretch;
+
+    margin-top: 28px;
+  }
+
+  .primary-button,
+  .secondary-button {
+    width: 100%;
+
+    box-sizing: border-box;
+  }
+
+  .hero-network {
+    margin-top: 40px;
+
+    display: grid;
+
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 10px;
+  }
+
+  .network-arrow {
+    display: none;
+  }
+
+  .network-item {
+    width: 100%;
+
+    box-sizing: border-box;
+  }
+
+  .mission-section {
+    padding: 60px 5%;
+  }
+
+  .section-heading h2 {
+    font-size: 36px;
+  }
+
+  .section-heading p {
+    font-size: 14px;
+  }
+
+  .mission-card {
+    padding: 22px;
+  }
+
+  .mission-card h3 {
+    font-size: 20px;
+  }
+
+  .mission-card p {
+    font-size: 13px;
+  }
+
+  .cta-section {
+    margin: 40px 5%;
+
+    padding: 30px 24px;
+
+    border-radius: 14px;
+  }
+
+  .cta-section h2 {
+    font-size: 32px;
+  }
+
+  .cta-section p {
+    font-size: 14px;
+  }
+
+  .footer {
+    padding: 45px 5% 20px;
   }
 }
