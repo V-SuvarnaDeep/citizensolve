@@ -172,30 +172,6 @@ function Home() {
           </div>
         </section>
 
-        {/* Call To Action */}
-        <section className="cta-section">
-
-          <div>
-            <span className="section-label">
-              READY TO MAKE AN IMPACT?
-            </span>
-
-            <h2>
-              Turn a problem into a possibility.
-            </h2>
-
-            <p>
-              Submit a societal problem and let Civiora help move it toward
-              a real solution.
-            </p>
-          </div>
-
-          <Link to="/register" className="primary-button">
-            Get Started
-          </Link>
-
-        </section>
-
       </main>
 
       {/* Footer */}
