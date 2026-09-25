@@ -42,6 +42,7 @@
 
   display: flex;
   align-items: center;
+  justify-content: flex-start;
 
   background: #ffffff;
 
@@ -59,19 +60,11 @@
   margin-right: 30px;
 
   color: #222;
-
-  flex-shrink: 0;
 }
-
-/* Navigation links moved towards RIGHT */
 
 .navbar-links {
   display: flex;
-  align-items: center;
-
   gap: 34px;
-
-  margin-left: auto;
 
   font-size: 14px;
   font-weight: 500;
@@ -79,35 +72,22 @@
   color: #666;
 }
 
-.navbar-links a {
-  text-decoration: none;
-  color: inherit;
-
-  transition: color 0.2s ease;
-}
-
 .navbar-links a:hover,
 .login-link:hover {
   color: #0b7a53;
 }
 
-
-/* Login + Get Started */
-
 .navbar-actions {
   display: flex;
   align-items: center;
-
   gap: 22px;
 
-  margin-left: 30px;
+  margin-left: auto;
 }
 
 .login-link {
   font-size: 14px;
   font-weight: 600;
-
-  white-space: nowrap;
 }
 
 
@@ -336,7 +316,8 @@
 
   font-weight: 600;
 
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.04);
+  box-shadow:
+    0 5px 15px rgba(0, 0, 0, 0.04);
 }
 
 
@@ -477,49 +458,12 @@
 
 /* =========================================
    CTA SECTION
+   HIDDEN
+   React code/functionality remains untouched
    ========================================= */
 
 .cta-section {
-  max-width: 1100px;
-
-  margin: 80px auto;
-
-  padding: 50px;
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: space-between;
-
-  gap: 30px;
-
-  border-radius: 16px;
-
-  background: #14201a;
-
-  color: white;
-
-  box-shadow:
-    0 12px 30px rgba(20, 32, 26, 0.10);
-}
-
-.cta-section h2 {
-  color: white;
-}
-
-.cta-section p {
-  max-width: 570px;
-
-  margin: 0;
-
-  color: #c3cec8;
-
-  line-height: 1.6;
-}
-
-.cta-section .primary-button {
-  flex-shrink: 0;
+  display: none;
 }
 
 
@@ -620,8 +564,6 @@
 
   .navbar-actions {
     gap: 14px;
-
-    margin-left: auto;
   }
 
   .hero-section {
@@ -674,16 +616,6 @@
 
   .mission-card h3 {
     margin-top: 15px;
-  }
-
-  .cta-section {
-    margin: 50px 5%;
-
-    padding: 35px;
-
-    flex-direction: column;
-
-    align-items: flex-start;
   }
 
   .footer-main {
@@ -807,22 +739,6 @@
 
   .mission-card p {
     font-size: 13px;
-  }
-
-  .cta-section {
-    margin: 40px 5%;
-
-    padding: 30px 24px;
-
-    border-radius: 14px;
-  }
-
-  .cta-section h2 {
-    font-size: 32px;
-  }
-
-  .cta-section p {
-    font-size: 14px;
   }
 
   .footer {
