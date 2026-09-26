@@ -1,3 +1,8 @@
+
+============================================================
+FILE: C:\Users\vsuva\citizensolve\frontend\src\routes\AppRoutes.jsx
+============================================================
+
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 // Public pages
@@ -35,6 +40,7 @@ import SolutionSubmit from "../university/pages/SolutionSubmit";
 import GovernmentHome from "../government/pages/Home";
 import GovernmentSolutions from "../government/pages/Solutions";
 import GovernmentReview from "../government/pages/Review";
+import GovernmentCompanies from "../government/pages/Companies";
 import GovernmentMeetings from "../government/pages/Meetings";
 import GovernmentNotifications from "../government/pages/Notifications";
 import GovernmentSettings from "../government/pages/Settings";
@@ -50,62 +56,29 @@ import CompanyNotifications from "../company/pages/Notifications";
 import CompanySettings from "../company/pages/Settings";
 import CompanyProfile from "../company/pages/Profile";
 
-
 function AppRoutes() {
   return (
     <BrowserRouter>
-
       <Routes>
 
-        {/* =========================
-            PUBLIC
-        ========================= */}
+        {/* Public */}
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/how-it-works" element={<HowItWorks />} />
 
-        <Route
-          path="/"
-          element={<Home />}
-        />
-
-        <Route
-          path="/about"
-          element={<About />}
-        />
-
-        <Route
-          path="/how-it-works"
-          element={<HowItWorks />}
-        />
-
-
-        {/* =========================
-            AUTHENTICATION
-        ========================= */}
-
-        <Route
-          path="/login"
-          element={<Login />}
-        />
-
-        <Route
-          path="/register"
-          element={<Register />}
-        />
-
+        {/* Authentication */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
         <Route
           path="/forgot-password"
           element={<ForgotPassword />}
         />
-
         <Route
           path="/reset-password"
           element={<ResetPassword />}
         />
 
-
-        {/* =========================
-            CITIZEN
-        ========================= */}
-
+        {/* Citizen */}
         <Route
           path="/citizen"
           element={
@@ -151,11 +124,7 @@ function AppRoutes() {
           }
         />
 
-
-        {/* =========================
-            UNIVERSITY
-        ========================= */}
-
+        {/* University */}
         <Route
           path="/university"
           element={
@@ -173,24 +142,22 @@ function AppRoutes() {
             </ProtectedRoute>
           }
         />
-
-        <Route
-          path="/university/problems/:id"
-          element={
-            <ProtectedRoute role="university">
-              <ProblemDetails />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/university/solutions/new"
-          element={
-            <ProtectedRoute role="university">
-              <SolutionSubmit />
-            </ProtectedRoute>
-          }
-        />
+             <Route
+  path="/university/problems/:id"
+  element={
+    <ProtectedRoute role="university">
+      <ProblemDetails />
+    </ProtectedRoute>
+  }
+/>
+<Route
+  path="/university/solutions/new"
+  element={
+    <ProtectedRoute role="university">
+      <SolutionSubmit />
+    </ProtectedRoute>
+  }
+/>
 
         <Route
           path="/university/solutions"
@@ -228,11 +195,7 @@ function AppRoutes() {
           }
         />
 
-
-        {/* =========================
-            GOVERNMENT
-        ========================= */}
-
+        {/* Government */}
         <Route
           path="/government"
           element={
@@ -241,12 +204,24 @@ function AppRoutes() {
             </ProtectedRoute>
           }
         />
+        <Route
+  path="/government/problems"
+  element={<Problems />}
+/>
+        <Route
+  path="/government/solutions/:id"
+  element={
+    <ProtectedRoute role="government">
+      <SolutionReview />
+    </ProtectedRoute>
+  }
+/>
 
         <Route
-          path="/government/problems"
+          path="/government/solutions"
           element={
             <ProtectedRoute role="government">
-              <Problems />
+              <GovernmentSolutions />
             </ProtectedRoute>
           }
         />
@@ -261,19 +236,10 @@ function AppRoutes() {
         />
 
         <Route
-          path="/government/solutions"
+          path="/government/companies"
           element={
             <ProtectedRoute role="government">
-              <GovernmentSolutions />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/government/solutions/:id"
-          element={
-            <ProtectedRoute role="government">
-              <SolutionReview />
+              <GovernmentCompanies />
             </ProtectedRoute>
           }
         />
@@ -305,11 +271,7 @@ function AppRoutes() {
           }
         />
 
-
-        {/* =========================
-            COMPANY
-        ========================= */}
-
+        {/* Company */}
         <Route
           path="/company"
           element={
@@ -327,15 +289,10 @@ function AppRoutes() {
             </ProtectedRoute>
           }
         />
-
         <Route
-          path="/company/profile"
-          element={
-            <ProtectedRoute role="company">
-              <CompanyProfile />
-            </ProtectedRoute>
-          }
-        />
+  path="/company/profile"
+  element={<CompanyProfile />}
+/>
 
         <Route
           path="/company/solutions"
@@ -374,7 +331,6 @@ function AppRoutes() {
         />
 
       </Routes>
-
     </BrowserRouter>
   );
 }

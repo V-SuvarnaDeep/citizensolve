@@ -269,3 +269,152 @@ Rules:
     )
 
     return json.loads(interaction.output_text)
+def match_company_with_gemini(
+    solution,
+    problem,
+    companies
+):
+    company_data = []
+
+    for company in companies:
+        company_data.append({
+            "id": company.get("id"),
+            "company_name": company.get("company_name"),
+            "location": company.get("location"),
+            "industries": company.get("industries") or [],
+            "expertise": company.get("expertise") or [],
+            "technologies": company.get("technologies") or [],
+            "capabilities": company.get("capabilities") or [],
+            "description": company.get("description") or ""
+        })
+
+    prompt = f"""
+You are Civiora AI, an AI system that matches approved
+civic solutions with the most suitable company.
+
+Your task is to select EXACTLY ONE company that is the
+best fit to implement the approved solution.
+
+CIVIC PROBLEM
+
+Title:
+{problem.get("title", "")}
+
+Description:
+{problem.get("description", "")}
+
+Category:
+{problem.get("category", "")}
+
+Location:
+{problem.get("location", "")}
+
+AI Analysis:
+{json.dumps(problem.get("ai_analysis") or {}, indent=2)}
+
+
+APPROVED UNIVERSITY SOLUTION
+
+Title:
+{solution.get("title", "")}
+
+Description:
+{solution.get("description", "")}
+
+Approach:
+{solution.get("approach", "")}
+
+Technologies:
+{solution.get("technologies", "")}
+
+Expected Impact:
+{solution.get("expected_impact", "")}
+
+
+AVAILABLE COMPANIES
+
+{json.dumps(company_data, indent=2)}
+
+
+Return ONLY valid JSON.
+
+Use exactly this structure:
+
+{{
+    "company_id": "",
+    "match_score": 0,
+    "match_reason": ""
+}}
+
+Rules:
+
+1. Select EXACTLY ONE company.
+
+2. company_id must be the id of one of the companies
+   provided above.
+
+3. match_score must be a number from 0 to 100.
+
+4. Consider:
+   - company expertise
+   - company industries
+   - company technologies
+   - company capabilities
+   - solution technologies
+   - solution approach
+   - type of civic problem
+   - expected impact
+   - location when relevant
+
+5. Select the company that is most capable of actually
+   implementing the solution.
+
+6. Do not select a company based only on its name.
+
+7. Give a short practical reason explaining why the company
+   matches the solution.
+
+8. Do not invent companies or company information.
+
+9. Do not return multiple companies.
+
+10. This is a recommendation for government decision support.
+    The government remains the final authority.
+"""
+
+    interaction = client.interactions.create(
+        model="gemini-3.6-flash",
+        input=[
+            {
+                "type": "text",
+                "text": prompt
+            }
+        ],
+        response_format={
+            "type": "text",
+            "mime_type": "application/json",
+            "schema": {
+                "type": "object",
+                "properties": {
+                    "company_id": {
+                        "type": "string"
+                    },
+                    "match_score": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 100
+                    },
+                    "match_reason": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "company_id",
+                    "match_score",
+                    "match_reason"
+                ]
+            }
+        }
+    )
+
+    return json.loads(interaction.output_text)

@@ -1,69 +1,145 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "../../supabaseClient";
 import "./Register.css";
 
 function Register() {
-  const [role, setRole] = useState("");
+  const navigate = useNavigate();
+
+  const [role, setRole] = useState("citizen");
 
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
     confirmPassword: "",
+
+    organizationName: "",
+    location: "",
+
+    departments: "",
+    expertise: "",
+    technologies: "",
+    capabilities: "",
+    industries: "",
   });
 
-const [loading, setLoading] = useState(false);
-const [error, setError] = useState("");
-const [success, setSuccess] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] =
+    useState(false);
 
-const [showPassword, setShowPassword] = useState(false);
-const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+  const handleChange = (event) => {
+    const { name, value } = event.target;
 
-    setError("");
+    setFormData((current) => ({
+      ...current,
+      [name]: value,
+    }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const convertToArray = (value) => {
+    return value
+      .split(",")
+      .map((item) => item.trim())
+      .filter((item) => item !== "");
+  };
 
+  const handleRegister = async (event) => {
+    event.preventDefault();
+
+    setMessage("");
     setError("");
-    setSuccess(false);
-
-    if (!role) {
-      setError("Please select your role.");
-      return;
-    }
 
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match.");
       return;
     }
-const passwordPattern =
-  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
 
-if (!passwordPattern.test(formData.password)) {
-  setError(
-    "Password must be at least 8 characters and include uppercase, lowercase, number, and special character."
-  );
-  return;
-}
+    if (formData.password.length < 6) {
+      setError("Password must contain at least 6 characters.");
+      return;
+    }
+
+    if (
+      (role === "university" || role === "company") &&
+      !formData.organizationName.trim()
+    ) {
+      setError("Please enter the organization name.");
+      return;
+    }
+
+    if (
+      (role === "university" || role === "company") &&
+      !formData.location.trim()
+    ) {
+      setError("Please enter the organization location.");
+      return;
+    }
+
     try {
       setLoading(true);
 
-      const { data, error: signUpError } =
+      let organizationDetails = null;
+
+      if (role === "university") {
+        organizationDetails = {
+          organization_name:
+            formData.organizationName.trim(),
+
+          location:
+            formData.location.trim(),
+
+          departments:
+            convertToArray(formData.departments),
+
+          expertise:
+            convertToArray(formData.expertise),
+
+          technologies:
+            convertToArray(formData.technologies),
+
+          capabilities:
+            convertToArray(formData.capabilities),
+        };
+      }
+
+      if (role === "company") {
+        organizationDetails = {
+          organization_name:
+            formData.organizationName.trim(),
+
+          location:
+            formData.location.trim(),
+
+          industries:
+            convertToArray(formData.industries),
+
+          expertise:
+            convertToArray(formData.expertise),
+
+          technologies:
+            convertToArray(formData.technologies),
+
+          capabilities:
+            convertToArray(formData.capabilities),
+        };
+      }
+
+      const { error: signUpError } =
         await supabase.auth.signUp({
-          email: formData.email,
+          email: formData.email.trim(),
           password: formData.password,
+
           options: {
             data: {
-              name: formData.name,
+              name: formData.name.trim(),
               role: role,
+              organization_details:
+                organizationDetails,
             },
           },
         });
@@ -72,34 +148,31 @@ if (!passwordPattern.test(formData.password)) {
         throw signUpError;
       }
 
-      if (data.user) {
-        setSuccess(
-          "Account created successfully. Please check your email to verify your account."
-        );
-      }
+      setMessage(
+        "Registration successful. Please check your email if verification is required."
+      );
 
       setFormData({
         name: "",
         email: "",
         password: "",
         confirmPassword: "",
+        organizationName: "",
+        location: "",
+        departments: "",
+        expertise: "",
+        technologies: "",
+        capabilities: "",
+        industries: "",
       });
 
-      setRole("");
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
+      console.error(error);
 
-      if (
-        err.message?.toLowerCase().includes("already registered")
-      ) {
-        setError(
-          "An account with this email already exists."
-        );
-      } else {
-        setError(
-          err.message || "Unable to create your account."
-        );
-      }
+      setError(
+        error.message ||
+          "Registration failed. Please try again."
+      );
     } finally {
       setLoading(false);
     }
@@ -109,121 +182,44 @@ if (!passwordPattern.test(formData.password)) {
     <div className="auth-page">
 
       <div className="auth-brand">
-        <Link to="/">CIVIORA</Link>
+        <Link to="/">
+          CIVIORA
+        </Link>
       </div>
 
       <div className="auth-container">
+
         <div className="auth-card">
 
           <div className="auth-header">
-            <span>JOIN CIVIORA</span>
 
-            <h1>Create your account</h1>
+            <span>
+              CIVIORA PLATFORM
+            </span>
+
+            <h1>
+              Create your account
+            </h1>
 
             <p>
-              Choose your role to join the civic innovation network.
+              Join the civic innovation ecosystem and
+              participate in solving real-world problems.
             </p>
+
           </div>
 
-          {error && (
-            <div className="auth-error">
-              {error}
-            </div>
-          )}
-
-          {success && (
-            <div className="auth-success">
-              {success}
-            </div>
-          )}
-
           <form
-            className="register-form"
-            onSubmit={handleSubmit}
+            className="auth-form"
+            onSubmit={handleRegister}
           >
 
-            <div className="form-group">
-              <label>Full Name</label>
+            {/* ROLE */}
 
-              <input
-                type="text"
-                name="name"
-                placeholder="Enter your full name"
-                value={formData.name}
-                onChange={handleChange}
-                required
-              />
-            </div>
+            <div className="role-selector">
 
-            <div className="form-group">
-              <label>Email Address</label>
-
-              <input
-                type="email"
-                name="email"
-                placeholder="Enter your email"
-                value={formData.email}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            <div className="form-group">
-  <label>Password</label>
-
-  <div className="password-input-wrapper">
-    <input
-      type={showPassword ? "text" : "password"}
-      name="password"
-      placeholder="Create a password"
-      value={formData.password}
-      onChange={handleChange}
-      minLength="8"
-      required
-    />
-
-    <button
-      type="button"
-      className="password-toggle"
-      onClick={() => setShowPassword(!showPassword)}
-    >
-      {showPassword ? "Hide" : "Show"}
-    </button>
-  </div>
-
-  <p className="password-hint">
-    Use 8+ characters with uppercase, lowercase, number and special character.
-  </p>
-</div>
-
-                 <div className="form-group">
-  <label>Confirm Password</label>
-
-  <div className="password-input-wrapper">
-    <input
-      type={showConfirmPassword ? "text" : "password"}
-      name="confirmPassword"
-      placeholder="Confirm your password"
-      value={formData.confirmPassword}
-      onChange={handleChange}
-      minLength="8"
-      required
-    />
-
-    <button
-      type="button"
-      className="password-toggle"
-      onClick={() =>
-        setShowConfirmPassword(!showConfirmPassword)
-      }
-    >
-      {showConfirmPassword ? "Hide" : "Show"}
-    </button>
-  </div>
-</div>
-
-            <div className="form-group">
-              <label>Select Your Role</label>
+              <label>
+                Account Type
+              </label>
 
               <div className="role-options">
 
@@ -231,7 +227,7 @@ if (!passwordPattern.test(formData.password)) {
                   type="button"
                   className={
                     role === "citizen"
-                      ? "role-option selected"
+                      ? "role-option active"
                       : "role-option"
                   }
                   onClick={() => setRole("citizen")}
@@ -243,7 +239,7 @@ if (!passwordPattern.test(formData.password)) {
                   type="button"
                   className={
                     role === "university"
-                      ? "role-option selected"
+                      ? "role-option active"
                       : "role-option"
                   }
                   onClick={() => setRole("university")}
@@ -255,7 +251,7 @@ if (!passwordPattern.test(formData.password)) {
                   type="button"
                   className={
                     role === "government"
-                      ? "role-option selected"
+                      ? "role-option active"
                       : "role-option"
                   }
                   onClick={() => setRole("government")}
@@ -267,7 +263,7 @@ if (!passwordPattern.test(formData.password)) {
                   type="button"
                   className={
                     role === "company"
-                      ? "role-option selected"
+                      ? "role-option active"
                       : "role-option"
                   }
                   onClick={() => setRole("company")}
@@ -276,25 +272,427 @@ if (!passwordPattern.test(formData.password)) {
                 </button>
 
               </div>
+
             </div>
+
+            {/* BASIC INFORMATION */}
+
+            <div className="input-group">
+
+              <label>
+                Full Name
+              </label>
+
+              <input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                placeholder="Enter your full name"
+                required
+              />
+
+            </div>
+
+            <div className="input-group">
+
+              <label>
+                Email Address
+              </label>
+
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="Enter your email"
+                required
+              />
+
+            </div>
+
+            <div className="input-group">
+
+              <label>
+                Password
+              </label>
+
+              <div className="password-wrapper">
+
+                <input
+                  type={
+                    showPassword
+                      ? "text"
+                      : "password"
+                  }
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  placeholder="Create a password"
+                  required
+                />
+
+                <button
+                  type="button"
+                  className="password-toggle"
+                  onClick={() =>
+                    setShowPassword(!showPassword)
+                  }
+                >
+                  {showPassword
+                    ? "Hide"
+                    : "Show"}
+                </button>
+
+              </div>
+
+            </div>
+
+            <div className="input-group">
+
+              <label>
+                Confirm Password
+              </label>
+
+              <div className="password-wrapper">
+
+                <input
+                  type={
+                    showConfirmPassword
+                      ? "text"
+                      : "password"
+                  }
+                  name="confirmPassword"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  placeholder="Confirm your password"
+                  required
+                />
+
+                <button
+                  type="button"
+                  className="password-toggle"
+                  onClick={() =>
+                    setShowConfirmPassword(
+                      !showConfirmPassword
+                    )
+                  }
+                >
+                  {showConfirmPassword
+                    ? "Hide"
+                    : "Show"}
+                </button>
+
+              </div>
+
+            </div>
+
+            {/* UNIVERSITY */}
+
+            {role === "university" && (
+              <div className="organization-section">
+
+                <div className="organization-header">
+
+                  <span>
+                    UNIVERSITY DETAILS
+                  </span>
+
+                  <h2>
+                    Tell us about your university
+                  </h2>
+
+                  <p>
+                    These details help Civiora match
+                    civic problems with suitable
+                    universities.
+                  </p>
+
+                </div>
+
+                <div className="input-group">
+
+                  <label>
+                    University Name
+                  </label>
+
+                  <input
+                    type="text"
+                    name="organizationName"
+                    value={
+                      formData.organizationName
+                    }
+                    onChange={handleChange}
+                    placeholder="e.g. ANITS"
+                    required
+                  />
+
+                </div>
+
+                <div className="input-group">
+
+                  <label>
+                    Location
+                  </label>
+
+                  <input
+                    type="text"
+                    name="location"
+                    value={formData.location}
+                    onChange={handleChange}
+                    placeholder="e.g. Visakhapatnam, Andhra Pradesh"
+                    required
+                  />
+
+                </div>
+
+                <div className="input-group">
+
+                  <label>
+                    Departments
+                  </label>
+
+                  <input
+                    type="text"
+                    name="departments"
+                    value={formData.departments}
+                    onChange={handleChange}
+                    placeholder="Computer Science, Civil Engineering, ECE"
+                  />
+
+                  <small>
+                    Separate multiple departments with commas.
+                  </small>
+
+                </div>
+
+                <div className="input-group">
+
+                  <label>
+                    Expertise
+                  </label>
+
+                  <input
+                    type="text"
+                    name="expertise"
+                    value={formData.expertise}
+                    onChange={handleChange}
+                    placeholder="Artificial Intelligence, IoT, Cybersecurity"
+                  />
+
+                  <small>
+                    Add the university's major areas of expertise.
+                  </small>
+
+                </div>
+
+                <div className="input-group">
+
+                  <label>
+                    Technologies
+                  </label>
+
+                  <input
+                    type="text"
+                    name="technologies"
+                    value={formData.technologies}
+                    onChange={handleChange}
+                    placeholder="Python, React, IoT, GIS"
+                  />
+
+                </div>
+
+                <div className="input-group">
+
+                  <label>
+                    Capabilities
+                  </label>
+
+                  <input
+                    type="text"
+                    name="capabilities"
+                    value={formData.capabilities}
+                    onChange={handleChange}
+                    placeholder="AI Solutions, Research, Web Development"
+                  />
+
+                </div>
+
+              </div>
+            )}
+
+            {/* COMPANY */}
+
+            {role === "company" && (
+              <div className="organization-section">
+
+                <div className="organization-header">
+
+                  <span>
+                    COMPANY DETAILS
+                  </span>
+
+                  <h2>
+                    Tell us about your company
+                  </h2>
+
+                  <p>
+                    These details help Civiora identify
+                    suitable companies for approved
+                    university solutions.
+                  </p>
+
+                </div>
+
+                <div className="input-group">
+
+                  <label>
+                    Company Name
+                  </label>
+
+                  <input
+                    type="text"
+                    name="organizationName"
+                    value={
+                      formData.organizationName
+                    }
+                    onChange={handleChange}
+                    placeholder="Enter company name"
+                    required
+                  />
+
+                </div>
+
+                <div className="input-group">
+
+                  <label>
+                    Location
+                  </label>
+
+                  <input
+                    type="text"
+                    name="location"
+                    value={formData.location}
+                    onChange={handleChange}
+                    placeholder="e.g. Visakhapatnam, Andhra Pradesh"
+                    required
+                  />
+
+                </div>
+
+                <div className="input-group">
+
+                  <label>
+                    Industries
+                  </label>
+
+                  <input
+                    type="text"
+                    name="industries"
+                    value={formData.industries}
+                    onChange={handleChange}
+                    placeholder="Infrastructure, Construction, Smart Cities"
+                  />
+
+                  <small>
+                    Separate multiple industries with commas.
+                  </small>
+
+                </div>
+
+                <div className="input-group">
+
+                  <label>
+                    Expertise
+                  </label>
+
+                  <input
+                    type="text"
+                    name="expertise"
+                    value={formData.expertise}
+                    onChange={handleChange}
+                    placeholder="Civil Engineering, Infrastructure Development"
+                  />
+
+                </div>
+
+                <div className="input-group">
+
+                  <label>
+                    Technologies
+                  </label>
+
+                  <input
+                    type="text"
+                    name="technologies"
+                    value={formData.technologies}
+                    onChange={handleChange}
+                    placeholder="IoT, GIS, GPS, Cloud Computing"
+                  />
+
+                </div>
+
+                <div className="input-group">
+
+                  <label>
+                    Capabilities
+                  </label>
+
+                  <input
+                    type="text"
+                    name="capabilities"
+                    value={formData.capabilities}
+                    onChange={handleChange}
+                    placeholder="Infrastructure Development, Smart City Solutions"
+                  />
+
+                </div>
+
+              </div>
+            )}
+
+            {/* MESSAGES */}
+
+            {error && (
+              <div className="auth-error">
+                {error}
+              </div>
+            )}
+
+            {message && (
+              <div className="auth-success">
+                {message}
+              </div>
+            )}
+
+            {/* SUBMIT */}
 
             <button
               type="submit"
-              className="register-submit"
+              className="auth-submit"
               disabled={loading}
             >
-              {loading ? "Creating Account..." : "Create Account"}
+              {loading
+                ? "Creating Account..."
+                : "Create Account"}
             </button>
+
+            <p className="auth-footer-text">
+
+              Already have an account?{" "}
+
+              <Link to="/login">
+                Sign in
+              </Link>
+
+            </p>
 
           </form>
 
-          <p className="auth-footer-text">
-            Already have an account?{" "}
-            <Link to="/login">Sign in</Link>
-          </p>
-
         </div>
+
       </div>
+
     </div>
   );
 }

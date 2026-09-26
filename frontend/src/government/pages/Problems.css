@@ -1,0 +1,627 @@
+/* =========================================
+   CIVIORA GOVERNMENT PROBLEMS
+   ========================================= */
+
+.problems-page {
+  min-height: 100vh;
+  background: #f5f7fb;
+  color: #172033;
+  font-family: Arial, sans-serif;
+}
+
+
+/* =========================================
+   MAIN CONTENT
+   ========================================= */
+
+.problems-content {
+  width: 90%;
+  max-width: 1350px;
+  margin: 0 auto;
+  padding: 42px 0 60px;
+}
+
+
+/* =========================================
+   HEADER
+   ========================================= */
+
+.problems-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 25px;
+  margin-bottom: 30px;
+}
+
+.problems-label {
+  margin: 0 0 8px;
+
+  color: #00866f;
+
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1.4px;
+}
+
+.problems-title {
+  margin: 0;
+
+  color: #172033;
+
+  font-size: 34px;
+  line-height: 1.2;
+  font-weight: 800;
+}
+
+.problems-subtitle {
+  margin: 10px 0 0;
+
+  color: #667085;
+
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+
+/* =========================================
+   REFRESH BUTTON
+   ========================================= */
+
+.problems-refresh-button {
+  border: none;
+  border-radius: 9px;
+
+  padding: 11px 20px;
+
+  background: #00866f;
+  color: #ffffff;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.problems-refresh-button:hover {
+  background: #006f5c;
+  transform: translateY(-1px);
+}
+
+
+/* =========================================
+   STATISTICS
+   ========================================= */
+
+.problem-stats {
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr));
+
+  gap: 18px;
+
+  margin-bottom: 30px;
+}
+
+.problem-stat-card {
+  background: #ffffff;
+
+  border: 1px solid #e4e9f0;
+  border-radius: 13px;
+
+  padding: 22px 24px;
+
+  box-shadow:
+    0 5px 18px rgba(23, 32, 51, 0.04);
+
+  transition: 0.2s ease;
+}
+
+.problem-stat-card:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 8px 24px rgba(23, 32, 51, 0.07);
+}
+
+.problem-stat-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  color: #667085;
+
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+}
+
+.problem-stat-dot {
+  width: 8px;
+  height: 8px;
+
+  border-radius: 50%;
+
+  display: inline-block;
+}
+
+.problem-stat-dot.blue {
+  background: #2563eb;
+}
+
+.problem-stat-dot.orange {
+  background: #f59e0b;
+}
+
+.problem-stat-dot.purple {
+  background: #7c3aed;
+}
+
+.problem-stat-dot.green {
+  background: #00866f;
+}
+
+.problem-stat-number {
+  margin-top: 15px;
+
+  color: #172033;
+
+  font-size: 30px;
+  font-weight: 800;
+}
+
+.problem-stat-description {
+  margin-top: 7px;
+
+  color: #8a94a6;
+
+  font-size: 13px;
+}
+
+
+/* =========================================
+   PRIORITY TABLE SECTION
+   ========================================= */
+
+.priority-table-section {
+  background: #ffffff;
+
+  border: 1px solid #e4e9f0;
+  border-radius: 14px;
+
+  box-shadow:
+    0 5px 18px rgba(23, 32, 51, 0.04);
+
+  overflow: hidden;
+}
+
+
+/* =========================================
+   TABLE HEADER
+   ========================================= */
+
+.priority-table-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  padding: 25px 27px;
+
+  border-bottom: 1px solid #e9edf2;
+}
+
+.priority-table-header h2 {
+  margin: 0;
+
+  color: #172033;
+
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.priority-table-header p {
+  margin: 7px 0 0;
+
+  color: #7a8495;
+
+  font-size: 13px;
+}
+
+.queue-count {
+  flex-shrink: 0;
+
+  padding: 8px 12px;
+
+  border-radius: 20px;
+
+  background: #eef8f5;
+  color: #00866f;
+
+  font-size: 12px;
+  font-weight: 800;
+}
+
+
+/* =========================================
+   TABLE
+   ========================================= */
+
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.priority-table {
+  width: 100%;
+
+  border-collapse: collapse;
+
+  min-width: 1050px;
+}
+
+.priority-table thead {
+  background: #f8fafc;
+}
+
+.priority-table th {
+  padding: 14px 16px;
+
+  border-bottom: 1px solid #e4e9f0;
+
+  color: #667085;
+
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+
+  text-align: left;
+
+  white-space: nowrap;
+}
+
+.priority-table td {
+  padding: 17px 16px;
+
+  border-bottom: 1px solid #edf0f4;
+
+  color: #475467;
+
+  font-size: 13px;
+
+  vertical-align: middle;
+}
+
+.priority-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+
+/* =========================================
+   PROBLEM ROW
+   ========================================= */
+
+.problem-row {
+  cursor: pointer;
+
+  transition:
+    background 0.18s ease,
+    transform 0.18s ease;
+}
+
+.problem-row:hover {
+  background: #f7fbfa;
+}
+
+
+/* =========================================
+   RANK
+   ========================================= */
+
+.rank-cell {
+  width: 75px;
+}
+
+.rank-number {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  min-width: 42px;
+  height: 30px;
+
+  padding: 0 8px;
+
+  border-radius: 7px;
+
+  background: #eef8f5;
+  color: #00866f;
+
+  font-size: 13px;
+  font-weight: 800;
+}
+
+
+/* =========================================
+   PROBLEM DETAILS
+   ========================================= */
+
+.problem-cell {
+  min-width: 300px;
+  max-width: 430px;
+}
+
+.problem-name {
+  margin-bottom: 6px;
+
+  color: #172033;
+
+  font-size: 14px;
+  font-weight: 800;
+
+  line-height: 1.4;
+}
+
+.problem-description {
+  color: #7a8495;
+
+  font-size: 12px;
+  line-height: 1.55;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+
+  overflow: hidden;
+}
+
+
+/* =========================================
+   CATEGORY
+   ========================================= */
+
+.category-text {
+  color: #475467;
+
+  font-size: 13px;
+  font-weight: 600;
+}
+
+
+/* =========================================
+   LOCATION
+   ========================================= */
+
+.location-text {
+  max-width: 170px;
+
+  color: #667085;
+
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+
+/* =========================================
+   SEVERITY
+   ========================================= */
+
+.problem-severity {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  min-width: 70px;
+
+  padding: 6px 10px;
+
+  border-radius: 20px;
+
+  font-size: 11px;
+  font-weight: 800;
+
+  text-transform: capitalize;
+}
+
+.problem-severity.critical {
+  background: #fee2e2;
+  color: #b42318;
+}
+
+.problem-severity.high {
+  background: #fff0df;
+  color: #c2410c;
+}
+
+.problem-severity.medium {
+  background: #fff7d6;
+  color: #a16207;
+}
+
+.problem-severity.low {
+  background: #e9f8f0;
+  color: #15803d;
+}
+
+.problem-severity.unknown {
+  background: #eef1f5;
+  color: #667085;
+}
+
+
+/* =========================================
+   URGENCY
+   ========================================= */
+
+.urgency-text {
+  color: #475467;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  text-transform: capitalize;
+}
+
+
+/* =========================================
+   STATUS
+   ========================================= */
+
+.problem-status {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 6px 11px;
+
+  border-radius: 20px;
+
+  background: #eef1f5;
+  color: #667085;
+
+  font-size: 11px;
+  font-weight: 800;
+
+  text-transform: capitalize;
+}
+
+.problem-status.submitted {
+  background: #fff4d6;
+  color: #a16207;
+}
+
+.problem-status.approved {
+  background: #e8f7ef;
+  color: #15803d;
+}
+
+.problem-status.rejected {
+  background: #fee2e2;
+  color: #b42318;
+}
+
+
+/* =========================================
+   LOADING / ERROR / EMPTY
+   ========================================= */
+
+.problems-message {
+  padding: 30px;
+
+  background: #ffffff;
+
+  border: 1px solid #e4e9f0;
+  border-radius: 12px;
+
+  color: #667085;
+
+  font-size: 14px;
+
+  text-align: center;
+}
+
+.problems-error {
+  padding: 18px 20px;
+
+  border: 1px solid #fecaca;
+  border-radius: 10px;
+
+  background: #fff5f5;
+  color: #b42318;
+
+  font-size: 14px;
+  font-weight: 600;
+}
+
+
+/* =========================================
+   TABLE HINT
+   ========================================= */
+
+.table-hint {
+  margin: 13px 3px 0;
+
+  color: #8a94a6;
+
+  font-size: 12px;
+}
+
+
+/* =========================================
+   RESPONSIVE
+   ========================================= */
+
+@media (max-width: 1050px) {
+
+  .problem-stats {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+}
+
+
+@media (max-width: 800px) {
+
+  .problems-content {
+    width: 92%;
+    padding-top: 30px;
+  }
+
+  .problems-header {
+    align-items: flex-start;
+
+    flex-direction: column;
+  }
+
+  .problems-refresh-button {
+    align-self: flex-start;
+  }
+
+  .priority-table-header {
+    align-items: flex-start;
+
+    flex-direction: column;
+  }
+
+  .queue-count {
+    align-self: flex-start;
+  }
+
+}
+
+
+@media (max-width: 600px) {
+
+  .problems-content {
+    width: 92%;
+  }
+
+  .problems-title {
+    font-size: 28px;
+  }
+
+  .problems-subtitle {
+    font-size: 14px;
+  }
+
+  .problem-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .problem-stat-card {
+    padding: 20px;
+  }
+
+  .priority-table-header {
+    padding: 20px;
+  }
+
+}

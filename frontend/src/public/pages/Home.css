@@ -1,15 +1,12 @@
 /* =========================================
    CIVIORA HOME PAGE
-   UI ONLY
-   Core React / Routing untouched
    ========================================= */
 
 .public-home {
   min-height: 100vh;
-  overflow: hidden;
 
   background: #ffffff;
-  color: #222;
+  color: #171a18;
 
   font-family:
     -apple-system,
@@ -19,15 +16,22 @@
     Oxygen,
     Ubuntu,
     Cantarell,
-    "Fira Sans",
-    "Droid Sans",
     "Helvetica Neue",
     sans-serif;
 }
 
+.public-home * {
+  box-sizing: border-box;
+}
+
 .public-home a {
-  text-decoration: none;
   color: inherit;
+  text-decoration: none;
+}
+
+.content-width {
+  width: min(1120px, 90%);
+  margin: 0 auto;
 }
 
 
@@ -36,128 +40,169 @@
    ========================================= */
 
 .navbar {
+  width: 100%;
   height: 76px;
 
-  padding: 0 7%;
+  padding: 0 6.5%;
 
   display: flex;
   align-items: center;
-  justify-content: flex-start;
 
   background: #ffffff;
-
-  border-bottom: 1px solid #e8e8e8;
+  border-bottom: 1px solid #e8ebe9;
 
   position: relative;
-  z-index: 10;
+  z-index: 20;
 }
 
 .navbar-brand {
+  flex-shrink: 0;
+
+  color: #171a18;
+
   font-size: 25px;
-  font-weight: 800;
+  font-weight: 850;
   letter-spacing: 2px;
-
-  margin-right: 30px;
-
-  color: #222;
 }
 
 .navbar-links {
   display: flex;
-  gap: 34px;
-
-  font-size: 14px;
-  font-weight: 500;
-
-  color: #666;
-}
-
-.navbar-links a:hover,
-.login-link:hover {
-  color: #0b7a53;
-}
-
-.navbar-actions {
-  display: flex;
   align-items: center;
-  gap: 22px;
 
-  margin-left: auto;
-}
+  gap: 34px;
+  margin-left: 48px;
 
-.login-link {
+  color: #5e6661;
+
   font-size: 14px;
   font-weight: 600;
 }
 
+.navbar-links a {
+  height: 76px;
 
-/* =========================================
-   GREEN BUTTON
-   ========================================= */
-
-.register-button,
-.primary-button {
-  display: inline-flex;
-
+  display: flex;
   align-items: center;
-  justify-content: center;
 
-  gap: 9px;
+  position: relative;
+
+  transition: color 0.2s ease;
+}
+
+.navbar-links a:hover {
+  color: #0b7a53;
+}
+
+.navbar-links a.active {
+  color: #0b7a53;
+}
+
+.navbar-links a.active::after {
+  content: "";
+
+  position: absolute;
+
+  left: 0;
+  right: 0;
+  bottom: 18px;
+
+  height: 2px;
+
+  border-radius: 2px;
 
   background: #0b7a53;
-  color: white !important;
+}
 
-  border-radius: 7px;
+.navbar-actions {
+  margin-left: auto;
 
-  font-weight: 700;
+  display: flex;
+  align-items: center;
 
-  transition: all 0.2s ease;
+  gap: 22px;
+}
+
+.login-link {
+  color: #252a27;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  transition: color 0.2s ease;
+}
+
+.login-link:hover {
+  color: #0b7a53;
 }
 
 .register-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
   padding: 11px 17px;
+
+  background: #0b7a53;
+  color: #ffffff !important;
+
+  border-radius: 7px;
+
   font-size: 13px;
+  font-weight: 700;
+
+  transition: 0.2s ease;
 }
 
-.register-button:hover,
-.primary-button:hover {
+.register-button:hover {
   background: #086443;
-
   transform: translateY(-1px);
+
+  box-shadow: 0 8px 20px rgba(11, 122, 83, 0.14);
 }
 
 
 /* =========================================
-   HERO SECTION
+   HERO
    ========================================= */
 
 .hero-section {
-  min-height: 650px;
+  padding: 90px 0 88px;
 
-  display: flex;
-  justify-content: center;
+  background:
+    radial-gradient(
+      circle at 82% 42%,
+      rgba(11, 122, 83, 0.055),
+      transparent 30%
+    ),
+    #ffffff;
+}
+
+.hero-container {
+  width: min(1160px, 90%);
+
+  margin: 0 auto;
+
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1.02fr)
+    minmax(420px, 0.98fr);
+
   align-items: center;
 
-  padding: 90px 7% 80px;
-
-  background: #ffffff;
+  gap: 75px;
 }
 
-.hero-content {
-  width: 100%;
-  max-width: 1150px;
-
-  text-align: center;
+.hero-copy {
+  padding-bottom: 5px;
 }
-
-
-/* =========================================
-   HERO BADGE
-   ========================================= */
 
 .hero-badge {
-  display: inline-flex;
+  width: fit-content;
 
+  display: inline-flex;
   align-items: center;
 
   gap: 8px;
@@ -167,303 +212,454 @@
   border: 1px solid #cfe3da;
   border-radius: 30px;
 
-  background: #ffffff;
+  background: #fbfdfc;
 
   color: #0b7a53;
 
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 800;
 
   letter-spacing: 1px;
 }
 
+.hero-copy h1 {
+  max-width: 690px;
 
-/* =========================================
-   HERO HEADING
-   ========================================= */
+  margin: 25px 0 0;
 
-.hero-content h1 {
-  max-width: 900px;
+  color: #171a18;
 
-  margin: 25px auto 0;
+  font-size: clamp(52px, 5.3vw, 76px);
 
-  color: #181818;
+  line-height: 0.99;
 
-  font-size: clamp(48px, 7vw, 82px);
+  letter-spacing: -3.8px;
 
-  line-height: 0.98;
-
-  letter-spacing: -3px;
-
-  font-weight: 800;
+  font-weight: 850;
 }
 
-.hero-content h1 span {
+.hero-copy h1 span {
   color: #0b7a53;
 }
 
-
-/* =========================================
-   HERO DESCRIPTION
-   ========================================= */
-
 .hero-description {
-  max-width: 710px;
+  max-width: 620px;
 
-  margin: 28px auto 0;
+  margin: 28px 0 0;
 
-  color: #666;
+  color: #69726d;
 
-  font-size: 17px;
+  font-size: 16px;
 
-  line-height: 1.7;
+  line-height: 1.75;
 }
-
-
-/* =========================================
-   HERO BUTTONS
-   ========================================= */
 
 .hero-actions {
   display: flex;
+  align-items: center;
 
-  justify-content: center;
+  gap: 12px;
 
-  gap: 13px;
-
-  margin-top: 35px;
+  margin-top: 31px;
 }
 
-.primary-button {
-  padding: 14px 21px;
-
-  font-size: 14px;
-}
-
+.primary-button,
 .secondary-button {
-  display: inline-flex;
+  min-height: 48px;
 
+  display: inline-flex;
   align-items: center;
   justify-content: center;
 
-  padding: 14px 21px;
+  gap: 8px;
 
-  border: 1px solid #d9d9d9;
+  padding: 12px 19px;
 
   border-radius: 7px;
 
-  background: #ffffff;
-
-  color: #333;
-
-  font-size: 14px;
-
+  font-size: 13px;
   font-weight: 700;
 
   transition: 0.2s ease;
+}
+
+.primary-button {
+  background: #0b7a53;
+  color: #ffffff !important;
+
+  border: 1px solid #0b7a53;
+}
+
+.primary-button:hover {
+  background: #086443;
+
+  transform: translateY(-1px);
+
+  box-shadow: 0 8px 20px rgba(11, 122, 83, 0.15);
+}
+
+.secondary-button {
+  background: #ffffff;
+
+  color: #2c312e;
+
+  border: 1px solid #d8ddda;
 }
 
 .secondary-button:hover {
   border-color: #0b7a53;
-
   color: #0b7a53;
 }
 
 
 /* =========================================
-   CIVIC NETWORK
-   Simple and beginner-friendly
+   HERO ECOSYSTEM
    ========================================= */
 
-.hero-network {
-  display: flex;
+.hero-visual {
+  padding: 27px;
 
-  align-items: center;
+  border: 1px solid #e0e5e2;
+  border-radius: 18px;
 
-  justify-content: center;
+  background: linear-gradient(
+    145deg,
+    #ffffff 0%,
+    #fbfdfc 100%
+  );
 
-  gap: 12px;
-
-  margin-top: 65px;
-
-  flex-wrap: wrap;
+  box-shadow:
+    0 18px 45px rgba(18, 38, 29, 0.06);
 }
 
-.network-item {
-  min-width: 105px;
+.visual-label {
+  margin-bottom: 23px;
 
-  padding: 14px 15px;
+  color: #7b8580;
+
+  font-size: 10px;
+  font-weight: 800;
+
+  letter-spacing: 1.6px;
+}
+
+.ecosystem-flow {
+  display: flex;
+  flex-direction: column;
+}
+
+.ecosystem-node {
+  min-height: 66px;
+
+  padding: 12px 14px;
 
   display: flex;
-
-  flex-direction: column;
-
   align-items: center;
 
-  justify-content: center;
+  gap: 13px;
 
-  gap: 7px;
-
-  border: 1px solid #dddddd;
-
+  border: 1px solid #e1e5e3;
   border-radius: 10px;
 
   background: #ffffff;
 
-  color: #333;
-
-  font-size: 12px;
-
-  font-weight: 600;
-
   box-shadow:
-    0 5px 15px rgba(0, 0, 0, 0.04);
-}
-
-
-/* All network boxes stay white */
-
-.ai-node {
-  border-color: #dddddd;
-
-  background: #ffffff;
-
-  color: #333;
-}
-
-.network-arrow {
-  color: #0b7a53;
-}
-
-
-/* =========================================
-   MISSION SECTION
-   ========================================= */
-
-.mission-section {
-  padding: 95px 7%;
-
-  background: #ffffff;
-}
-
-.section-heading {
-  max-width: 760px;
-
-  margin: 0 auto;
-
-  text-align: center;
-}
-
-.section-label {
-  color: #0b7a53;
-
-  font-size: 11px;
-
-  font-weight: 800;
-
-  letter-spacing: 1.7px;
-}
-
-.section-heading h2,
-.cta-section h2 {
-  margin: 16px 0;
-
-  color: #181818;
-
-  font-size: clamp(35px, 5vw, 54px);
-
-  line-height: 1.05;
-
-  letter-spacing: -1.8px;
-}
-
-.section-heading p {
-  color: #707070;
-
-  font-size: 16px;
-
-  line-height: 1.7;
-}
-
-
-/* =========================================
-   MISSION CARDS
-   Simple white cards
-   ========================================= */
-
-.mission-cards {
-  max-width: 1100px;
-
-  margin: 55px auto 0;
-
-  display: grid;
-
-  grid-template-columns: repeat(3, 1fr);
-
-  gap: 20px;
-}
-
-.mission-card {
-  padding: 30px;
-
-  border: 1px solid #e2e2e2;
-
-  border-radius: 12px;
-
-  background: #ffffff;
-
-  box-shadow:
-    0 5px 18px rgba(0, 0, 0, 0.04);
+    0 4px 12px rgba(0, 0, 0, 0.025);
 
   transition: 0.2s ease;
 }
 
-.mission-card:hover {
-  transform: translateY(-2px);
-
-  border-color: #c9ddd4;
-
-  box-shadow:
-    0 8px 22px rgba(0, 0, 0, 0.06);
+.ecosystem-node:hover {
+  border-color: #c4dbd1;
+  transform: translateX(3px);
 }
 
-.mission-card span {
+.node-icon {
+  width: 39px;
+  height: 39px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 9px;
+
+  background: #eef7f2;
+
   color: #0b7a53;
+}
+
+.ecosystem-node strong {
+  display: block;
+
+  color: #242925;
+
+  font-size: 13px;
+}
+
+.ecosystem-node span {
+  display: block;
+
+  margin-top: 3px;
+
+  color: #818983;
 
   font-size: 11px;
-
-  font-weight: 800;
 }
 
-.mission-card h3 {
-  margin: 20px 0 10px;
+.flow-line {
+  width: 1px;
+  height: 25px;
 
-  color: #222;
+  margin-left: 33px;
 
-  font-size: 22px;
-
-  font-weight: 700;
-}
-
-.mission-card p {
-  margin: 0;
-
-  color: #707070;
-
-  line-height: 1.65;
-
-  font-size: 14px;
+  background: #b7cec3;
 }
 
 
 /* =========================================
-   CTA SECTION
-   HIDDEN
-   React code/functionality remains untouched
+   MISSION
    ========================================= */
 
-.cta-section {
-  display: none;
+.mission-section {
+  padding: 100px 0 105px;
+
+  background: #f8faf9;
+
+  border-top: 1px solid #eef1ef;
+  border-bottom: 1px solid #eef1ef;
+}
+
+.mission-header {
+  display: grid;
+
+  grid-template-columns: 180px minmax(0, 1fr);
+
+  gap: 70px;
+
+  align-items: start;
+}
+
+.section-label {
+  display: inline-block;
+
+  color: #0b7a53;
+
+  font-size: 10px;
+  font-weight: 850;
+
+  letter-spacing: 1.7px;
+
+  line-height: 1.5;
+}
+
+.mission-heading {
+  display: grid;
+
+  grid-template-columns: minmax(260px, 0.9fr) minmax(300px, 1.1fr);
+
+  gap: 60px;
+
+  align-items: start;
+}
+
+.mission-heading h2 {
+  margin: 0;
+
+  color: #171a18;
+
+  font-size: clamp(34px, 4vw, 48px);
+
+  line-height: 1.05;
+
+  letter-spacing: -2px;
+
+  font-weight: 820;
+}
+
+.mission-heading p {
+  max-width: 520px;
+
+  margin: 3px 0 0;
+
+  color: #68716c;
+
+  font-size: 15px;
+
+  line-height: 1.8;
+}
+
+.mission-divider {
+  height: 1px;
+
+  margin: 60px 0 0;
+
+  background: #dfe5e1;
+}
+
+.mission-points {
+  display: grid;
+
+  grid-template-columns: repeat(3, 1fr);
+
+  border-bottom: 1px solid #dfe5e1;
+}
+
+.mission-point {
+  min-height: 175px;
+
+  padding: 32px 35px 28px 0;
+
+  display: flex;
+  align-items: flex-start;
+
+  gap: 22px;
+}
+
+.mission-point + .mission-point {
+  padding-left: 35px;
+
+  border-left: 1px solid #dfe5e1;
+}
+
+.mission-point > span {
+  flex-shrink: 0;
+
+  color: #0b7a53;
+
+  font-size: 11px;
+  font-weight: 850;
+}
+
+.mission-point h3 {
+  margin: 0;
+
+  color: #252a27;
+
+  font-size: 18px;
+
+  line-height: 1.3;
+}
+
+.mission-point p {
+  margin: 10px 0 0;
+
+  color: #737c77;
+
+  font-size: 13px;
+
+  line-height: 1.65;
+}
+
+
+/* =========================================
+   ECOSYSTEM SECTION
+   ========================================= */
+
+.ecosystem-section {
+  padding: 105px 0;
+
+  background: #ffffff;
+}
+
+.section-top {
+  display: grid;
+
+  grid-template-columns: 1fr 390px;
+
+  gap: 70px;
+
+  align-items: end;
+}
+
+.section-top h2 {
+  margin: 13px 0 0;
+
+  color: #171a18;
+
+  font-size: clamp(34px, 4vw, 48px);
+
+  line-height: 1.05;
+
+  letter-spacing: -2px;
+
+  font-weight: 820;
+}
+
+.section-top > p {
+  margin: 0;
+
+  color: #707873;
+
+  font-size: 14px;
+
+  line-height: 1.75;
+}
+
+.role-grid {
+  margin-top: 58px;
+
+  display: grid;
+
+  grid-template-columns: repeat(5, 1fr);
+
+  border-top: 1px solid #dfe4e1;
+  border-bottom: 1px solid #dfe4e1;
+}
+
+.role-card {
+  min-height: 255px;
+
+  padding: 27px 23px;
+}
+
+.role-card + .role-card {
+  border-left: 1px solid #dfe4e1;
+}
+
+.role-number {
+  color: #0b7a53;
+
+  font-size: 10px;
+  font-weight: 850;
+}
+
+.role-icon {
+  width: 43px;
+  height: 43px;
+
+  margin-top: 28px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 10px;
+
+  background: #eef7f2;
+
+  color: #0b7a53;
+}
+
+.role-card h3 {
+  margin: 20px 0 9px;
+
+  color: #222724;
+
+  font-size: 18px;
+  font-weight: 750;
+}
+
+.role-card p {
+  margin: 0;
+
+  color: #747d78;
+
+  font-size: 12px;
+
+  line-height: 1.7;
 }
 
 
@@ -472,84 +668,139 @@
    ========================================= */
 
 .footer {
-  padding: 55px 7% 25px;
+  padding: 58px 0 25px;
 
-  background: #0e1712;
+  background: #0a110d;
 
-  color: white;
+  color: #ffffff;
 }
 
 .footer-main {
-  max-width: 1100px;
+  width: min(1120px, 90%);
 
   margin: 0 auto;
 
-  display: flex;
+  display: grid;
 
-  justify-content: space-between;
+  grid-template-columns: 1fr 150px 150px;
 
-  gap: 50px;
+  gap: 70px;
 }
 
 .footer-brand {
-  font-size: 22px;
+  color: #ffffff;
 
-  font-weight: 800;
+  font-size: 22px;
+  font-weight: 850;
 
   letter-spacing: 2px;
 }
 
-.footer-main p {
+.footer-brand-section p {
   max-width: 390px;
 
-  margin-top: 16px;
+  margin: 15px 0 0;
 
-  color: #9daaa3;
-
-  line-height: 1.6;
-
-  font-size: 14px;
-}
-
-.footer-links {
-  display: flex;
-
-  flex-wrap: wrap;
-
-  align-content: flex-start;
-
-  gap: 25px;
-
-  color: #b9c2bd;
+  color: #9aa69f;
 
   font-size: 13px;
+
+  line-height: 1.7;
 }
 
-.footer-links a:hover {
-  color: white;
+.footer-column {
+  display: flex;
+  flex-direction: column;
+
+  gap: 12px;
+
+  font-size: 12px;
+}
+
+.footer-column span {
+  margin-bottom: 4px;
+
+  color: #ffffff;
+
+  font-size: 11px;
+  font-weight: 750;
+
+  text-transform: uppercase;
+
+  letter-spacing: 1px;
+}
+
+.footer-column a {
+  color: #8e9b94;
+
+  transition: color 0.2s ease;
+}
+
+.footer-column a:hover {
+  color: #ffffff;
 }
 
 .footer-bottom {
-  max-width: 1100px;
+  width: min(1120px, 90%);
 
   margin: 50px auto 0;
 
   padding-top: 20px;
 
-  border-top: 1px solid #29342e;
-
   display: flex;
-
   justify-content: space-between;
 
-  color: #758179;
+  border-top: 1px solid #26312b;
 
-  font-size: 11px;
+  color: #68756d;
+
+  font-size: 10px;
 }
 
 
 /* =========================================
-   RESPONSIVE
+   TABLET
+   ========================================= */
+
+@media (max-width: 1050px) {
+
+  .hero-container {
+    grid-template-columns:
+      minmax(0, 1fr)
+      minmax(360px, 0.9fr);
+
+    gap: 45px;
+  }
+
+  .hero-copy h1 {
+    font-size: clamp(48px, 5.7vw, 65px);
+  }
+
+  .mission-header {
+    gap: 40px;
+  }
+
+  .mission-heading {
+    gap: 35px;
+  }
+
+  .role-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .role-card:nth-child(4),
+  .role-card:nth-child(5) {
+    border-top: 1px solid #dfe4e1;
+  }
+
+  .role-card:nth-child(4) {
+    border-left: none;
+  }
+}
+
+
+/* =========================================
+   TABLET
    ========================================= */
 
 @media (max-width: 800px) {
@@ -559,91 +810,121 @@
   }
 
   .navbar-links {
-    display: none;
-  }
-
-  .navbar-actions {
-    gap: 14px;
+    gap: 22px;
+    margin-left: 30px;
   }
 
   .hero-section {
-    min-height: auto;
-
-    padding: 75px 5% 60px;
+    padding: 70px 0;
   }
 
-  .hero-content h1 {
-    letter-spacing: -2px;
-  }
-
-  .hero-description {
-    font-size: 15px;
-  }
-
-  .hero-network {
-    margin-top: 45px;
-
-    gap: 8px;
-  }
-
-  .network-item {
-    min-width: 90px;
-
-    padding: 12px 10px;
-
-    font-size: 11px;
-  }
-
-  .mission-section {
-    padding: 70px 5%;
-  }
-
-  .section-heading p {
-    font-size: 15px;
-  }
-
-  .mission-cards {
+  .hero-container {
     grid-template-columns: 1fr;
 
-    gap: 15px;
-
-    margin-top: 40px;
+    gap: 55px;
   }
 
-  .mission-card {
-    padding: 24px;
+  .hero-copy {
+    max-width: 720px;
   }
 
-  .mission-card h3 {
-    margin-top: 15px;
+  .hero-visual {
+    max-width: 650px;
+  }
+
+  .mission-section,
+  .ecosystem-section {
+    padding: 80px 0;
+  }
+
+  .mission-header {
+    grid-template-columns: 1fr;
+
+    gap: 25px;
+  }
+
+  .mission-heading {
+    grid-template-columns: 1fr;
+
+    gap: 20px;
+  }
+
+  .mission-points {
+    grid-template-columns: 1fr;
+  }
+
+  .mission-point,
+  .mission-point + .mission-point {
+    padding: 25px 0;
+
+    border-left: none;
+  }
+
+  .mission-point + .mission-point {
+    border-top: 1px solid #dfe5e1;
+  }
+
+  .section-top {
+    grid-template-columns: 1fr;
+
+    gap: 20px;
+  }
+
+  .role-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .role-card:nth-child(3) {
+    border-left: none;
+
+    border-top: 1px solid #dfe4e1;
+  }
+
+  .role-card:nth-child(4) {
+    border-left: 1px solid #dfe4e1;
+  }
+
+  .role-card:nth-child(5) {
+    grid-column: span 2;
+
+    border-left: none;
+    border-top: 1px solid #dfe4e1;
   }
 
   .footer-main {
-    flex-direction: column;
-  }
+    grid-template-columns: 1fr 140px 140px;
 
-  .footer-bottom {
-    flex-direction: column;
-
-    gap: 10px;
+    gap: 35px;
   }
 }
 
 
 /* =========================================
-   SMALL MOBILE
+   MOBILE
    ========================================= */
 
-@media (max-width: 500px) {
+@media (max-width: 600px) {
+
+  .content-width {
+    width: 90%;
+  }
 
   .navbar {
     height: 68px;
+
+    padding: 0 5%;
   }
 
   .navbar-brand {
     font-size: 21px;
+  }
 
-    margin-right: 0;
+  .navbar-links {
+    display: none;
+  }
+
+  .navbar-actions {
+    gap: 13px;
   }
 
   .login-link {
@@ -657,21 +938,23 @@
   }
 
   .hero-section {
-    padding: 60px 5% 50px;
+    padding: 58px 0 65px;
   }
 
-  .hero-badge {
-    font-size: 9px;
+  .hero-container {
+    width: 90%;
 
-    padding: 7px 10px;
+    gap: 40px;
   }
 
-  .hero-content h1 {
-    font-size: 42px;
+  .hero-copy h1 {
+    margin-top: 22px;
 
-    line-height: 1;
+    font-size: clamp(42px, 12vw, 57px);
 
-    letter-spacing: -1.8px;
+    line-height: 1.01;
+
+    letter-spacing: -2.5px;
   }
 
   .hero-description {
@@ -679,69 +962,127 @@
 
     font-size: 14px;
 
-    line-height: 1.6;
+    line-height: 1.7;
   }
 
   .hero-actions {
     flex-direction: column;
-
     align-items: stretch;
 
-    margin-top: 28px;
+    margin-top: 27px;
   }
 
   .primary-button,
   .secondary-button {
     width: 100%;
-
-    box-sizing: border-box;
   }
 
-  .hero-network {
-    margin-top: 40px;
+  .hero-visual {
+    padding: 20px;
 
-    display: grid;
-
-    grid-template-columns: repeat(2, 1fr);
-
-    gap: 10px;
+    border-radius: 14px;
   }
 
-  .network-arrow {
-    display: none;
+  .mission-section,
+  .ecosystem-section {
+    padding: 65px 0;
   }
 
-  .network-item {
-    width: 100%;
-
-    box-sizing: border-box;
+  .mission-heading h2,
+  .section-top h2 {
+    font-size: 35px;
   }
 
-  .mission-section {
-    padding: 60px 5%;
-  }
-
-  .section-heading h2 {
-    font-size: 36px;
-  }
-
-  .section-heading p {
+  .mission-heading p {
     font-size: 14px;
   }
 
-  .mission-card {
-    padding: 22px;
+  .mission-divider {
+    margin-top: 40px;
   }
 
-  .mission-card h3 {
-    font-size: 20px;
+  .role-grid {
+    grid-template-columns: 1fr;
   }
 
-  .mission-card p {
-    font-size: 13px;
+  .role-card,
+  .role-card:nth-child(5) {
+    grid-column: auto;
+
+    min-height: 205px;
+
+    border-left: none !important;
+
+    border-top: 1px solid #dfe4e1;
+  }
+
+  .role-card:first-child {
+    border-top: none;
   }
 
   .footer {
-    padding: 45px 5% 20px;
+    padding: 45px 0 20px;
+  }
+
+  .footer-main {
+    width: 90%;
+
+    grid-template-columns: 1fr;
+
+    gap: 30px;
+  }
+
+  .footer-column {
+    gap: 9px;
+  }
+
+  .footer-bottom {
+    width: 90%;
+
+    margin-top: 35px;
+
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    gap: 9px;
+  }
+}
+
+
+/* =========================================
+   SMALL MOBILE
+   ========================================= */
+
+@media (max-width: 400px) {
+
+  .hero-copy h1 {
+    font-size: 40px;
+
+    letter-spacing: -2px;
+  }
+
+  .hero-badge {
+    font-size: 9px;
+  }
+
+  .hero-visual {
+    padding: 16px;
+  }
+
+  .ecosystem-node {
+    min-height: 61px;
+
+    padding: 10px;
+  }
+
+  .node-icon {
+    width: 35px;
+    height: 35px;
+  }
+
+  .mission-heading h2,
+  .section-top h2 {
+    font-size: 31px;
   }
 }

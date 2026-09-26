@@ -2,39 +2,10 @@
   min-height: 100vh;
   background: #f5f7fb;
   color: #172033;
+  font-family: Arial, sans-serif;
 }
 
-.government-review-navbar {
-  height: 72px;
-  padding: 0 7%;
-  background: #ffffff;
-  border-bottom: 1px solid #e5e9f0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.government-review-brand {
-  font-size: 22px;
-  font-weight: 800;
-  letter-spacing: 1px;
-}
-
-.government-review-nav-links {
-  display: flex;
-  gap: 28px;
-}
-
-.government-review-nav-links a {
-  text-decoration: none;
-  color: #536078;
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.government-review-nav-links a:hover {
-  color: #1d4ed8;
-}
+/* MAIN CONTENT */
 
 .government-review-container {
   width: 86%;
@@ -42,6 +13,8 @@
   margin: 0 auto;
   padding: 36px 0 60px;
 }
+
+/* BACK BUTTON */
 
 .back-to-solutions-button {
   display: inline-block;
@@ -51,6 +24,12 @@
   font-weight: 600;
   font-size: 14px;
 }
+
+.back-to-solutions-button:hover {
+  text-decoration: underline;
+}
+
+/* HEADER */
 
 .government-review-header {
   background: #ffffff;
@@ -76,6 +55,7 @@
 .government-review-header h1 {
   margin: 0 0 10px;
   font-size: 30px;
+  color: #172033;
 }
 
 .government-review-header p {
@@ -83,6 +63,8 @@
   color: #667085;
   line-height: 1.6;
 }
+
+/* SOLUTION STATUS */
 
 .solution-status {
   padding: 8px 14px;
@@ -108,6 +90,8 @@
   color: #b91c1c;
 }
 
+/* SECTIONS */
+
 .government-review-section {
   background: #ffffff;
   border: 1px solid #e5e9f0;
@@ -123,12 +107,15 @@
 .section-heading h2 {
   margin: 0 0 6px;
   font-size: 21px;
+  color: #172033;
 }
 
 .section-heading span {
   color: #7a8497;
   font-size: 13px;
 }
+
+/* PROBLEM */
 
 .problem-review-card {
   border: 1px solid #e6eaf0;
@@ -140,6 +127,7 @@
 .problem-review-card h3 {
   margin: 0 0 12px;
   font-size: 20px;
+  color: #172033;
 }
 
 .problem-description {
@@ -147,6 +135,8 @@
   line-height: 1.7;
   margin-bottom: 24px;
 }
+
+/* PROBLEM DETAILS */
 
 .problem-details-grid {
   display: grid;
@@ -173,6 +163,8 @@
   color: #263248;
 }
 
+/* SOLUTION */
+
 .solution-review-card {
   display: grid;
   gap: 18px;
@@ -188,6 +180,7 @@
 .review-content-block h3 {
   margin: 0 0 10px;
   font-size: 16px;
+  color: #172033;
 }
 
 .review-content-block p {
@@ -196,6 +189,8 @@
   line-height: 1.7;
   white-space: pre-wrap;
 }
+
+/* FEEDBACK */
 
 .feedback-card {
   border: 1px solid #e6eaf0;
@@ -209,6 +204,7 @@
   margin-bottom: 10px;
   font-size: 14px;
   font-weight: 700;
+  color: #172033;
 }
 
 .feedback-card textarea {
@@ -228,6 +224,8 @@
 .feedback-card textarea:focus {
   border-color: #2563eb;
 }
+
+/* ACTION BUTTONS */
 
 .review-actions {
   margin-top: 18px;
@@ -270,9 +268,16 @@
   cursor: not-allowed;
 }
 
+/* LOADING / ERROR */
+
 .government-review-loading,
 .government-review-error,
 .empty-review-box {
+  width: 86%;
+  max-width: 1200px;
+  margin: 40px auto;
+  box-sizing: border-box;
+
   background: #ffffff;
   border: 1px solid #e5e9f0;
   border-radius: 12px;
@@ -280,18 +285,13 @@
   color: #667085;
 }
 
-.government-review-loading {
-  width: 86%;
-  max-width: 1200px;
-  margin: 40px auto;
-}
-
 .government-review-error {
   color: #b91c1c;
   background: #fff5f5;
   border-color: #fecaca;
-  margin-bottom: 18px;
 }
+
+/* RESPONSIVE */
 
 @media (max-width: 900px) {
   .problem-details-grid {
@@ -304,19 +304,6 @@
 }
 
 @media (max-width: 600px) {
-  .government-review-navbar {
-    height: auto;
-    padding: 18px 5%;
-    flex-direction: column;
-    gap: 15px;
-  }
-
-  .government-review-nav-links {
-    gap: 15px;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
   .government-review-container {
     width: 92%;
   }
@@ -324,6 +311,10 @@
   .government-review-header,
   .government-review-section {
     padding: 20px;
+  }
+
+  .government-review-header h1 {
+    font-size: 26px;
   }
 
   .problem-details-grid {

@@ -2,18 +2,19 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "../../supabaseClient";
 import "./Settings.css";
+import "./GovernmentNavbar.css";
 
 function Settings() {
   const navigate = useNavigate();
 
   const [profile, setProfile] = useState(null);
+  const [userEmail, setUserEmail] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
-  loadProfile();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-}, []);
+    loadProfile();
+  }, []);
 
   const loadProfile = async () => {
     try {
@@ -21,15 +22,15 @@ function Settings() {
       setError("");
 
       const {
-        data: {
-          user,
-        },
+        data: { user },
       } = await supabase.auth.getUser();
 
       if (!user) {
-        navigate("/login");
+        setError("Government user session not found.");
         return;
       }
+
+      setUserEmail(user.email || "");
 
       const { data, error } = await supabase
         .from("profiles")
@@ -42,8 +43,8 @@ function Settings() {
       }
 
       setProfile(data);
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      console.error(err);
       setError("Unable to load government profile.");
     } finally {
       setLoading(false);
@@ -53,10 +54,9 @@ function Settings() {
   const handleLogout = async () => {
     try {
       await supabase.auth.signOut();
-
       navigate("/login");
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      console.error(err);
     }
   };
 
@@ -76,19 +76,15 @@ function Settings() {
           <div className="government-nav-links">
 
             <Link to="/government">
-              Dashboard
+              Home
             </Link>
 
-            <Link to="/government">
+            <Link to="/government/problems">
               Problems
             </Link>
 
             <Link to="/government/solutions">
               Solutions
-            </Link>
-
-            <Link to="/government/companies">
-              Companies
             </Link>
 
             <Link to="/government/meetings">
@@ -129,7 +125,7 @@ function Settings() {
     );
   }
 
-  if (error || !profile) {
+  if (error) {
     return (
       <div className="government-settings-page">
 
@@ -145,19 +141,15 @@ function Settings() {
           <div className="government-nav-links">
 
             <Link to="/government">
-              Dashboard
+              Home
             </Link>
 
-            <Link to="/government">
+            <Link to="/government/problems">
               Problems
             </Link>
 
             <Link to="/government/solutions">
               Solutions
-            </Link>
-
-            <Link to="/government/companies">
-              Companies
             </Link>
 
             <Link to="/government/meetings">
@@ -189,7 +181,7 @@ function Settings() {
         <main className="government-settings-content">
 
           <div className="settings-error">
-            {error || "Government profile not found."}
+            {error}
           </div>
 
         </main>
@@ -215,19 +207,15 @@ function Settings() {
         <div className="government-nav-links">
 
           <Link to="/government">
-            Dashboard
+            Home
           </Link>
 
-          <Link to="/government">
+          <Link to="/government/problems">
             Problems
           </Link>
 
           <Link to="/government/solutions">
             Solutions
-          </Link>
-
-          <Link to="/government/companies">
-            Companies
           </Link>
 
           <Link to="/government/meetings">
@@ -247,374 +235,356 @@ function Settings() {
 
         </div>
 
-        <Link
-          to="/login"
+        <button
           className="government-logout"
+          onClick={handleLogout}
         >
           Logout
-        </Link>
+        </button>
 
       </nav>
 
-      {/* SETTINGS CONTENT */}
+
+      {/* CONTENT */}
 
       <main className="government-settings-content">
 
-        <div className="settings-page-header">
+        <div className="settings-header">
 
-          <div>
+          <p className="settings-label">
+            GOVERNMENT WORKSPACE
+          </p>
 
-            <p className="settings-label">
-              GOVERNMENT WORKSPACE
-            </p>
+          <h1 className="settings-title">
+            Settings
+          </h1>
 
-            <h1>
-              Settings
-            </h1>
+          <p className="settings-subtitle">
+            Manage your government account and access information.
+          </p>
 
-            <p>
-              Manage your Civiora government account and
-              workspace information.
-            </p>
+        </div>
+
+
+        {/* PROFILE */}
+
+        <section className="settings-section">
+
+          <div className="settings-section-heading">
+
+            <div>
+
+              <h2>
+                Government Profile
+              </h2>
+
+              <p>
+                Account information associated with this government account.
+              </p>
+
+            </div>
 
           </div>
 
-        </div>
 
-        <div className="settings-layout">
+          <div className="profile-card">
 
-          {/* SETTINGS SIDEBAR */}
+            <div className="profile-avatar">
+              {(profile?.name ||
+                profile?.full_name ||
+                "G"
+              )
+                .charAt(0)
+                .toUpperCase()}
+            </div>
 
-          <aside className="settings-sidebar">
 
-            <div className="settings-sidebar-item active">
+            <div className="profile-main">
 
-              <span className="settings-sidebar-icon">
-                ◉
-              </span>
+              <h3>
+                {profile?.name ||
+                  profile?.full_name ||
+                  "Government Authority"}
+              </h3>
 
-              <div>
-                <strong>
-                  Profile
-                </strong>
-
-                <small>
-                  Account information
-                </small>
-              </div>
+              <p>
+                {userEmail}
+              </p>
 
             </div>
 
-            <div className="settings-sidebar-item">
+            <span className="profile-role">
+              Government
+            </span>
 
-              <span className="settings-sidebar-icon">
-                ◇
+          </div>
+
+
+          <div className="settings-details">
+
+            <div className="settings-detail">
+
+              <span>
+                FULL NAME
               </span>
 
-              <div>
-                <strong>
-                  Security
-                </strong>
-
-                <small>
-                  Account protection
-                </small>
-              </div>
+              <strong>
+                {profile?.name ||
+                  profile?.full_name ||
+                  "Not available"}
+              </strong>
 
             </div>
 
-            <div className="settings-sidebar-item">
 
-              <span className="settings-sidebar-icon">
+            <div className="settings-detail">
+
+              <span>
+                EMAIL
+              </span>
+
+              <strong>
+                {userEmail || "Not available"}
+              </strong>
+
+            </div>
+
+
+            <div className="settings-detail">
+
+              <span>
+                ROLE
+              </span>
+
+              <strong>
+                {profile?.role || "government"}
+              </strong>
+
+            </div>
+
+
+            <div className="settings-detail">
+
+              <span>
+                ACCOUNT STATUS
+              </span>
+
+              <strong className="status-active">
+                Active
+              </strong>
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+        {/* PLATFORM ACCESS */}
+
+        <section className="settings-section">
+
+          <div className="settings-section-heading">
+
+            <div>
+
+              <h2>
+                Platform Access
+              </h2>
+
+              <p>
+                Your current responsibilities within the Civiora workflow.
+              </p>
+
+            </div>
+
+          </div>
+
+
+          <div className="access-list">
+
+            <div className="access-item">
+
+              <div className="access-icon">
                 ✓
-              </span>
-
-              <div>
-                <strong>
-                  Notifications
-                </strong>
-
-                <small>
-                  Platform updates
-                </small>
               </div>
-
-            </div>
-
-          </aside>
-
-          {/* SETTINGS MAIN */}
-
-          <section className="settings-main">
-
-            <div className="settings-card">
-
-              <div className="settings-card-header">
-
-                <div>
-
-                  <p className="card-label">
-                    ACCOUNT
-                  </p>
-
-                  <h2>
-                    Government Profile
-                  </h2>
-
-                  <p>
-                    Information associated with your Civiora
-                    government account.
-                  </p>
-
-                </div>
-
-                <div className="profile-avatar">
-                  {profile.name
-                    ? profile.name.charAt(0).toUpperCase()
-                    : "G"}
-                </div>
-
-              </div>
-
-              <div className="profile-details">
-
-                <div className="profile-detail">
-
-                  <span>
-                    Full Name
-                  </span>
-
-                  <strong>
-                    {profile.name || "Not available"}
-                  </strong>
-
-                </div>
-
-                <div className="profile-detail">
-
-                  <span>
-                    Email Address
-                  </span>
-
-                  <strong>
-                    {profile.email || "Not available"}
-                  </strong>
-
-                </div>
-
-                <div className="profile-detail">
-
-                  <span>
-                    Civiora ID
-                  </span>
-
-                  <strong className="civiora-id">
-                    {profile.civiora_id || "Not available"}
-                  </strong>
-
-                </div>
-
-                <div className="profile-detail">
-
-                  <span>
-                    Account Role
-                  </span>
-
-                  <strong className="role-value">
-                    Government
-                  </strong>
-
-                </div>
-
-              </div>
-
-            </div>
-
-            <div className="settings-card">
-
-              <div className="settings-card-header">
-
-                <div>
-
-                  <p className="card-label">
-                    PLATFORM ACCESS
-                  </p>
-
-                  <h2>
-                    Government Workspace
-                  </h2>
-
-                  <p>
-                    Your account is connected to the
-                    government workflow of Civiora.
-                  </p>
-
-                </div>
-
-                <span className="access-status">
-                  Active
-                </span>
-
-              </div>
-
-              <div className="access-list">
-
-                <div className="access-item">
-
-                  <div className="access-icon">
-                    AI
-                  </div>
-
-                  <div>
-
-                    <strong>
-                      AI Priority Review
-                    </strong>
-
-                    <p>
-                      Review AI-ranked civic problems
-                      before government validation.
-                    </p>
-
-                  </div>
-
-                  <span className="enabled">
-                    Enabled
-                  </span>
-
-                </div>
-
-                <div className="access-item">
-
-                  <div className="access-icon">
-                    ✓
-                  </div>
-
-                  <div>
-
-                    <strong>
-                      Solution Review
-                    </strong>
-
-                    <p>
-                      Review university solutions submitted
-                      for approved civic problems.
-                    </p>
-
-                  </div>
-
-                  <span className="enabled">
-                    Enabled
-                  </span>
-
-                </div>
-
-                <div className="access-item">
-
-                  <div className="access-icon">
-                    C
-                  </div>
-
-                  <div>
-
-                    <strong>
-                      Company Coordination
-                    </strong>
-
-                    <p>
-                      Coordinate approved solutions with
-                      suitable companies.
-                    </p>
-
-                  </div>
-
-                  <span className="enabled">
-                    Enabled
-                  </span>
-
-                </div>
-
-              </div>
-
-            </div>
-
-            <div className="settings-card security-card">
-
-              <div className="settings-card-header">
-
-                <div>
-
-                  <p className="card-label">
-                    ACCOUNT SECURITY
-                  </p>
-
-                  <h2>
-                    Security
-                  </h2>
-
-                  <p>
-                    Your Civiora account is protected through
-                    authenticated access.
-                  </p>
-
-                </div>
-
-              </div>
-
-              <div className="security-row">
-
-                <div>
-
-                  <strong>
-                    Authentication
-                  </strong>
-
-                  <p>
-                    Your account uses secure Civiora
-                    authentication.
-                  </p>
-
-                </div>
-
-                <span className="security-badge">
-                  Protected
-                </span>
-
-              </div>
-
-            </div>
-
-            <div className="settings-card danger-card">
 
               <div>
 
-                <p className="card-label">
-                  ACCOUNT ACTION
-                </p>
-
-                <h2>
-                  Sign out
-                </h2>
+                <h3>
+                  Problem Validation
+                </h3>
 
                 <p>
-                  Sign out from this Government Civiora
-                  account on this device.
+                  Review and approve civic problems submitted by citizens.
                 </p>
 
               </div>
 
-              <button
-                className="settings-logout-button"
-                onClick={handleLogout}
-              >
-                Sign Out
-              </button>
+            </div>
+
+
+            <div className="access-item">
+
+              <div className="access-icon">
+                ✓
+              </div>
+
+              <div>
+
+                <h3>
+                  Solution Review
+                </h3>
+
+                <p>
+                  Review solutions developed by matched universities.
+                </p>
+
+              </div>
 
             </div>
 
-          </section>
 
-        </div>
+            <div className="access-item">
+
+              <div className="access-icon">
+                ✓
+              </div>
+
+              <div>
+
+                <h3>
+                  Implementation Coordination
+                </h3>
+
+                <p>
+                  Coordinate approved solutions with implementation companies.
+                </p>
+
+              </div>
+
+            </div>
+
+
+            <div className="access-item">
+
+              <div className="access-icon">
+                ✓
+              </div>
+
+              <div>
+
+                <h3>
+                  Meeting Management
+                </h3>
+
+                <p>
+                  View and manage meetings created through the Civiora workflow.
+                </p>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+        {/* SECURITY */}
+
+        <section className="settings-section">
+
+          <div className="settings-section-heading">
+
+            <div>
+
+              <h2>
+                Account Security
+              </h2>
+
+              <p>
+                Basic security information for your Civiora account.
+              </p>
+
+            </div>
+
+          </div>
+
+
+          <div className="security-card">
+
+            <div>
+
+              <span className="security-label">
+                AUTHENTICATION
+              </span>
+
+              <h3>
+                Secure account session
+              </h3>
+
+              <p>
+                Your account is authenticated through the Civiora
+                authentication system.
+              </p>
+
+            </div>
+
+            <span className="security-status">
+              Protected
+            </span>
+
+          </div>
+
+        </section>
+
+
+        {/* DANGER ZONE */}
+
+        <section className="settings-section danger-section">
+
+          <div className="settings-section-heading">
+
+            <div>
+
+              <h2>
+                Account Actions
+              </h2>
+
+              <p>
+                Sign out from the current government account.
+              </p>
+
+            </div>
+
+          </div>
+
+
+          <div className="danger-card">
+
+            <div>
+
+              <h3>
+                Sign out
+              </h3>
+
+              <p>
+                You will be returned to the Civiora login page.
+              </p>
+
+            </div>
+
+            <button
+              className="settings-logout-button"
+              onClick={handleLogout}
+            >
+              Logout
+            </button>
+
+          </div>
+
+        </section>
 
       </main>
 

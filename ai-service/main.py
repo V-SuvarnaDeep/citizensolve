@@ -1,6 +1,7 @@
 import os
 import tempfile
-
+import json
+from datetime import datetime, timedelta
 from dotenv import load_dotenv
 
 from fastapi import (
@@ -15,8 +16,12 @@ from fastapi import (
 from fastapi.middleware.cors import CORSMiddleware
 
 from supabase import create_client
+from google import genai
 
-from ai import analyze_problem
+from ai import (
+    analyze_problem,
+    match_company_with_gemini
+)
 from ranking import rank_problems
 
 
@@ -37,6 +42,15 @@ supabase_key = os.getenv("SUPABASE_SECRET_KEY")
 supabase = create_client(
     supabase_url,
     supabase_key
+)
+
+gemini_api_key = os.getenv("GEMINI_API_KEY")
+
+if not gemini_api_key:
+    raise ValueError("GEMINI_API_KEY was not found in .env")
+
+gemini_client = genai.Client(
+    api_key=gemini_api_key
 )
 
 
@@ -1130,3 +1144,683 @@ def get_university_problems(
         "problems":
             problems_response.data
     }
+    # --------------------------------------------------
+# GOVERNMENT - APPROVE SOLUTION AND MATCH COMPANY
+# --------------------------------------------------
+
+@app.patch("/solutions/{solution_id}/status")
+def update_solution_status(
+    solution_id: str,
+    status_data: dict
+):
+    new_status = status_data.get("status")
+
+    if new_status not in [
+        "approved",
+        "rejected"
+    ]:
+        return {
+            "success": False,
+            "message": "Invalid solution status"
+        }
+
+    # --------------------------------------------------
+    # GET SOLUTION
+    # --------------------------------------------------
+
+    solution_response = (
+        supabase
+        .table("solutions")
+        .select("*")
+        .eq("id", solution_id)
+        .single()
+        .execute()
+    )
+
+    solution = solution_response.data
+
+    if not solution:
+        raise HTTPException(
+            status_code=404,
+            detail="Solution not found"
+        )
+
+    # --------------------------------------------------
+    # UPDATE SOLUTION STATUS
+    # --------------------------------------------------
+
+    updated_response = (
+        supabase
+        .table("solutions")
+        .update({
+            "status": new_status
+        })
+        .eq("id", solution_id)
+        .execute()
+    )
+
+    if not updated_response.data:
+        raise HTTPException(
+            status_code=404,
+            detail="Solution could not be updated"
+        )
+
+    updated_solution = updated_response.data[0]
+
+    # --------------------------------------------------
+    # MATCH COMPANY AFTER GOVERNMENT APPROVAL
+    # --------------------------------------------------
+
+    if new_status == "approved":
+
+        # Get original civic problem
+
+        problem_response = (
+            supabase
+            .table("problems")
+            .select("*")
+            .eq(
+                "id",
+                solution["problem_id"]
+            )
+            .single()
+            .execute()
+        )
+
+        problem = problem_response.data
+
+        if not problem:
+            raise HTTPException(
+                status_code=404,
+                detail="Related problem not found"
+            )
+
+        # Get all companies
+
+        companies_response = (
+            supabase
+            .table("companies")
+            .select("*")
+            .execute()
+        )
+
+        companies = companies_response.data
+
+        if companies:
+
+            # --------------------------------------------------
+            # GEMINI COMPANY MATCHING
+            # --------------------------------------------------
+
+            company_match = match_company_with_gemini(
+                updated_solution,
+                problem,
+                companies
+            )
+
+            company_id = company_match.get(
+                "company_id"
+            )
+
+            match_score = company_match.get(
+                "match_score",
+                0
+            )
+
+            match_reason = company_match.get(
+                "match_reason",
+                ""
+            )
+
+            # --------------------------------------------------
+            # VERIFY COMPANY EXISTS
+            # --------------------------------------------------
+
+            selected_company = None
+
+            for company in companies:
+
+                if str(company["id"]) == str(company_id):
+                    selected_company = company
+                    break
+
+            if selected_company:
+
+                # --------------------------------------------------
+                # CHECK EXISTING OPPORTUNITY
+                # --------------------------------------------------
+
+                existing_opportunity = (
+                    supabase
+                    .table("company_opportunities")
+                    .select("id")
+                    .eq(
+                        "company_id",
+                        selected_company["id"]
+                    )
+                    .eq(
+                        "solution_id",
+                        solution_id
+                    )
+                    .execute()
+                )
+
+                if not existing_opportunity.data:
+
+                    # --------------------------------------------------
+                    # SAVE COMPANY OPPORTUNITY
+                    # --------------------------------------------------
+
+                    (
+                        supabase
+                        .table("company_opportunities")
+                        .insert({
+                            "company_id":
+                                selected_company["id"],
+
+                            "solution_id":
+                                solution_id,
+
+                            "problem_id":
+                                solution["problem_id"],
+
+                            "match_score":
+                                match_score,
+
+                            "match_reason":
+                                match_reason,
+
+                            "status":
+                                "pending"
+                        })
+                        .execute()
+                    )
+
+                # --------------------------------------------------
+                # NOTIFY COMPANY
+                # --------------------------------------------------
+
+                create_notification(
+                    selected_company["profile_id"],
+
+                    "New Solution Opportunity",
+
+                    f'The approved solution "{updated_solution["title"]}" has been matched to {selected_company.get("company_name", "your company")} for implementation review.',
+
+                    "company_opportunity"
+                )
+
+    return {
+        "success": True,
+        "solution": updated_solution
+    }
+
+
+# --------------------------------------------------
+# AI MEETING SCHEDULER
+# --------------------------------------------------
+
+def schedule_meeting_with_gemini(
+    solution,
+    problem,
+    company
+):
+    # Create a few valid future meeting slots.
+    # Civiora gives Gemini the available slots instead of
+    # allowing it to invent a date or time.
+
+    slots = []
+
+    current_date = datetime.now().date()
+
+    for day_offset in range(1, 6):
+        meeting_date = current_date + timedelta(days=day_offset)
+
+        # Skip Sunday
+        if meeting_date.weekday() == 6:
+            continue
+
+        for hour in [10, 14, 16]:
+            slots.append({
+                "date": meeting_date.isoformat(),
+                "time": f"{hour:02d}:00:00"
+            })
+
+    slot_text = json.dumps(
+        slots,
+        indent=2
+    )
+
+    prompt = f"""
+You are Civiora AI meeting scheduler.
+
+A company has accepted an approved civic implementation
+opportunity.
+
+Select ONE suitable meeting slot from the available slots.
+
+The meeting is for:
+- technical discussion
+- implementation planning
+- project timeline
+- estimated cost and budget discussion
+- funding/commercial discussion
+- responsibilities
+- next steps
+
+Do not invent a date or time.
+Choose only one slot from AVAILABLE SLOTS.
+
+CIVIC PROBLEM:
+Title: {problem.get("title", "")}
+Description: {problem.get("description", "")}
+Category: {problem.get("category", "")}
+Location: {problem.get("location", "")}
+
+APPROVED SOLUTION:
+Title: {solution.get("title", "")}
+Description: {solution.get("description", "")}
+Approach: {solution.get("approach", "")}
+Technologies: {solution.get("technologies", "")}
+Expected Impact: {solution.get("expected_impact", "")}
+
+COMPANY:
+Name: {company.get("company_name", "")}
+Location: {company.get("location", "")}
+Expertise: {json.dumps(company.get("expertise") or [])}
+Capabilities: {json.dumps(company.get("capabilities") or [])}
+
+AVAILABLE SLOTS:
+{slot_text}
+
+Return ONLY valid JSON:
+
+{{
+    "slot_index": 0,
+    "reason": ""
+}}
+
+Rules:
+1. slot_index must be the index of exactly one available slot.
+2. Do not invent a slot.
+3. Prefer a slot that gives reasonable preparation time.
+4. The reason must be short.
+"""
+
+    try:
+        interaction = gemini_client.interactions.create(
+            model="gemini-3.6-flash",
+            input=[
+                {
+                    "type": "text",
+                    "text": prompt
+                }
+            ],
+            response_format={
+                "type": "text",
+                "mime_type": "application/json",
+                "schema": {
+                    "type": "object",
+                    "properties": {
+                        "slot_index": {
+                            "type": "integer",
+                            "minimum": 0
+                        },
+                        "reason": {
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "slot_index",
+                        "reason"
+                    ]
+                }
+            }
+        )
+
+        result = json.loads(
+            interaction.output_text
+        )
+
+        slot_index = int(
+            result.get("slot_index", 0)
+        )
+
+        if slot_index < 0 or slot_index >= len(slots):
+            slot_index = 0
+
+        return slots[slot_index], result.get(
+            "reason",
+            "Selected by Civiora AI based on project requirements."
+        )
+
+    except Exception as error:
+        print(
+            "AI meeting scheduling failed:",
+            error
+        )
+
+        # Safe fallback so the prototype still works if
+        # Gemini has a temporary failure.
+        return slots[0], (
+            "Civiora selected the earliest available "
+            "future working-day slot."
+        )
+
+
+# --------------------------------------------------
+# COMPANY - ACCEPT OPPORTUNITY AND CREATE MEETING
+# --------------------------------------------------
+
+@app.patch(
+    "/company-opportunities/{opportunity_id}/status"
+)
+def update_company_opportunity_status(
+    opportunity_id: str,
+    status_data: dict
+):
+    new_status = status_data.get("status")
+
+    if new_status not in [
+        "accepted",
+        "rejected"
+    ]:
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid company opportunity status"
+        )
+
+    # Get opportunity
+    opportunity_response = (
+        supabase
+        .table("company_opportunities")
+        .select("*")
+        .eq("id", opportunity_id)
+        .single()
+        .execute()
+    )
+
+    opportunity = opportunity_response.data
+
+    if not opportunity:
+        raise HTTPException(
+            status_code=404,
+            detail="Company opportunity not found"
+        )
+
+    # Update company response
+    response_text = (
+        "Company accepted the opportunity."
+        if new_status == "accepted"
+        else "Company rejected the opportunity."
+    )
+
+    updated_response = (
+        supabase
+        .table("company_opportunities")
+        .update({
+            "status": new_status,
+            "company_response": response_text,
+            "responded_at": datetime.utcnow().isoformat()
+        })
+        .eq("id", opportunity_id)
+        .execute()
+    )
+
+    if not updated_response.data:
+        raise HTTPException(
+            status_code=500,
+            detail="Company opportunity could not be updated"
+        )
+
+    updated_opportunity = updated_response.data[0]
+
+    # If rejected, there is nothing else to schedule.
+    if new_status == "rejected":
+        return {
+            "success": True,
+            "opportunity": updated_opportunity
+        }
+
+    # --------------------------------------------------
+    # CHECK IF A MEETING ALREADY EXISTS
+    # --------------------------------------------------
+
+    existing_meeting_response = (
+        supabase
+        .table("meetings")
+        .select("*")
+        .eq(
+            "opportunity_id",
+            opportunity_id
+        )
+        .execute()
+    )
+
+    if existing_meeting_response.data:
+        return {
+            "success": True,
+            "opportunity": updated_opportunity,
+            "meeting": existing_meeting_response.data[0]
+        }
+
+    # --------------------------------------------------
+    # GET SOLUTION
+    # --------------------------------------------------
+
+    solution_response = (
+        supabase
+        .table("solutions")
+        .select("*")
+        .eq(
+            "id",
+            opportunity["solution_id"]
+        )
+        .single()
+        .execute()
+    )
+
+    solution = solution_response.data
+
+    if not solution:
+        raise HTTPException(
+            status_code=404,
+            detail="Solution not found"
+        )
+
+    # --------------------------------------------------
+    # GET PROBLEM
+    # --------------------------------------------------
+
+    problem_response = (
+        supabase
+        .table("problems")
+        .select("*")
+        .eq(
+            "id",
+            opportunity["problem_id"]
+        )
+        .single()
+        .execute()
+    )
+
+    problem = problem_response.data
+
+    if not problem:
+        raise HTTPException(
+            status_code=404,
+            detail="Problem not found"
+        )
+
+    # --------------------------------------------------
+    # GET COMPANY
+    # --------------------------------------------------
+
+    company_response = (
+        supabase
+        .table("companies")
+        .select("*")
+        .eq(
+            "id",
+            opportunity["company_id"]
+        )
+        .single()
+        .execute()
+    )
+
+    company = company_response.data
+
+    if not company:
+        raise HTTPException(
+            status_code=404,
+            detail="Company not found"
+        )
+
+    # --------------------------------------------------
+    # GET GOVERNMENT USER
+    # --------------------------------------------------
+
+    government_response = (
+        supabase
+        .table("profiles")
+        .select("id, role")
+        .execute()
+    )
+
+    government_profiles = [
+        profile
+        for profile in (government_response.data or [])
+        if str(profile.get("role", "")).lower() == "government"
+    ]
+
+    if not government_profiles:
+        raise HTTPException(
+            status_code=404,
+            detail="Government profile not found"
+        )
+
+    government_id = government_profiles[0]["id"]
+
+    # --------------------------------------------------
+    # AI SELECTS MEETING SLOT
+    # --------------------------------------------------
+
+    selected_slot, ai_reason = (
+        schedule_meeting_with_gemini(
+            solution,
+            problem,
+            company
+        )
+    )
+
+    # --------------------------------------------------
+    # CREATE MEETING
+    # --------------------------------------------------
+
+    meeting_title = (
+        f'{solution["title"]} - '
+        "Implementation Discussion"
+    )
+
+    meeting_purpose = (
+        "Technical implementation, project timeline, "
+        "estimated cost, budget, funding and "
+        "responsibility discussion."
+    )
+
+    meeting_agenda = [
+        "Review the civic problem",
+        "Review the university solution",
+        "Discuss technical requirements",
+        "Discuss implementation timeline",
+        "Discuss estimated project cost",
+        "Discuss funding and commercial terms",
+        "Finalize responsibilities",
+        "Agree on next steps"
+    ]
+
+    meeting_response = (
+        supabase
+        .table("meetings")
+        .insert({
+            "opportunity_id":
+                opportunity_id,
+
+            "solution_id":
+                opportunity["solution_id"],
+
+            "problem_id":
+                opportunity["problem_id"],
+
+            "government_id":
+                government_id,
+
+            "company_id":
+                opportunity["company_id"],
+
+            "meeting_title":
+                meeting_title,
+
+            "meeting_date":
+                selected_slot["date"],
+
+            "meeting_time":
+                selected_slot["time"],
+
+            "purpose":
+                meeting_purpose,
+
+            "agenda":
+                meeting_agenda,
+
+            "status":
+                "scheduled",
+
+            "ai_reason":
+                ai_reason
+        })
+        .execute()
+    )
+
+    if not meeting_response.data:
+        raise HTTPException(
+            status_code=500,
+            detail="Meeting could not be created"
+        )
+
+    meeting = meeting_response.data[0]
+
+    # --------------------------------------------------
+    # NOTIFY GOVERNMENT
+    # --------------------------------------------------
+
+    create_notification(
+        government_id,
+
+        "Civiora Meeting Scheduled",
+
+        f'An implementation meeting for "{solution["title"]}" has been scheduled with {company.get("company_name", "the selected company")} on {selected_slot["date"]} at {selected_slot["time"][:5]}. The meeting will cover technical requirements, implementation, budget and funding discussions.',
+
+        "meeting"
+    )
+
+    # --------------------------------------------------
+    # NOTIFY COMPANY
+    # --------------------------------------------------
+
+    create_notification(
+        company["profile_id"],
+
+        "Civiora Meeting Scheduled",
+
+        f'Your company has accepted the opportunity for "{solution["title"]}". Civiora AI has scheduled an implementation meeting on {selected_slot["date"]} at {selected_slot["time"][:5]}. The meeting will cover technical requirements, implementation, budget and funding discussions.',
+
+        "meeting"
+    )
+
+    return {
+        "success": True,
+        "opportunity": updated_opportunity,
+        "meeting": meeting
+    }
+

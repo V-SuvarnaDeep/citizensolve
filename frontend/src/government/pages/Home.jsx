@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import API_URL from "../../api";
 import "./Home.css";
+import "./GovernmentNavbar.css";
 
 function Home() {
-  const navigate = useNavigate();
-
   const [problems, setProblems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -32,32 +31,16 @@ function Home() {
     }
   };
 
-  const getSeverityClass = (severity) => {
-    const value = String(severity || "").toLowerCase();
-
-    if (value === "critical") {
-      return "severity-critical";
-    }
-
-    if (value === "high") {
-      return "severity-high";
-    }
-
-    if (value === "medium") {
-      return "severity-medium";
-    }
-
-    return "severity-low";
-  };
-
   const criticalProblems = problems.filter(
     (problem) =>
-      String(problem.ai_analysis?.severity || "").toLowerCase() ===
-      "critical"
+      String(
+        problem.ai_analysis?.severity || ""
+      ).toLowerCase() === "critical"
   );
 
   const submittedProblems = problems.filter(
-    (problem) => problem.status === "submitted"
+    (problem) =>
+      problem.status === "submitted"
   );
 
   return (
@@ -80,19 +63,15 @@ function Home() {
             to="/government"
             className="active"
           >
-            Dashboard
+            Home
           </Link>
 
-          <Link to="/government">
+          <Link to="/government/problems">
             Problems
           </Link>
 
           <Link to="/government/solutions">
             Solutions
-          </Link>
-
-          <Link to="/government/companies">
-            Companies
           </Link>
 
           <Link to="/government/meetings">
@@ -118,7 +97,7 @@ function Home() {
 
       </nav>
 
-      {/* DASHBOARD */}
+      {/* HOME CONTENT */}
 
       <main className="government-content">
 
@@ -131,7 +110,7 @@ function Home() {
             </p>
 
             <h1 className="government-title">
-              Government Dashboard
+              Government Home
             </h1>
 
             <p className="government-subtitle">
@@ -163,6 +142,8 @@ function Home() {
 
         {!loading && !error && (
           <>
+
+            {/* STATISTICS */}
 
             <div className="government-stats">
 
@@ -204,122 +185,32 @@ function Home() {
 
             </div>
 
+            {/* HOME INFORMATION */}
+
             <div className="priority-section">
 
               <h2 className="section-title">
-                AI Priority Queue
+                Civiora Government Workflow
               </h2>
 
-              {problems.length === 0 ? (
+              <div className="dashboard-message">
 
-                <div className="dashboard-message">
-                  No civic problems have been submitted yet.
-                </div>
+                <p>
+                  Civic problems submitted by citizens are
+                  analyzed and prioritized by Civiora AI.
+                  Government officials can review and validate
+                  these problems before they proceed to the
+                  university solution stage.
+                </p>
 
-              ) : (
+                <Link
+                  to="/government/problems"
+                  className="overview-button"
+                >
+                  View AI Priority Queue
+                </Link>
 
-                <div className="table-wrapper">
-
-                  <table className="priority-table">
-
-                    <thead>
-
-                      <tr>
-                        <th>Rank</th>
-                        <th>Problem</th>
-                        <th>Category</th>
-                        <th>Location</th>
-                        <th>Severity</th>
-                        <th>Urgency</th>
-                        <th>Status</th>
-                      </tr>
-
-                    </thead>
-
-                    <tbody>
-
-                      {problems.map((problem) => {
-
-                        const analysis =
-                          problem.ai_analysis || {};
-
-                        return (
-                          <tr
-                            key={problem.id}
-                            onClick={() =>
-                              navigate(
-                                `/government/review?id=${problem.id}`
-                              )
-                            }
-                            className="problem-row"
-                          >
-
-                            <td>
-
-                              <span className="rank">
-                                #{problem.priority_rank}
-                              </span>
-
-                            </td>
-
-                            <td>
-
-                              <strong>
-                                {problem.title}
-                              </strong>
-
-                              <div className="problem-summary">
-                                {analysis.summary ||
-                                  problem.description}
-                              </div>
-
-                            </td>
-
-                            <td>
-                              {problem.category}
-                            </td>
-
-                            <td>
-                              {problem.location}
-                            </td>
-
-                            <td>
-
-                              <span
-                                className={`severity-badge ${getSeverityClass(
-                                  analysis.severity
-                                )}`}
-                              >
-                                {analysis.severity ||
-                                  "Unknown"}
-                              </span>
-
-                            </td>
-
-                            <td>
-                              {analysis.urgency ||
-                                problem.urgency}
-                            </td>
-
-                            <td>
-
-                              <span className="status-badge">
-                                {problem.status}
-                              </span>
-
-                            </td>
-
-                          </tr>
-                        );
-                      })}
-
-                    </tbody>
-
-                  </table>
-
-                </div>
-
-              )}
+              </div>
 
             </div>
 

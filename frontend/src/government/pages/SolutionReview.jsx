@@ -6,7 +6,7 @@ import React, {
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { supabase } from "../../supabaseClient";
 import "./SolutionReview.css";
-
+import "./GovernmentNavbar.css";
 function SolutionReview() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -66,44 +66,52 @@ function SolutionReview() {
     fetchSolution();
   }, [fetchSolution]);
 
-  const updateSolutionStatus = async (status) => {
-    if (!solution) {
-      return;
-    }
+const updateSolutionStatus = async (status) => {
+  if (!solution) {
+    return;
+  }
 
-    if (status === "rejected" && !feedback.trim()) {
-      setError("Please provide feedback before rejecting the solution.");
-      return;
-    }
+  if (status === "rejected" && !feedback.trim()) {
+    setError("Please provide feedback before rejecting the solution.");
+    return;
+  }
 
-    try {
-      setSubmitting(true);
-      setError("");
+  try {
+    setSubmitting(true);
+    setError("");
 
-      const {
-        error: updateError,
-      } = await supabase
-        .from("solutions")
-        .update({
+    const response = await fetch(
+      `/api/solutions/${solution.id}/status`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
           status: status,
           government_feedback: feedback.trim(),
-          updated_at: new Date().toISOString(),
-        })
-        .eq("id", solution.id);
-
-      if (updateError) {
-        throw updateError;
+        }),
       }
+    );
 
-      navigate("/government/solutions");
-    } catch (err) {
-      console.error("Error updating solution:", err);
-      setError("Unable to update the solution.");
-    } finally {
-      setSubmitting(false);
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        data.detail || "Unable to update the solution."
+      );
     }
-  };
 
+    navigate("/government/solutions");
+  } catch (err) {
+    console.error("Error updating solution:", err);
+    setError(
+      err.message || "Unable to update the solution."
+    );
+  } finally {
+    setSubmitting(false);
+  }
+};
   if (loading) {
     return (
       <div className="government-solution-review-page">
@@ -137,25 +145,51 @@ function SolutionReview() {
 
   return (
     <div className="government-solution-review-page">
-      <nav className="government-review-navbar">
-        <div className="government-review-brand">
-          CIVIORA
-        </div>
+      <nav className="government-navbar">
 
-        <div className="government-review-nav-links">
-          <Link to="/government">
-            Dashboard
-          </Link>
+  <Link
+    to="/government"
+    className="government-logo"
+  >
+    CIVIORA
+  </Link>
 
-          <Link to="/government/solutions">
-            Solutions
-          </Link>
+  <div className="government-nav-links">
 
-          <Link to="/government/review">
-            Problems
-          </Link>
-        </div>
-      </nav>
+    <Link to="/government">
+      Home
+    </Link>
+
+    <Link to="/government/problems">
+      Problems
+    </Link>
+
+    <Link to="/government/solutions">
+      Solutions
+    </Link>
+
+    <Link to="/government/meetings">
+      Meetings
+    </Link>
+
+    <Link to="/government/notifications">
+      Notifications
+    </Link>
+
+    <Link to="/government/settings">
+      Settings
+    </Link>
+
+  </div>
+
+  <Link
+    to="/login"
+    className="government-logout"
+  >
+    Logout
+  </Link>
+
+</nav>
 
       <main className="government-review-container">
         <Link

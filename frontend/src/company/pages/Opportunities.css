@@ -1,0 +1,355 @@
+.company-opportunities-page {
+  min-height: 100vh;
+  background: #f4f8f6;
+  padding: 40px;
+}
+
+.company-opportunities-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 30px;
+  margin-bottom: 35px;
+}
+
+.company-opportunities-label,
+.company-opportunity-label,
+.company-ai-match-label {
+  color: #087f5b;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+}
+
+.company-opportunities-header h1 {
+  margin: 8px 0;
+  color: #173b32;
+  font-size: 36px;
+}
+
+.company-opportunities-header p {
+  margin: 0;
+  color: #687b75;
+  font-size: 15px;
+}
+
+.company-opportunity-count {
+  min-width: 120px;
+  padding: 18px 22px;
+  background: white;
+  border: 1px solid #dce8e3;
+  border-radius: 14px;
+  color: #087f5b;
+  font-size: 28px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.company-opportunity-count span {
+  display: block;
+  margin-top: 4px;
+  color: #71837d;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.company-opportunities-error {
+  margin-bottom: 20px;
+  padding: 14px 18px;
+  border: 1px solid #f1c5c5;
+  border-radius: 10px;
+  background: #fff4f4;
+  color: #a33a3a;
+}
+
+.company-opportunities-loading {
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #087f5b;
+  font-size: 16px;
+}
+
+.company-empty-opportunities {
+  padding: 70px 30px;
+  background: white;
+  border: 1px solid #dce8e3;
+  border-radius: 18px;
+  text-align: center;
+}
+
+.company-empty-icon {
+  width: 55px;
+  height: 55px;
+  margin: 0 auto 18px;
+  border-radius: 50%;
+  background: #e6f4ef;
+  color: #087f5b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+}
+
+.company-empty-opportunities h2 {
+  margin: 0 0 8px;
+  color: #173b32;
+}
+
+.company-empty-opportunities p {
+  max-width: 550px;
+  margin: 0 auto;
+  color: #71837d;
+  line-height: 1.6;
+}
+
+.company-opportunities-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.company-opportunity-card {
+  background: white;
+  border: 1px solid #dce8e3;
+  border-radius: 18px;
+  padding: 28px;
+  box-shadow: 0 5px 18px rgba(25, 65, 54, 0.05);
+}
+
+.company-opportunity-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  padding-bottom: 22px;
+  border-bottom: 1px solid #edf2f0;
+}
+
+.company-opportunity-top h2 {
+  margin: 8px 0 0;
+  color: #173b32;
+  font-size: 24px;
+}
+
+.company-opportunity-status {
+  padding: 7px 13px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.company-opportunity-status.pending {
+  background: #fff4d6;
+  color: #916b00;
+}
+
+.company-opportunity-status.accepted {
+  background: #e5f6ee;
+  color: #087f5b;
+}
+
+.company-opportunity-status.rejected {
+  background: #fdeaea;
+  color: #a33a3a;
+}
+
+.company-opportunity-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 25px;
+  margin-top: 25px;
+}
+
+.company-opportunity-section {
+  padding: 22px;
+  border-radius: 14px;
+  background: #f7faf9;
+}
+
+.company-opportunity-section h3,
+.company-solution-details h3 {
+  margin: 0 0 10px;
+  color: #31564b;
+  font-size: 15px;
+}
+
+.company-opportunity-section h4 {
+  margin: 0 0 10px;
+  color: #173b32;
+  font-size: 18px;
+}
+
+.company-opportunity-section p,
+.company-solution-details p {
+  margin: 0;
+  color: #687b75;
+  line-height: 1.65;
+  font-size: 14px;
+}
+
+.company-opportunity-details {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.company-opportunity-details div {
+  padding: 12px;
+  background: white;
+  border-radius: 9px;
+}
+
+.company-opportunity-details span {
+  display: block;
+  margin-bottom: 5px;
+  color: #82918c;
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+.company-opportunity-details strong {
+  color: #31564b;
+  font-size: 13px;
+}
+
+.company-solution-details {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-top: 22px;
+  padding: 22px;
+  border-top: 1px solid #edf2f0;
+  border-bottom: 1px solid #edf2f0;
+}
+
+.company-ai-match {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+  margin-top: 22px;
+  padding: 18px 20px;
+  background: #eef8f4;
+  border-radius: 12px;
+}
+
+.company-ai-match > div {
+  min-width: 120px;
+}
+
+.company-ai-match strong {
+  display: block;
+  margin-top: 5px;
+  color: #087f5b;
+  font-size: 28px;
+}
+
+.company-ai-match p {
+  margin: 0;
+  color: #48665d;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.company-opportunity-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.company-opportunity-actions button {
+  padding: 11px 20px;
+  border-radius: 9px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.company-reject-button {
+  border: 1px solid #e0baba;
+  background: white;
+  color: #a33a3a;
+}
+
+.company-accept-button {
+  border: none;
+  background: #087f5b;
+  color: white;
+}
+
+.company-accept-button:hover {
+  background: #066b4c;
+}
+
+.company-reject-button:hover {
+  background: #fff4f4;
+}
+
+.company-opportunity-confirmation {
+  margin-top: 22px;
+  padding: 14px 18px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.company-opportunity-confirmation.accepted {
+  background: #e8f7f0;
+  color: #087f5b;
+}
+
+.company-opportunity-confirmation.rejected {
+  background: #fff0f0;
+  color: #a33a3a;
+}
+
+@media (max-width: 900px) {
+  .company-opportunities-page {
+    padding: 25px;
+  }
+
+  .company-opportunities-header {
+    flex-direction: column;
+  }
+
+  .company-opportunity-grid,
+  .company-solution-details {
+    grid-template-columns: 1fr;
+  }
+
+  .company-opportunity-details {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .company-opportunities-page {
+    padding: 18px;
+  }
+
+  .company-opportunity-card {
+    padding: 20px;
+  }
+
+  .company-opportunity-top {
+    flex-direction: column;
+  }
+
+  .company-ai-match {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .company-opportunity-actions {
+    flex-direction: column;
+  }
+
+  .company-opportunity-actions button {
+    width: 100%;
+  }
+}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Link,
   useSearchParams,
@@ -7,6 +7,7 @@ import {
 import axios from "axios";
 import API_URL from "../../api";
 import "./Review.css";
+import "./GovernmentNavbar.css";
 
 function Review() {
   const [searchParams] = useSearchParams();
@@ -28,11 +29,15 @@ function Review() {
       }
 
       try {
+        setLoading(true);
+        setError("");
+
         const response = await axios.get(
           `${API_URL}/problems/${problemId}`
         );
 
         setProblem(response.data.problem);
+
       } catch (err) {
         console.error(err);
         setError("Unable to load problem details.");
@@ -44,29 +49,95 @@ function Review() {
     loadProblem();
   }, [problemId]);
 
+
   const updateStatus = async (status) => {
     try {
       setActionLoading(true);
+      setError("");
 
       await axios.patch(
         `${API_URL}/problems/${problemId}/status`,
         {
-          status: status,
+          status: status
         }
       );
 
-      navigate("/government");
+      navigate("/government/problems");
+
     } catch (err) {
       console.error(err);
-      setError("Unable to update the problem status.");
+      setError(
+        "Unable to update the problem status."
+      );
     } finally {
       setActionLoading(false);
     }
   };
 
+
+  const formatDate = (date) => {
+    if (!date) {
+      return "—";
+    }
+
+    return new Date(date).toLocaleString(
+      "en-IN",
+      {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit"
+      }
+    );
+  };
+
+
+  const getSeverityClass = (severity) => {
+    const value = String(
+      severity || ""
+    ).toLowerCase();
+
+    if (value === "critical") {
+      return "review-severity critical";
+    }
+
+    if (value === "high") {
+      return "review-severity high";
+    }
+
+    if (value === "medium") {
+      return "review-severity medium";
+    }
+
+    if (value === "low") {
+      return "review-severity low";
+    }
+
+    return "review-severity";
+  };
+
+
+  const getStatusClass = (status) => {
+    const value = String(
+      status || ""
+    ).toLowerCase();
+
+    if (value === "approved") {
+      return "review-status approved";
+    }
+
+    if (value === "rejected") {
+      return "review-status rejected";
+    }
+
+    return "review-status pending";
+  };
+
+
   if (loading) {
     return (
-      <div className="review-page">
+      <div className="government-review-page">
 
         <nav className="government-navbar">
 
@@ -80,19 +151,18 @@ function Review() {
           <div className="government-nav-links">
 
             <Link to="/government">
-              Dashboard
+              Home
             </Link>
 
-            <Link to="/government">
+            <Link
+              to="/government/problems"
+              className="active"
+            >
               Problems
             </Link>
 
             <Link to="/government/solutions">
               Solutions
-            </Link>
-
-            <Link to="/government/companies">
-              Companies
             </Link>
 
             <Link to="/government/meetings">
@@ -118,7 +188,7 @@ function Review() {
 
         </nav>
 
-        <main className="review-content">
+        <main className="government-review-content">
 
           <div className="review-message">
             Loading problem details...
@@ -130,9 +200,10 @@ function Review() {
     );
   }
 
-  if (error || !problem) {
+
+  if (error && !problem) {
     return (
-      <div className="review-page">
+      <div className="government-review-page">
 
         <nav className="government-navbar">
 
@@ -146,19 +217,18 @@ function Review() {
           <div className="government-nav-links">
 
             <Link to="/government">
-              Dashboard
+              Home
             </Link>
 
-            <Link to="/government">
+            <Link
+              to="/government/problems"
+              className="active"
+            >
               Problems
             </Link>
 
             <Link to="/government/solutions">
               Solutions
-            </Link>
-
-            <Link to="/government/companies">
-              Companies
             </Link>
 
             <Link to="/government/meetings">
@@ -184,18 +254,18 @@ function Review() {
 
         </nav>
 
-        <main className="review-content">
+        <main className="government-review-content">
 
           <div className="review-error">
-            {error || "Problem not found."}
+            {error}
           </div>
 
-          <button
-            className="back-button"
-            onClick={() => navigate("/government")}
+          <Link
+            to="/government/problems"
+            className="review-back-link"
           >
-            Back to Dashboard
-          </button>
+            ← Back to Problems
+          </Link>
 
         </main>
 
@@ -203,12 +273,25 @@ function Review() {
     );
   }
 
-  const analysis = problem.ai_analysis || {};
+
+  if (!problem) {
+    return null;
+  }
+
+
+  /*
+    AI analysis is stored inside the
+    ai_analysis column of the problem.
+  */
+
+  const analysis =
+    problem.ai_analysis || {};
+
 
   return (
-    <div className="review-page">
+    <div className="government-review-page">
 
-      {/* GOVERNMENT NAVBAR */}
+      {/* NAVBAR */}
 
       <nav className="government-navbar">
 
@@ -222,11 +305,11 @@ function Review() {
         <div className="government-nav-links">
 
           <Link to="/government">
-            Dashboard
+            Home
           </Link>
 
           <Link
-            to="/government"
+            to="/government/problems"
             className="active"
           >
             Problems
@@ -234,10 +317,6 @@ function Review() {
 
           <Link to="/government/solutions">
             Solutions
-          </Link>
-
-          <Link to="/government/companies">
-            Companies
           </Link>
 
           <Link to="/government/meetings">
@@ -263,126 +342,196 @@ function Review() {
 
       </nav>
 
-      {/* REVIEW CONTENT */}
 
-      <main className="review-content">
+      {/* CONTENT */}
+
+      <main className="government-review-content">
+
+        <Link
+          to="/government/problems"
+          className="review-back-link"
+        >
+          ← Back to Problems
+        </Link>
+
 
         <div className="review-header">
 
-          <div>
+          <p className="review-label">
+            GOVERNMENT REVIEW
+          </p>
 
-            <button
-              className="back-button"
-              onClick={() => navigate("/government")}
-            >
-              ← Back to Dashboard
-            </button>
+          <h1 className="review-title">
+            Civic Problem Review
+          </h1>
 
-            <p className="review-label">
-              GOVERNMENT REVIEW
-            </p>
-
-            <h1>
-              Problem Review
-            </h1>
-
-            <p>
-              Government validation of an AI-prioritized civic problem
-            </p>
-
-          </div>
-
-          <div className="review-rank">
-            Priority #{problem.priority_rank}
-          </div>
+          <p className="review-subtitle">
+            Review the citizen-submitted problem and
+            Civiora AI analysis before making a decision.
+          </p>
 
         </div>
 
-        <div className="review-grid">
 
-          <div className="review-card">
+        {error && (
+          <div className="review-error">
+            {error}
+          </div>
+        )}
 
-            <h2>
-              Problem Details
-            </h2>
 
-            <div className="detail-item">
+        <div className="review-layout">
 
-              <span>
-                Title
+
+          {/* =========================
+              PROBLEM INFORMATION
+          ========================= */}
+
+          <section className="review-main-card">
+
+            <div className="review-card-header">
+
+              <div>
+
+                <span className="review-card-label">
+                  CITIZEN SUBMISSION
+                </span>
+
+                <h2>
+                  {problem.title ||
+                    "Untitled Civic Problem"}
+                </h2>
+
+              </div>
+
+              <span
+                className={getStatusClass(
+                  problem.status
+                )}
+              >
+                {problem.status ||
+                  "submitted"}
               </span>
-
-              <strong>
-                {problem.title}
-              </strong>
 
             </div>
 
-            <div className="detail-item">
 
-              <span>
-                Description
+            {/* DESCRIPTION */}
+
+            <div className="review-section">
+
+              <span className="review-section-label">
+                PROBLEM DESCRIPTION
               </span>
 
-              <p>
-                {problem.description}
+              <p className="review-description">
+                {problem.description ||
+                  "No description available."}
               </p>
 
             </div>
 
-            <div className="detail-item">
 
-              <span>
-                Category
-              </span>
+            {/* BASIC DETAILS */}
 
-              <p>
-                {problem.category}
-              </p>
+            <div className="review-details-grid">
 
-            </div>
-
-            <div className="detail-item">
-
-              <span>
-                Location
-              </span>
-
-              <p>
-                {problem.location}
-              </p>
-
-            </div>
-
-            <div className="detail-item">
-
-              <span>
-                Reported Impact
-              </span>
-
-              <p>
-                {problem.impact}
-              </p>
-
-            </div>
-
-            <div className="detail-item">
-
-              <span>
-                Reported Urgency
-              </span>
-
-              <p>
-                {problem.urgency}
-              </p>
-
-            </div>
-
-            {problem.additional_info && (
-              <div className="detail-item">
+              <div className="review-detail">
 
                 <span>
-                  Additional Information
+                  CATEGORY
+                </span>
+
+                <strong>
+                  {problem.category ||
+                    "Not available"}
+                </strong>
+
+              </div>
+
+
+              <div className="review-detail">
+
+                <span>
+                  PROBLEM TYPE
+                </span>
+
+                <strong>
+                  {analysis.problemType ||
+                    "Not available"}
+                </strong>
+
+              </div>
+
+
+              <div className="review-detail">
+
+                <span>
+                  LOCATION
+                </span>
+
+                <strong>
+                  {problem.location ||
+                    "Not available"}
+                </strong>
+
+              </div>
+
+
+              <div className="review-detail">
+
+                <span>
+                  IMPACT
+                </span>
+
+                <strong>
+                  {problem.impact ||
+                    "Not available"}
+                </strong>
+
+              </div>
+
+
+              <div className="review-detail">
+
+                <span>
+                  SUBMITTED
+                </span>
+
+                <strong>
+                  {formatDate(
+                    problem.created_at
+                  )}
+                </strong>
+
+              </div>
+
+
+              <div className="review-detail">
+
+                <span>
+                  PRIORITY RANK
+                </span>
+
+                <strong>
+                  {problem.priority_rank
+                    ? `#${problem.priority_rank}`
+                    : "Not ranked"}
+                </strong>
+
+              </div>
+
+            </div>
+
+
+            {/* ADDITIONAL INFORMATION */}
+
+            {problem.additional_info && (
+
+              <div className="ai-summary">
+
+                <span>
+                  ADDITIONAL INFORMATION
                 </span>
 
                 <p>
@@ -390,162 +539,370 @@ function Review() {
                 </p>
 
               </div>
+
             )}
 
-          </div>
 
-          <div className="review-card">
+            {/* =========================
+                AI ANALYSIS
+            ========================= */}
+
+            <div className="review-ai-section">
+
+              <div className="review-ai-heading">
+
+                <div>
+
+                  <span className="review-section-label">
+                    CIVIORA AI ANALYSIS
+                  </span>
+
+                  <h3>
+                    AI Assessment
+                  </h3>
+
+                </div>
+
+                <span className="ai-badge">
+                  AI
+                </span>
+
+              </div>
+
+
+              <div className="ai-analysis-grid">
+
+                <div className="ai-analysis-item">
+
+                  <span>
+                    SEVERITY
+                  </span>
+
+                  <strong
+                    className={getSeverityClass(
+                      analysis.severity
+                    )}
+                  >
+                    {analysis.severity ||
+                      "Not available"}
+                  </strong>
+
+                </div>
+
+
+                <div className="ai-analysis-item">
+
+                  <span>
+                    URGENCY
+                  </span>
+
+                  <strong>
+                    {analysis.urgency ||
+                      problem.urgency ||
+                      "Not available"}
+                  </strong>
+
+                </div>
+
+
+                <div className="ai-analysis-item">
+
+                  <span>
+                    VISUAL SEVERITY
+                  </span>
+
+                  <strong>
+                    {analysis.visualSeverity ||
+                      "Not available"}
+                  </strong>
+
+                </div>
+
+
+                <div className="ai-analysis-item">
+
+                  <span>
+                    AFFECTED GROUPS
+                  </span>
+
+                  <strong>
+                    {analysis.affectedGroups ||
+                      "Not available"}
+                  </strong>
+
+                </div>
+
+
+                <div className="ai-analysis-item">
+
+                  <span>
+                    AFFECTED POPULATION
+                  </span>
+
+                  <strong>
+                    {analysis.affectedPopulation ||
+                      "Not available"}
+                  </strong>
+
+                </div>
+
+
+                <div className="ai-analysis-item">
+
+                  <span>
+                    SAFETY RISK
+                  </span>
+
+                  <strong>
+                    {analysis.safetyRisk ||
+                      "Not available"}
+                  </strong>
+
+                </div>
+
+
+                <div className="ai-analysis-item">
+
+                  <span>
+                    GEOGRAPHIC IMPACT
+                  </span>
+
+                  <strong>
+                    {analysis.geographicImpact ||
+                      "Not available"}
+                  </strong>
+
+                </div>
+
+
+                <div className="ai-analysis-item">
+
+                  <span>
+                    TIME SENSITIVITY
+                  </span>
+
+                  <strong>
+                    {analysis.timeSensitivity ||
+                      "Not available"}
+                  </strong>
+
+                </div>
+
+              </div>
+
+
+              {/* AI SUMMARY */}
+
+              {analysis.summary && (
+
+                <div className="ai-summary">
+
+                  <span>
+                    AI SUMMARY
+                  </span>
+
+                  <p>
+                    {analysis.summary}
+                  </p>
+
+                </div>
+
+              )}
+
+
+              {/* VISUAL FINDINGS */}
+
+              {analysis.visualFindings && (
+
+                <div className="ai-summary">
+
+                  <span>
+                    VISUAL FINDINGS
+                  </span>
+
+                  <p>
+                    {analysis.visualFindings}
+                  </p>
+
+                </div>
+
+              )}
+
+
+              {/* REQUIRED SKILLS */}
+
+              {analysis.requiredSkills &&
+                Array.isArray(
+                  analysis.requiredSkills
+                ) &&
+                analysis.requiredSkills.length > 0 && (
+
+                <div className="ai-summary">
+
+                  <span>
+                    REQUIRED SKILLS
+                  </span>
+
+                  <p>
+                    {analysis.requiredSkills.join(
+                      ", "
+                    )}
+                  </p>
+
+                </div>
+
+              )}
+
+
+              {/* KEYWORDS */}
+
+              {analysis.keywords &&
+                Array.isArray(
+                  analysis.keywords
+                ) &&
+                analysis.keywords.length > 0 && (
+
+                <div className="ai-summary">
+
+                  <span>
+                    AI KEYWORDS
+                  </span>
+
+                  <p>
+                    {analysis.keywords.join(
+                      ", "
+                    )}
+                  </p>
+
+                </div>
+
+              )}
+
+            </div>
+
+          </section>
+
+
+          {/* =========================
+              GOVERNMENT DECISION
+          ========================= */}
+
+          <aside className="review-side-card">
+
+            <span className="review-card-label">
+              GOVERNMENT DECISION
+            </span>
 
             <h2>
-              AI Analysis
+              Validate Problem
             </h2>
 
-            <div className="analysis-grid">
+            <p>
+              Government approval is required before
+              Civiora sends this problem to the university
+              matching stage.
+            </p>
 
-              <div className="analysis-item">
 
-                <span>
-                  Severity
-                </span>
+            <div className="decision-note">
 
-                <strong>
-                  {analysis.severity || "N/A"}
-                </strong>
+              <strong>
+                Important
+              </strong>
+
+              <span>
+                AI provides analysis and priority support.
+                The final decision remains with Government.
+              </span>
+
+            </div>
+
+
+            <div className="decision-actions">
+
+              <button
+                className="approve-button"
+                disabled={
+                  actionLoading ||
+                  problem.status === "approved"
+                }
+                onClick={() =>
+                  updateStatus("approved")
+                }
+              >
+                {actionLoading
+                  ? "Updating..."
+                  : problem.status === "approved"
+                  ? "Approved"
+                  : "Approve Problem"}
+              </button>
+
+
+              <button
+                className="reject-button"
+                disabled={
+                  actionLoading ||
+                  problem.status === "rejected"
+                }
+                onClick={() =>
+                  updateStatus("rejected")
+                }
+              >
+                {actionLoading
+                  ? "Updating..."
+                  : problem.status === "rejected"
+                  ? "Rejected"
+                  : "Reject Problem"}
+              </button>
+
+            </div>
+
+
+            {/* WORKFLOW */}
+
+            <div className="decision-flow">
+
+              <span>
+                CURRENT WORKFLOW
+              </span>
+
+              <div className="flow-step active">
+
+                <b>
+                  1
+                </b>
+
+                Government Review
 
               </div>
 
-              <div className="analysis-item">
+              <div className="flow-line" />
 
-                <span>
-                  Urgency
-                </span>
+              <div className="flow-step">
 
-                <strong>
-                  {analysis.urgency || "N/A"}
-                </strong>
+                <b>
+                  2
+                </b>
 
-              </div>
-
-              <div className="analysis-item">
-
-                <span>
-                  Safety Risk
-                </span>
-
-                <strong>
-                  {analysis.safetyRisk || "N/A"}
-                </strong>
+                University Matching
 
               </div>
 
-              <div className="analysis-item">
+              <div className="flow-line" />
 
-                <span>
-                  Affected Population
-                </span>
+              <div className="flow-step">
 
-                <strong>
-                  {analysis.affectedPopulation || "N/A"}
-                </strong>
+                <b>
+                  3
+                </b>
 
-              </div>
-
-              <div className="analysis-item">
-
-                <span>
-                  Geographic Impact
-                </span>
-
-                <strong>
-                  {analysis.geographicImpact || "N/A"}
-                </strong>
-
-              </div>
-
-              <div className="analysis-item">
-
-                <span>
-                  Time Sensitivity
-                </span>
-
-                <strong>
-                  {analysis.timeSensitivity || "N/A"}
-                </strong>
+                Solution Development
 
               </div>
 
             </div>
 
-            {analysis.summary && (
-              <div className="ai-summary">
-
-                <span>
-                  AI Summary
-                </span>
-
-                <p>
-                  {analysis.summary}
-                </p>
-
-              </div>
-            )}
-
-            {analysis.visualFindings && (
-              <div className="ai-summary">
-
-                <span>
-                  Visual Findings
-                </span>
-
-                <p>
-                  {analysis.visualFindings}
-                </p>
-
-              </div>
-            )}
-
-          </div>
-
-        </div>
-
-        <div className="decision-card">
-
-          <div>
-
-            <p className="decision-label">
-              GOVERNMENT DECISION
-            </p>
-
-            <h2>
-              Validate this civic problem
-            </h2>
-
-            <p>
-              Review the citizen submission and AI analysis before
-              validating the problem.
-            </p>
-
-          </div>
-
-          <div className="decision-buttons">
-
-            <button
-              className="reject-button"
-              disabled={actionLoading}
-              onClick={() => updateStatus("rejected")}
-            >
-              Reject Problem
-            </button>
-
-            <button
-              className="approve-button"
-              disabled={actionLoading}
-              onClick={() => updateStatus("approved")}
-            >
-              Approve Problem
-            </button>
-
-          </div>
+          </aside>
 
         </div>
 

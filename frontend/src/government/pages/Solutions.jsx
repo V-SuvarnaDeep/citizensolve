@@ -1,143 +1,204 @@
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "../../supabaseClient";
 import "./Solutions.css";
+import "./GovernmentNavbar.css";
 
 function Solutions() {
   const [solutions, setSolutions] = useState([]);
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const [search, setSearch] = useState("");
-  const [statusFilter, setStatusFilter] = useState("all");
-
   useEffect(() => {
-    const loadSolutions = async () => {
-      try {
-        const { data, error } = await supabase
-          .from("solutions")
-          .select("*")
-          .order("created_at", {
-            ascending: false,
-          });
+    loadSolutions();
+  }, []);
 
-        if (error) {
-          throw error;
-        }
+  const loadSolutions = async () => {
+    try {
+      setLoading(true);
+      setError("");
 
-        const solutionList = data || [];
+      const { data, error } = await supabase
+        .from("solutions")
+        .select("*")
+        .order("created_at", {
+          ascending: false,
+        });
 
-        if (solutionList.length === 0) {
-          setSolutions([]);
-          return;
-        }
+      if (error) {
+        throw error;
+      }
 
-        const problemIds = [
-          ...new Set(
-            solutionList
-              .map((solution) => solution.problem_id)
-              .filter(Boolean)
-          ),
-        ];
+      const solutionData = data || [];
 
-        const {
-          data: problemData,
-          error: problemError,
-        } = await supabase
-          .from("problems")
-          .select(
-            "id, title, category, location, priority_rank, status"
-          )
-          .in("id", problemIds);
+      const problemIds = [
+        ...new Set(
+          solutionData
+            .map((solution) => solution.problem_id)
+            .filter(Boolean)
+        ),
+      ];
+
+      let problems = [];
+
+      if (problemIds.length > 0) {
+        const { data: problemData, error: problemError } =
+          await supabase
+            .from("problems")
+            .select(
+              "id, title, description, category, location"
+            )
+            .in("id", problemIds);
 
         if (problemError) {
           throw problemError;
         }
 
-        const problems = problemData || [];
-
-        const combinedSolutions = solutionList.map(
-          (solution) => {
-            const problem = problems.find(
-              (item) => item.id === solution.problem_id
-            );
-
-            return {
-              ...solution,
-              problem: problem || null,
-            };
-          }
-        );
-
-        setSolutions(combinedSolutions);
-      } catch (error) {
-        console.error(error);
-        setError("Unable to load submitted solutions.");
-      } finally {
-        setLoading(false);
+        problems = problemData || [];
       }
-    };
 
-    loadSolutions();
-  }, []);
+      const combinedSolutions = solutionData.map(
+        (solution) => ({
+          ...solution,
+          problem:
+            problems.find(
+              (problem) =>
+                problem.id === solution.problem_id
+            ) || null,
+        })
+      );
+
+      setSolutions(combinedSolutions);
+    } catch (err) {
+      console.error(err);
+      setError("Unable to load government solutions.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const filteredSolutions = useMemo(() => {
     return solutions.filter((solution) => {
-      const searchText = search.toLowerCase();
-
-      const problem = solution.problem || {};
+      const searchText = search
+        .toLowerCase()
+        .trim();
 
       const matchesSearch =
         !searchText ||
-        (solution.title || "")
+        String(
+          solution.title ||
+            solution.solution_title ||
+            ""
+        )
           .toLowerCase()
           .includes(searchText) ||
-        (solution.description || "")
+        String(
+          solution.description || ""
+        )
           .toLowerCase()
           .includes(searchText) ||
-        (problem.title || "")
-          .toLowerCase()
-          .includes(searchText) ||
-        (problem.category || "")
-          .toLowerCase()
-          .includes(searchText) ||
-        (problem.location || "")
+        String(
+          solution.problem?.title || ""
+        )
           .toLowerCase()
           .includes(searchText);
 
+      const solutionStatus = String(
+        solution.status || ""
+      ).toLowerCase();
+
       const matchesStatus =
         statusFilter === "all" ||
-        (solution.status || "").toLowerCase() ===
+        solutionStatus ===
           statusFilter.toLowerCase();
 
       return matchesSearch && matchesStatus;
     });
   }, [solutions, search, statusFilter]);
 
-  const submittedCount = solutions.filter(
-    (solution) => solution.status === "submitted"
+  const approvedSolutions = solutions.filter(
+    (solution) =>
+      String(solution.status || "").toLowerCase() ===
+      "approved"
   ).length;
 
-  const approvedCount = solutions.filter(
-    (solution) => solution.status === "approved"
+  const pendingSolutions = solutions.filter(
+    (solution) => {
+      const status = String(
+        solution.status || ""
+      ).toLowerCase();
+
+      return (
+        status === "pending" ||
+        status === "submitted" ||
+        status === "under_review"
+      );
+    }
   ).length;
 
-  const rejectedCount = solutions.filter(
-    (solution) => solution.status === "rejected"
+  const rejectedSolutions = solutions.filter(
+    (solution) =>
+      String(solution.status || "").toLowerCase() ===
+      "rejected"
   ).length;
 
   const getStatusClass = (status) => {
-    const currentStatus = (
-      status || "submitted"
+    const value = String(
+      status || ""
     ).toLowerCase();
 
-    return `government-solution-${currentStatus}`;
+    if (value === "approved") {
+      return "solution-status approved";
+    }
+
+    if (
+      value === "pending" ||
+      value === "submitted" ||
+      value === "under_review"
+    ) {
+      return "solution-status pending";
+    }
+
+    if (value === "rejected") {
+      return "solution-status rejected";
+    }
+
+    return "solution-status";
+  };
+
+  const getStatusText = (status) => {
+    if (!status) {
+      return "Pending";
+    }
+
+    return String(status)
+      .replaceAll("_", " ")
+      .replace(/\b\w/g, (letter) =>
+        letter.toUpperCase()
+      );
+  };
+
+  const formatDate = (date) => {
+    if (!date) {
+      return "—";
+    }
+
+    return new Date(date).toLocaleDateString(
+      "en-IN",
+      {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      }
+    );
   };
 
   return (
     <div className="government-solutions-page">
 
-      {/* GOVERNMENT NAVBAR */}
+      {/* NAVBAR */}
 
       <nav className="government-navbar">
 
@@ -151,10 +212,10 @@ function Solutions() {
         <div className="government-nav-links">
 
           <Link to="/government">
-            Dashboard
+            Home
           </Link>
 
-          <Link to="/government">
+          <Link to="/government/problems">
             Problems
           </Link>
 
@@ -163,10 +224,6 @@ function Solutions() {
             className="active"
           >
             Solutions
-          </Link>
-
-          <Link to="/government/companies">
-            Companies
           </Link>
 
           <Link to="/government/meetings">
@@ -192,356 +249,305 @@ function Solutions() {
 
       </nav>
 
-      {/* PAGE CONTENT */}
+
+      {/* CONTENT */}
 
       <main className="government-solutions-content">
 
-        <div className="government-solutions-header">
+        <div className="solutions-header">
 
           <div>
 
-            <p className="government-solutions-label">
-              SOLUTION REVIEW
+            <p className="solutions-label">
+              GOVERNMENT WORKSPACE
             </p>
 
-            <h1>
-              University Solutions
+            <h1 className="solutions-title">
+              Solutions
             </h1>
 
-            <p>
-              Review solutions submitted by universities
-              for government-approved civic problems.
+            <p className="solutions-subtitle">
+              Review solutions developed by universities for approved civic problems.
             </p>
 
           </div>
 
-          <div className="government-solution-count">
+          <button
+            className="solutions-refresh-button"
+            onClick={loadSolutions}
+          >
+            Refresh
+          </button>
 
-            <strong>
-              {loading ? "..." : solutions.length}
-            </strong>
+        </div>
+
+
+        {/* STATS */}
+
+        <div className="solution-stats">
+
+          <div className="solution-stat-card">
 
             <span>
-              Total Solutions
+              TOTAL SOLUTIONS
             </span>
+
+            <strong>
+              {solutions.length}
+            </strong>
+
+          </div>
+
+
+          <div className="solution-stat-card">
+
+            <span>
+              AWAITING REVIEW
+            </span>
+
+            <strong>
+              {pendingSolutions}
+            </strong>
+
+          </div>
+
+
+          <div className="solution-stat-card">
+
+            <span>
+              APPROVED
+            </span>
+
+            <strong className="approved-number">
+              {approvedSolutions}
+            </strong>
+
+          </div>
+
+
+          <div className="solution-stat-card">
+
+            <span>
+              REJECTED
+            </span>
+
+            <strong className="rejected-number">
+              {rejectedSolutions}
+            </strong>
 
           </div>
 
         </div>
 
-        {!loading &&
-          !error &&
-          solutions.length > 0 && (
-            <div className="government-solution-statistics">
 
-              <div className="government-solution-stat-card">
+        {/* FILTERS */}
 
-                <span>
-                  Total
-                </span>
+        <div className="solutions-filters">
 
-                <strong>
-                  {solutions.length}
-                </strong>
+          <div className="solution-search">
 
-                <small>
-                  University submissions
-                </small>
+            <input
+              type="text"
+              placeholder="Search solutions or problems..."
+              value={search}
+              onChange={(event) =>
+                setSearch(event.target.value)
+              }
+            />
 
-              </div>
+          </div>
 
-              <div className="government-solution-stat-card">
 
-                <span>
-                  Awaiting Review
-                </span>
+          <div className="solution-status-filter">
 
-                <strong>
-                  {submittedCount}
-                </strong>
+            <select
+              value={statusFilter}
+              onChange={(event) =>
+                setStatusFilter(event.target.value)
+              }
+            >
+              <option value="all">
+                All Status
+              </option>
 
-                <small>
-                  Need government decision
-                </small>
+              <option value="pending">
+                Pending
+              </option>
 
-              </div>
+              <option value="submitted">
+                Submitted
+              </option>
 
-              <div className="government-solution-stat-card">
+              <option value="under_review">
+                Under Review
+              </option>
 
-                <span>
-                  Approved
-                </span>
+              <option value="approved">
+                Approved
+              </option>
 
-                <strong>
-                  {approvedCount}
-                </strong>
+              <option value="rejected">
+                Rejected
+              </option>
+            </select>
 
-                <small>
-                  Approved solutions
-                </small>
+          </div>
 
-              </div>
+        </div>
 
-              <div className="government-solution-stat-card">
 
-                <span>
-                  Rejected
-                </span>
-
-                <strong>
-                  {rejectedCount}
-                </strong>
-
-                <small>
-                  Require revision
-                </small>
-
-              </div>
-
-            </div>
-          )}
-
-        {!loading &&
-          !error &&
-          solutions.length > 0 && (
-            <div className="government-solution-filters">
-
-              <input
-                type="text"
-                placeholder="Search solutions, problems or locations..."
-                value={search}
-                onChange={(event) =>
-                  setSearch(event.target.value)
-                }
-              />
-
-              <select
-                value={statusFilter}
-                onChange={(event) =>
-                  setStatusFilter(event.target.value)
-                }
-              >
-
-                <option value="all">
-                  All Status
-                </option>
-
-                <option value="submitted">
-                  Awaiting Review
-                </option>
-
-                <option value="approved">
-                  Approved
-                </option>
-
-                <option value="rejected">
-                  Rejected
-                </option>
-
-              </select>
-
-            </div>
-          )}
+        {/* LOADING */}
 
         {loading && (
-          <div className="government-solutions-message">
-            Loading university solutions...
+          <div className="solutions-message">
+            Loading solutions...
           </div>
         )}
 
+
+        {/* ERROR */}
+
         {!loading && error && (
-          <div className="government-solutions-error">
+          <div className="solutions-error">
             {error}
           </div>
         )}
 
-        {!loading &&
-          !error &&
-          solutions.length === 0 && (
-            <div className="government-empty-solutions">
 
-              <h2>
-                No solutions submitted yet
-              </h2>
-
-              <p>
-                University solutions will appear here
-                after they are submitted for government
-                review.
-              </p>
-
-            </div>
-          )}
+        {/* EMPTY */}
 
         {!loading &&
           !error &&
-          solutions.length > 0 &&
           filteredSolutions.length === 0 && (
-            <div className="government-empty-solutions">
 
-              <h2>
-                No matching solutions
-              </h2>
+          <div className="solutions-empty">
 
-              <p>
-                Try changing your search or status filter.
-              </p>
-
-              <button
-                className="clear-government-filter"
-                onClick={() => {
-                  setSearch("");
-                  setStatusFilter("all");
-                }}
-              >
-                Clear Filters
-              </button>
-
+            <div className="solutions-empty-icon">
+              ✓
             </div>
-          )}
+
+            <h2>
+              No solutions found
+            </h2>
+
+            <p>
+              {solutions.length === 0
+                ? "University solutions will appear here after approved problems are assigned."
+                : "Try changing your search or status filter."}
+            </p>
+
+          </div>
+        )}
+
+
+        {/* SOLUTION LIST */}
 
         {!loading &&
           !error &&
           filteredSolutions.length > 0 && (
-            <div className="government-solutions-list">
 
-              <div className="government-results-heading">
+          <div className="solutions-list">
 
-                <span>
-                  Showing {filteredSolutions.length} of{" "}
-                  {solutions.length} solutions
-                </span>
+            {filteredSolutions.map(
+              (solution) => (
 
-                <span>
-                  Latest submissions first
-                </span>
+                <div
+                  className="solution-card"
+                  key={solution.id}
+                >
 
-              </div>
+                  <div className="solution-card-top">
 
-              {filteredSolutions.map((solution) => {
+                    <div>
 
-                const problem = solution.problem || {};
-
-                return (
-                  <div
-                    className="government-solution-card"
-                    key={solution.id}
-                  >
-
-                    <div className="government-solution-card-top">
-
-                      <div>
-
-                        <span className="government-problem-label">
-                          UNIVERSITY SOLUTION
-                        </span>
-
-                        <h2>
-                          {solution.title}
-                        </h2>
-
-                        <p className="government-linked-problem">
-                          Problem:{" "}
-                          {problem.title ||
-                            "Problem information unavailable"}
-                        </p>
-
-                      </div>
-
-                      <span
-                        className={`government-solution-status ${getStatusClass(
-                          solution.status
-                        )}`}
-                      >
-                        {solution.status === "submitted"
-                          ? "Awaiting Review"
-                          : solution.status ||
-                            "Submitted"}
+                      <span className="solution-card-label">
+                        UNIVERSITY SOLUTION
                       </span>
 
-                    </div>
-
-                    <p className="government-solution-description">
-                      {solution.description}
-                    </p>
-
-                    <div className="government-solution-details">
-
-                      <div>
-
-                        <span>
-                          Category
-                        </span>
-
-                        <strong>
-                          {problem.category || "N/A"}
-                        </strong>
-
-                      </div>
-
-                      <div>
-
-                        <span>
-                          Location
-                        </span>
-
-                        <strong>
-                          {problem.location || "N/A"}
-                        </strong>
-
-                      </div>
-
-                      <div>
-
-                        <span>
-                          Problem Priority
-                        </span>
-
-                        <strong>
-                          #{problem.priority_rank || "N/A"}
-                        </strong>
-
-                      </div>
-
-                      <div>
-
-                        <span>
-                          Submitted
-                        </span>
-
-                        <strong>
-                          {solution.created_at
-                            ? new Date(
-                                solution.created_at
-                              ).toLocaleDateString()
-                            : "N/A"}
-                        </strong>
-
-                      </div>
+                      <h2>
+                        {solution.title ||
+                          solution.solution_title ||
+                          "Untitled Solution"}
+                      </h2>
 
                     </div>
 
-                    <div className="government-solution-card-bottom">
-
-                      <span>
-                        Government Technical Review
-                      </span>
-
-                      <Link
-                        to={`/government/solutions/${solution.id}`}
-                        className="review-solution-button"
-                      >
-                        Review Solution →
-                      </Link>
-
-                    </div>
+                    <span
+                      className={getStatusClass(
+                        solution.status
+                      )}
+                    >
+                      {getStatusText(
+                        solution.status
+                      )}
+                    </span>
 
                   </div>
-                );
-              })}
 
-            </div>
-          )}
+
+                  <div className="solution-description">
+
+                    <p>
+                      {solution.description ||
+                        "No solution description available."}
+                    </p>
+
+                  </div>
+
+
+                  <div className="solution-problem">
+
+                    <span>
+                      RELATED CIVIC PROBLEM
+                    </span>
+
+                    <strong>
+                      {solution.problem?.title ||
+                        "Problem information unavailable"}
+                    </strong>
+
+                    {solution.problem?.location && (
+                      <small>
+                        {solution.problem.location}
+                      </small>
+                    )}
+
+                  </div>
+
+
+                  <div className="solution-card-footer">
+
+                    <div className="solution-meta">
+
+                      <span>
+                        SUBMITTED
+                      </span>
+
+                      <strong>
+                        {formatDate(
+                          solution.created_at
+                        )}
+                      </strong>
+
+                    </div>
+
+
+                    <Link
+                      to={`/government/solutions/${solution.id}`}
+                      className="solution-review-button"
+                    >
+                      Review Solution
+                    </Link>
+
+                  </div>
+
+                </div>
+
+              )
+            )}
+
+          </div>
+        )}
 
       </main>
 
